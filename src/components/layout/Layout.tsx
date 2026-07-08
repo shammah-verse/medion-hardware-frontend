@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Navbar } from './Navbar';
+import { Footer } from './Footer';
 
 export function Layout() {
   return (
@@ -8,9 +9,7 @@ export function Layout() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <footer className="border-t border-border-light dark:border-border-dark mt-24 py-12 text-center text-sm text-muted">
-        <p>© 2026 Medion Hardware. Designed with care.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
