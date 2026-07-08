@@ -11,7 +11,8 @@ export function Register() {
     lastName: '',
     username: '',
     password: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    isStoreOwner: false
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -20,7 +21,8 @@ export function Register() {
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData(prev => ({ ...prev, [e.target.name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,8 +36,15 @@ export function Register() {
       // Auto-login after registration
       login(response.token, response.user);
       
-      // Navigate to home or dashboard
-      navigate('/');
+      // Navigate based on role
+      const role = response.user.role;
+      if (role === 'STORE_OWNER') {
+        // According to blueprint, we should check if they have a store. We'll direct them to dashboard 
+        // and the dashboard/App logic will check and redirect to /vendor/setup if needed, or we just send them straight to setup.
+        navigate('/vendor/setup');
+      } else {
+        navigate('/');
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'We could not create your account. Please check your details and try again.');
     } finally {
@@ -100,6 +109,20 @@ export function Register() {
             onChange={handleChange}
             minLength={8}
           />
+
+          <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl border border-border-light dark:border-border-dark bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+            <input 
+              type="checkbox" 
+              name="isStoreOwner"
+              checked={formData.isStoreOwner}
+              onChange={handleChange}
+              className="w-5 h-5 accent-accent-terracotta rounded"
+            />
+            <div className="flex flex-col">
+              <span className="font-medium text-sm text-foreground">Register as a Store Vendor</span>
+              <span className="text-xs text-muted">Create and manage your own hardware store on our platform.</span>
+            </div>
+          </label>
           
           {error && (
             <div className="p-4 bg-accent-terracotta/10 text-accent-terracotta rounded-xl text-sm border border-accent-terracotta/20">

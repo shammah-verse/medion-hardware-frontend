@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom';
 import { ShoppingBag, Menu } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useAuthStore } from '../../store/useAuthStore';
+import { useCartStore } from '../../store/useCartStore';
 
 export function Navbar() {
   const { isAuthenticated, user, logout } = useAuthStore();
+  const { openCart, cart } = useCartStore();
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border-light dark:border-border-dark bg-background/80 backdrop-blur-md">
@@ -15,6 +17,7 @@ export function Navbar() {
           </Link>
           <div className="hidden md:flex gap-8 text-sm font-medium text-muted">
             <Link to="/products" className="hover:text-foreground transition-colors">Catalog</Link>
+            <Link to="/stores" className="hover:text-foreground transition-colors">Stores</Link>
             <Link to="/about" className="hover:text-foreground transition-colors">Stories</Link>
             <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
           </div>
@@ -36,14 +39,14 @@ export function Navbar() {
             </div>
           )}
 
-          <Link to="/cart">
-            <Button variant="ghost" size="sm" className="relative h-12 w-12 rounded-full p-0">
-              <ShoppingBag className="h-5 w-5" />
-              <span className="absolute top-3 right-3 flex h-4 w-4 items-center justify-center rounded-full bg-accent-terracotta text-[10px] font-bold text-white">
-                3
+          <button onClick={openCart} className="relative h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-ring">
+            <ShoppingBag className="h-5 w-5" />
+            {cart && cart.items.length > 0 && (
+              <span className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent-terracotta text-[10px] font-bold text-white">
+                {cart.items.reduce((acc, item) => acc + item.quantity, 0)}
               </span>
-            </Button>
-          </Link>
+            )}
+          </button>
           <Button variant="ghost" size="sm" className="md:hidden h-12 w-12 rounded-full p-0">
             <Menu className="h-5 w-5" />
           </Button>

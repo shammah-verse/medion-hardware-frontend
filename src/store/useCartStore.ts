@@ -6,18 +6,23 @@ interface CartState {
   cart: Cart | null;
   loading: boolean;
   error: string | null;
+  isOpen: boolean;
   
   fetchCart: () => Promise<void>;
   addItem: (productId: string, quantity: number) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
   clearCart: () => void;
+  toggleCart: () => void;
+  openCart: () => void;
+  closeCart: () => void;
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
   cart: null,
   loading: false,
   error: null,
+  isOpen: false,
 
   fetchCart: async () => {
     set({ loading: true, error: null });
@@ -86,5 +91,9 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
   },
   
-  clearCart: () => set({ cart: null })
+  clearCart: () => set({ cart: null }),
+
+  toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
+  openCart: () => set({ isOpen: true }),
+  closeCart: () => set({ isOpen: false }),
 }));

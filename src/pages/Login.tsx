@@ -26,8 +26,15 @@ export function Login() {
       // Update global store
       login(response.token, response.user);
       
-      // Navigate to home or dashboard
-      navigate('/');
+      // Navigate based on role
+      const role = response.user.role;
+      if (role === 'STORE_OWNER') {
+        navigate('/vendor/dashboard');
+      } else if (role === 'ADMIN') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err: any) {
       // Empathetic error messaging
       setError(err.response?.data?.message || 'We could not log you in with those credentials. Please try again.');
