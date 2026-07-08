@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Menu } from 'lucide-react';
+import { ShoppingBag, Menu, User } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { useAuthStore } from '../../store/useAuthStore';
 
 export function Navbar() {
+  const { isAuthenticated, user, logout } = useAuthStore();
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border-light dark:border-border-dark bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-6 lg:px-8">
@@ -19,6 +22,21 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
+          {isAuthenticated ? (
+            <div className="hidden md:flex items-center gap-4 text-sm font-medium">
+              <span className="text-muted">Hi, {user?.firstName}</span>
+              <button onClick={logout} className="text-muted hover:text-foreground transition-colors focus-ring rounded-sm">
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-4">
+              <Link to="/login" className="text-sm font-medium text-muted hover:text-foreground transition-colors focus-ring rounded-sm">
+                Sign in
+              </Link>
+            </div>
+          )}
+
           <Link to="/cart">
             <Button variant="ghost" size="sm" className="relative h-12 w-12 rounded-full p-0">
               <ShoppingBag className="h-5 w-5" />
