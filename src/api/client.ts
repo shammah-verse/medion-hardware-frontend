@@ -13,8 +13,12 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('jwt_token');
-    if (token && config.headers) {
+    // Prevent sending literal "undefined" or "null" strings which crash the backend JWT parser
+    if (token && token !== 'undefined' && token !== 'null' && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
+    } else if (token === 'undefined' || token === 'null') {
+      // Clean up corrupt local storage
+      localStorage.removeItem('jwt_token');
     }
     return config;
   },

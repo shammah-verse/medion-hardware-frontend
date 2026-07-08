@@ -38,7 +38,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   initialize: () => {
     const token = localStorage.getItem('jwt_token');
     const userStr = localStorage.getItem('user');
-    if (token && userStr) {
+    
+    if (token && token !== 'undefined' && token !== 'null' && userStr && userStr !== 'undefined') {
       try {
         const user = JSON.parse(userStr);
         set({ token, user, isAuthenticated: true });
