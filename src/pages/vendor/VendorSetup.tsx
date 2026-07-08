@@ -10,6 +10,7 @@ export function VendorSetup() {
   const [address, setAddress] = useState('');
   const [lat, setLat] = useState('');
   const [lon, setLon] = useState('');
+  const [subscriptionType, setSubscriptionType] = useState<'COMMISSION' | 'PREMIUM'>('COMMISSION');
   
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -64,7 +65,8 @@ export function VendorSetup() {
         name,
         address,
         latitude: parseFloat(lat),
-        longitude: parseFloat(lon)
+        longitude: parseFloat(lon),
+        subscriptionType
       });
       navigate('/vendor/dashboard');
     } catch (err: any) {
@@ -76,7 +78,7 @@ export function VendorSetup() {
 
   return (
     <div className="min-h-[70vh] flex flex-col justify-center items-center px-6 py-24">
-      <div className="w-full max-w-lg">
+      <div className="w-full max-w-2xl">
         <div className="text-center mb-10">
           <div className="w-16 h-16 bg-accent-sage/10 text-accent-sage rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Store className="w-8 h-8" />
@@ -85,43 +87,100 @@ export function VendorSetup() {
           <p className="text-muted">Enter your physical store details to start selling premium hardware.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8 bg-black/5 dark:bg-white/5 p-8 rounded-[32px] border border-border-light dark:border-border-dark">
-          <Input 
-            label="Store Name"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="Medion Flagship - Nairobi"
-            required
-          />
-          <Input 
-            label="Physical Address"
-            value={address}
-            onChange={e => setAddress(e.target.value)}
-            placeholder="123 Silicon Ave, Nairobi"
-            required
-          />
+        <form onSubmit={handleSubmit} className="space-y-8 bg-black/5 dark:bg-white/5 p-8 md:p-12 rounded-[32px] border border-border-light dark:border-border-dark">
           
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-foreground">Location Coordinates</label>
-              <Button type="button" variant="outline" size="sm" onClick={handleGetLocation} disabled={loadingLocation}>
-                {loadingLocation ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4 mr-2" />}
-                {loadingLocation ? 'Locating...' : 'Auto-Detect'}
-              </Button>
+          <div className="space-y-6">
+            <h2 className="text-xl font-serif text-foreground border-b border-border-light dark:border-border-dark pb-4">1. Store Details</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Input 
+                label="Store Name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="Medion Flagship - Nairobi"
+                required
+              />
+              <Input 
+                label="Physical Address"
+                value={address}
+                onChange={e => setAddress(e.target.value)}
+                placeholder="123 Silicon Ave, Nairobi"
+                required
+              />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <Input 
-                value={lat} 
-                onChange={e => setLat(e.target.value)} 
-                placeholder="Latitude"
-                required 
-              />
-              <Input 
-                value={lon} 
-                onChange={e => setLon(e.target.value)} 
-                placeholder="Longitude"
-                required 
-              />
+            
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <label className="text-sm font-medium text-foreground">Location Coordinates</label>
+                <Button type="button" variant="outline" size="sm" onClick={handleGetLocation} disabled={loadingLocation}>
+                  {loadingLocation ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4 mr-2" />}
+                  {loadingLocation ? 'Locating...' : 'Auto-Detect'}
+                </Button>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Input 
+                  value={lat} 
+                  onChange={e => setLat(e.target.value)} 
+                  placeholder="Latitude"
+                  required 
+                />
+                <Input 
+                  value={lon} 
+                  onChange={e => setLon(e.target.value)} 
+                  placeholder="Longitude"
+                  required 
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6 pt-6">
+            <h2 className="text-xl font-serif text-foreground border-b border-border-light dark:border-border-dark pb-4">2. Subscription Plan</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Commission Plan */}
+              <label 
+                className={`relative flex flex-col p-6 cursor-pointer rounded-2xl border-2 transition-all ${
+                  subscriptionType === 'COMMISSION' 
+                    ? 'border-accent-terracotta bg-accent-terracotta/5' 
+                    : 'border-border-light dark:border-border-dark hover:border-accent-terracotta/50'
+                }`}
+              >
+                <input 
+                  type="radio" 
+                  name="subscriptionType" 
+                  value="COMMISSION"
+                  checked={subscriptionType === 'COMMISSION'}
+                  onChange={() => setSubscriptionType('COMMISSION')}
+                  className="sr-only"
+                />
+                <div className="mb-4">
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-black/5 dark:bg-white/5 text-foreground mb-4">Pay as you go</span>
+                  <h3 className="text-xl font-medium text-foreground">5% Commission</h3>
+                </div>
+                <p className="text-sm text-muted">We take a small 5% cut only when you make a sale. Perfect for new hardware makers.</p>
+              </label>
+
+              {/* Premium Plan */}
+              <label 
+                className={`relative flex flex-col p-6 cursor-pointer rounded-2xl border-2 transition-all ${
+                  subscriptionType === 'PREMIUM' 
+                    ? 'border-accent-sage bg-accent-sage/5' 
+                    : 'border-border-light dark:border-border-dark hover:border-accent-sage/50'
+                }`}
+              >
+                <input 
+                  type="radio" 
+                  name="subscriptionType" 
+                  value="PREMIUM"
+                  checked={subscriptionType === 'PREMIUM'}
+                  onChange={() => setSubscriptionType('PREMIUM')}
+                  className="sr-only"
+                />
+                <div className="mb-4">
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-accent-sage/10 text-accent-sage mb-4">Pro Makers</span>
+                  <h3 className="text-xl font-medium text-foreground">$49 / month</h3>
+                </div>
+                <p className="text-sm text-muted">Pay a flat monthly fee and keep 100% of your profits from every hardware sale.</p>
+              </label>
             </div>
           </div>
 
@@ -131,9 +190,11 @@ export function VendorSetup() {
             </div>
           )}
 
-          <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-            {submitting ? 'Creating Store...' : 'Launch Store'}
-          </Button>
+          <div className="pt-6">
+            <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+              {submitting ? 'Creating Store...' : 'Launch Store'}
+            </Button>
+          </div>
         </form>
       </div>
     </div>

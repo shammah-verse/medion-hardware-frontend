@@ -7,6 +7,7 @@ export interface CreateStorePayload {
   address: string;
   latitude: number;
   longitude: number;
+  subscriptionType: 'COMMISSION' | 'PREMIUM';
 }
 
 export interface CreateProductPayload {

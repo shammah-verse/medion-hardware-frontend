@@ -21,8 +21,9 @@ export function Home() {
     const fetchProducts = async () => {
       try {
         const data = await productsApi.getActiveProducts();
-        // Take the first 3 active products for the landing page
-        setFeaturedProducts(data.slice(0, 3));
+        // The backend now natively returns an ORDER BY RANDOM() feed of products across all vendors.
+        // We map over the full array to provide an endless discovery experience.
+        setFeaturedProducts(data);
       } catch (error) {
         console.error('Failed to fetch featured products', error);
       } finally {
@@ -75,9 +76,9 @@ export function Home() {
       {/* 2. Featured Products Section */}
       <section className="px-6 lg:px-8 max-w-7xl mx-auto w-full">
         <div className="flex justify-between items-end mb-12">
-          <h2 className="text-3xl font-serif text-foreground">Featured Artifacts</h2>
+          <h2 className="text-3xl font-serif text-foreground">Discovery Feed</h2>
           <Link to="/products" className="text-sm font-medium hover:text-foreground text-muted flex items-center gap-2 focus-ring rounded-sm transition-colors">
-            View all <ArrowRight className="w-4 h-4" />
+            View Catalog <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
