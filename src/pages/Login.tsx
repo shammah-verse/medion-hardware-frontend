@@ -6,7 +6,7 @@ import { authApi } from '../api/auth';
 import { useAuthStore } from '../store/useAuthStore';
 
 export function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -21,7 +21,7 @@ export function Login() {
 
     try {
       // Execute API call
-      const response = await authApi.login({ email, password });
+      const response = await authApi.login({ username, password });
       
       // Update global store
       login(response.token, response.user);
@@ -46,12 +46,12 @@ export function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input 
-            label="Email address"
-            type="email" 
-            placeholder="name@example.com" 
+            label="Username"
+            type="text" 
+            placeholder="johndoe" 
             required 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <Input 
             label="Password"

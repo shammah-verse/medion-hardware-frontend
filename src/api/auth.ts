@@ -1,7 +1,7 @@
 import { apiClient } from './client';
 
 export interface LoginPayload {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -17,7 +17,7 @@ export interface AuthResponse {
     id: string;
     firstName: string;
     lastName: string;
-    email: string;
+    username: string;
     role: string;
   };
 }

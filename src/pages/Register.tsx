@@ -9,7 +9,7 @@ export function Register() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email: '',
+    username: '',
     password: '',
     phoneNumber: ''
   });
@@ -73,12 +73,12 @@ export function Register() {
             />
           </div>
           <Input 
-            label="Email address"
-            name="email"
-            type="email" 
-            placeholder="name@example.com" 
+            label="Username"
+            name="username"
+            type="text" 
+            placeholder="janedoe" 
             required 
-            value={formData.email}
+            value={formData.username}
             onChange={handleChange}
           />
           <Input 
