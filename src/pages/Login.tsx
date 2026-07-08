@@ -36,8 +36,13 @@ export function Login() {
         navigate('/');
       }
     } catch (err: any) {
-      // Empathetic error messaging
-      setError(err.response?.data?.message || 'We could not log you in with those credentials. Please try again.');
+      console.error("Login error:", err);
+      // Surface raw backend error to the UI
+      const backendMessage = typeof err.response?.data === 'string' 
+        ? err.response.data 
+        : err.response?.data?.message;
+        
+      setError(backendMessage || err.message || 'We could not log you in. Please check your credentials.');
     } finally {
       setLoading(false);
     }
