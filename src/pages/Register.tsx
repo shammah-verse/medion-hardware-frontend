@@ -33,20 +33,29 @@ export function Register() {
     try {
       const response = await authApi.register(formData);
       
-      // Auto-login after registration
-      login(response.token, response.user);
-      
-      // Navigate based on role
-      const role = response.user.role;
-      if (role === 'STORE_OWNER') {
-        // According to blueprint, we should check if they have a store. We'll direct them to dashboard 
-        // and the dashboard/App logic will check and redirect to /vendor/setup if needed, or we just send them straight to setup.
-        navigate('/vendor/setup');
+      // Auto-login after registration if the backend provides a token
+      if (response && response.token && response.user) {
+        login(response.token, response.user);
+        
+        // Navigate based on role
+        const role = response.user.role;
+        if (role === 'STORE_OWNER' || role === 'VENDOR') {
+          navigate('/vendor/setup');
+        } else {
+          navigate('/');
+        }
       } else {
-        navigate('/');
+        // If no token is returned (e.g. backend just returns 201 Created), force user to login manually.
+        navigate('/login');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'We could not create your account. Please check your details and try again.');
+      console.error("Registration error:", err);
+      // Sometimes Spring Boot returns errors in err.response.data (if it's a string)
+      const backendMessage = typeof err.response?.data === 'string' 
+        ? err.response.data 
+        : err.response?.data?.message;
+        
+      setError(backendMessage || err.message || 'We could not create your account. Please check your details and try again.');
     } finally {
       setLoading(false);
     }
