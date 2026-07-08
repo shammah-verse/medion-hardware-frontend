@@ -4,7 +4,8 @@ import { Card } from '../components/ui/Card';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Button } from '../components/ui/Button';
 import { Plus } from 'lucide-react';
-import { productsApi, Product } from '../api/products';
+import { productsApi } from '../api/products';
+import type { Product } from '../api/products';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
 

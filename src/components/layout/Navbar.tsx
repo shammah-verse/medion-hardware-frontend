@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Menu, User } from 'lucide-react';
+import { ShoppingBag, Menu } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useAuthStore } from '../../store/useAuthStore';
 

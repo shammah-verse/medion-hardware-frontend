@@ -9,7 +9,7 @@ import { MapPin, Smartphone } from 'lucide-react';
 
 export function Checkout() {
   const { cart, clearCart } = useCartStore();
-  const { user } = useAuthStore();
+  useAuthStore(); // imported to ensure initialization or auth logic if needed, but unused directly
   const navigate = useNavigate();
 
   const [phoneNumber, setPhoneNumber] = useState('');
