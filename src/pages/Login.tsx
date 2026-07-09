@@ -33,11 +33,11 @@ export function Login() {
       const response = await authApi.login({ username, password });
       
       // Update global store
-      login(response.token, response.user);
+      login(response.accessToken, response.profile);
       
       // Navigate based on role or intended destination
       const from = (location.state as any)?.from?.pathname;
-      const role = response.user.role;
+      const role = response.profile.role;
       
       if (from) {
         navigate(from);

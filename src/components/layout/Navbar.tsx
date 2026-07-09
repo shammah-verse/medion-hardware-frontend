@@ -5,7 +5,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { useCartStore } from '../../store/useCartStore';
 
 export function Navbar() {
-  const { isAuthenticated, user, logout } = useAuthStore();
+  const { isAuthenticated, profile, logout } = useAuthStore();
   const { openCart, cart } = useCartStore();
 
   return (
@@ -18,15 +18,19 @@ export function Navbar() {
           <div className="hidden md:flex gap-8 text-sm font-medium text-muted">
             <Link to="/products" className="hover:text-foreground transition-colors">Catalog</Link>
             <Link to="/stores" className="hover:text-foreground transition-colors">Stores</Link>
-            <Link to="/about" className="hover:text-foreground transition-colors">Stories</Link>
-            <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
+            {isAuthenticated && profile?.role === 'STORE_VENDOR' && (
+              <Link to="/vendor/dashboard" className="hover:text-foreground transition-colors text-accent-terracotta">Vendor Portal</Link>
+            )}
+            {isAuthenticated && profile?.role === 'ADMIN' && (
+              <Link to="/admin/dashboard" className="hover:text-foreground transition-colors text-accent-terracotta">Admin Panel</Link>
+            )}
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <div className="hidden md:flex items-center gap-4 text-sm font-medium">
-              <span className="text-muted">Hi, {user?.firstName}</span>
+              <span className="text-muted">Hi, {profile?.firstName}</span>
               <button onClick={logout} className="text-muted hover:text-foreground transition-colors focus-ring rounded-sm">
                 Sign out
               </button>

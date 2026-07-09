@@ -15,7 +15,7 @@ export function Register() {
     phoneNumber: '',
     password: '',
     confirmPassword: '',
-    isStoreOwner: false
+    role: 'CUSTOMER' as "CUSTOMER" | "STORE_VENDOR" | "ADMIN"
   });
   
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +28,7 @@ export function Register() {
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    const value = e.target.type === 'radio' ? e.target.value : e.target.value;
     setFormData(prev => ({ ...prev, [e.target.name]: value }));
   };
 
@@ -66,12 +66,12 @@ export function Register() {
       const response = await authApi.register(payload);
       
       // Auto-login after registration if the backend provides a token
-      if (response && response.token && response.user) {
-        login(response.token, response.user);
+      if (response && response.accessToken && response.profile) {
+        login(response.accessToken, response.profile);
         
         // Navigate based on role
-        const role = response.user.role;
-        if (role === 'STORE_OWNER' || role === 'VENDOR') {
+        const role = response.profile.role;
+        if (role === 'STORE_VENDOR') {
           navigate('/vendor/setup');
         } else {
           navigate('/');
@@ -200,19 +200,36 @@ export function Register() {
             </div>
           </div>
 
-          <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl border border-border-light dark:border-border-dark bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors group">
-            <input 
-              type="checkbox" 
-              name="isStoreOwner"
-              checked={formData.isStoreOwner}
-              onChange={handleChange}
-              className="w-5 h-5 accent-accent-terracotta rounded cursor-pointer"
-            />
-            <div className="flex flex-col">
-              <span className="font-medium text-sm text-foreground group-hover:text-accent-terracotta transition-colors">Register as a Store Vendor</span>
-              <span className="text-xs text-muted">Create and manage your own hardware store on our platform.</span>
+          <div className="flex flex-col gap-3">
+            <span className="text-sm font-medium text-foreground">Account Type</span>
+            <div className="grid grid-cols-2 gap-4">
+              <label className={`flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-colors group ${formData.role === 'CUSTOMER' ? 'border-accent-terracotta bg-accent-terracotta/5' : 'border-border-light dark:border-border-dark bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10'}`}>
+                <input 
+                  type="radio" 
+                  name="role"
+                  value="CUSTOMER"
+                  checked={formData.role === 'CUSTOMER'}
+                  onChange={handleChange}
+                  className="w-4 h-4 accent-accent-terracotta cursor-pointer"
+                />
+                <span className="font-medium text-sm text-foreground">Standard User</span>
+              </label>
+
+              <label className={`flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-colors group ${formData.role === 'STORE_VENDOR' ? 'border-accent-terracotta bg-accent-terracotta/5' : 'border-border-light dark:border-border-dark bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10'}`}>
+                <input 
+                  type="radio" 
+                  name="role"
+                  value="STORE_VENDOR"
+                  checked={formData.role === 'STORE_VENDOR'}
+                  onChange={handleChange}
+                  className="w-4 h-4 accent-accent-terracotta cursor-pointer"
+                />
+                <div className="flex flex-col">
+                  <span className="font-medium text-sm text-foreground">Store Vendor</span>
+                </div>
+              </label>
             </div>
-          </label>
+          </div>
           
           {error && (
             <div className="p-4 bg-accent-terracotta/10 text-accent-terracotta rounded-xl text-sm border border-accent-terracotta/20 animate-in fade-in zoom-in-95 duration-200">

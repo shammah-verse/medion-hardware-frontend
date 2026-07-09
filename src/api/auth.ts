@@ -9,17 +9,17 @@ export interface RegisterPayload extends LoginPayload {
   email: string;
   firstName: string;
   lastName: string;
-  phoneNumber: string;
-  isStoreOwner?: boolean;
+  role: "CUSTOMER" | "STORE_VENDOR" | "ADMIN";
 }
 
 export interface AuthResponse {
-  token: string;
-  user: {
+  accessToken: string;
+  profile: {
     id: string;
     firstName: string;
     lastName: string;
     username: string;
+    email?: string;
     role: string;
   };
 }

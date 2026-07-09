@@ -10,44 +10,43 @@ interface User {
 }
 
 interface AuthState {
-  user: User | null;
-  token: string | null;
+  profile: User | null;
+  accessToken: string | null;
   isAuthenticated: boolean;
-  login: (token: string, user: User) => void;
+  login: (accessToken: string, profile: User) => void;
   logout: () => void;
   initialize: () => void; // Checks local storage on app load
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: null,
+  profile: null,
+  accessToken: null,
   isAuthenticated: false,
 
-  login: (token, user) => {
-    localStorage.setItem('jwt_token', token);
-    // Ideally we would also store user metadata locally or fetch it on load
-    localStorage.setItem('user', JSON.stringify(user));
-    set({ token, user, isAuthenticated: true });
+  login: (accessToken, profile) => {
+    localStorage.setItem('jwt_token', accessToken);
+    localStorage.setItem('user_profile', JSON.stringify(profile));
+    set({ accessToken, profile, isAuthenticated: true });
   },
 
   logout: () => {
     localStorage.removeItem('jwt_token');
-    localStorage.removeItem('user');
-    set({ token: null, user: null, isAuthenticated: false });
+    localStorage.removeItem('user_profile');
+    set({ accessToken: null, profile: null, isAuthenticated: false });
   },
 
   initialize: () => {
-    const token = localStorage.getItem('jwt_token');
-    const userStr = localStorage.getItem('user');
+    const accessToken = localStorage.getItem('jwt_token');
+    const profileStr = localStorage.getItem('user_profile');
     
-    if (token && token !== 'undefined' && token !== 'null' && userStr && userStr !== 'undefined') {
+    if (accessToken && accessToken !== 'undefined' && accessToken !== 'null' && profileStr && profileStr !== 'undefined') {
       try {
-        const user = JSON.parse(userStr);
-        set({ token, user, isAuthenticated: true });
+        const profile = JSON.parse(profileStr);
+        set({ accessToken, profile, isAuthenticated: true });
       } catch (e) {
         // Corrupt user data
         localStorage.removeItem('jwt_token');
-        localStorage.removeItem('user');
+        localStorage.removeItem('user_profile');
       }
     }
   },

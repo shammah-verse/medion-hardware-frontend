@@ -29,13 +29,11 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    // In a production app with refresh tokens, we'd handle 401s here.
-    // Since the API spec only shows a generic token, we'll gracefully handle 401s
-    // by clearing the invalid token.
-    if (error.response?.status === 401) {
-      // Clear token and optionally trigger a logout event
+    // Gracefully handle 401/403 by clearing invalid token and redirecting
+    if (error.response?.status === 401 || error.response?.status === 403) {
       localStorage.removeItem('jwt_token');
-      // A mechanism to notify the store/app to redirect to login could go here.
+      localStorage.removeItem('user_profile');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

@@ -39,12 +39,12 @@ export function App() {
 
           {/* Vendor Routes */}
           <Route path="vendor/setup" element={
-            <ProtectedRoute allowedRoles={['STORE_OWNER']}>
+            <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
               <VendorSetup />
             </ProtectedRoute>
           } />
           <Route path="vendor/dashboard" element={
-            <ProtectedRoute allowedRoles={['STORE_OWNER']}>
+            <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
               <VendorDashboard />
             </ProtectedRoute>
           } />
