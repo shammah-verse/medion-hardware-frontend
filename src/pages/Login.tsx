@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { authApi } from '../api/auth';
@@ -8,14 +9,22 @@ import { useAuthStore } from '../store/useAuthStore';
 export function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Basic client-side validation
+  const isFormValid = username.trim().length > 0 && password.length > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isFormValid) return;
+
     setError('');
     setLoading(true);
 
@@ -26,9 +35,13 @@ export function Login() {
       // Update global store
       login(response.token, response.user);
       
-      // Navigate based on role
+      // Navigate based on role or intended destination
+      const from = (location.state as any)?.from?.pathname;
       const role = response.user.role;
-      if (role === 'STORE_OWNER') {
+      
+      if (from) {
+        navigate(from);
+      } else if (role === 'STORE_OWNER' || role === 'VENDOR') {
         navigate('/vendor/dashboard');
       } else if (role === 'ADMIN') {
         navigate('/admin/dashboard');
@@ -37,12 +50,17 @@ export function Login() {
       }
     } catch (err: any) {
       console.error("Login error:", err);
-      // Surface raw backend error to the UI
-      const backendMessage = typeof err.response?.data === 'string' 
+      // Surface raw backend error to the UI, sanitizing any stack traces or HTML
+      let backendMessage = typeof err.response?.data === 'string' 
         ? err.response.data 
         : err.response?.data?.message;
+      
+      // Sanitize potential stack traces (basic check)
+      if (backendMessage && (backendMessage.includes('java.lang') || backendMessage.includes('<html'))) {
+        backendMessage = 'An internal server error occurred. Please try again later.';
+      }
         
-      setError(backendMessage || err.message || 'We could not log you in. Please check your credentials.');
+      setError(backendMessage || 'We could not log you in. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -65,23 +83,60 @@ export function Login() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <Input 
-            label="Password"
-            type="password" 
-            placeholder="••••••••" 
-            required 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          
+          <div className="relative">
+            <Input 
+              label="Password"
+              type={showPassword ? "text" : "password"} 
+              placeholder="••••••••" 
+              required 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button 
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-[34px] text-muted hover:text-foreground focus:outline-none p-1 rounded-md focus-ring transition-colors"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground">
+              <input 
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 rounded border-border-light dark:border-border-dark accent-foreground"
+              />
+              Remember me
+            </label>
+            <a href="#" className="text-sm font-medium text-muted hover:text-foreground focus-ring rounded-sm transition-colors">
+              Forgot password?
+            </a>
+          </div>
           
           {error && (
-            <div className="p-4 bg-accent-terracotta/10 text-accent-terracotta rounded-xl text-sm border border-accent-terracotta/20">
+            <div className="p-4 bg-accent-terracotta/10 text-accent-terracotta rounded-xl text-sm border border-accent-terracotta/20 animate-in fade-in zoom-in-95 duration-200">
               {error}
             </div>
           )}
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+          <Button 
+            type="submit" 
+            className="w-full" 
+            disabled={!isFormValid || loading}
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Signing in...
+              </span>
+            ) : (
+              'Sign In'
+            )}
           </Button>
         </form>
 

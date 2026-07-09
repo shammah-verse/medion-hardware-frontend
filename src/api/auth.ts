@@ -6,6 +6,7 @@ export interface LoginPayload {
 }
 
 export interface RegisterPayload extends LoginPayload {
+  email: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;

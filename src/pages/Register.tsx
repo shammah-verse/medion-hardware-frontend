@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { authApi } from '../api/auth';
@@ -10,10 +11,16 @@ export function Register() {
     firstName: '',
     lastName: '',
     username: '',
-    password: '',
+    email: '',
     phoneNumber: '',
+    password: '',
+    confirmPassword: '',
     isStoreOwner: false
   });
+  
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -25,13 +32,38 @@ export function Register() {
     setFormData(prev => ({ ...prev, [e.target.name]: value }));
   };
 
+  const validateForm = () => {
+    if (formData.username.length < 3) return 'Username must be at least 3 characters long.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return 'Please enter a valid email address.';
+    if (formData.password.length < 8) return 'Password must be at least 8 characters long.';
+    if (formData.password !== formData.confirmPassword) return 'Passwords do not match.';
+    return null;
+  };
+
+  // Allow submission only if basic constraints are met (prevents empty submits)
+  const isFormValid = 
+    formData.username.trim().length > 0 && 
+    formData.email.trim().length > 0 && 
+    formData.password.length > 0 && 
+    formData.confirmPassword.length > 0;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isFormValid) return;
+    
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setError('');
     setLoading(true);
 
     try {
-      const response = await authApi.register(formData);
+      // Exclude confirmPassword from the API payload
+      const { confirmPassword, ...payload } = formData;
+      const response = await authApi.register(payload);
       
       // Auto-login after registration if the backend provides a token
       if (response && response.token && response.user) {
@@ -45,17 +77,21 @@ export function Register() {
           navigate('/');
         }
       } else {
-        // If no token is returned (e.g. backend just returns 201 Created), force user to login manually.
+        // If no token is returned, redirect to login page.
         navigate('/login');
       }
     } catch (err: any) {
       console.error("Registration error:", err);
-      // Sometimes Spring Boot returns errors in err.response.data (if it's a string)
-      const backendMessage = typeof err.response?.data === 'string' 
+      let backendMessage = typeof err.response?.data === 'string' 
         ? err.response.data 
         : err.response?.data?.message;
         
-      setError(backendMessage || err.message || 'We could not create your account. Please check your details and try again.');
+      // Sanitize stack traces
+      if (backendMessage && (backendMessage.includes('java.lang') || backendMessage.includes('<html'))) {
+        backendMessage = 'An internal server error occurred. Please try again later.';
+      }
+        
+      setError(backendMessage || 'We could not create your account. Please check your details and try again.');
     } finally {
       setLoading(false);
     }
@@ -90,6 +126,7 @@ export function Register() {
               onChange={handleChange}
             />
           </div>
+          
           <Input 
             label="Username"
             name="username"
@@ -99,48 +136,103 @@ export function Register() {
             value={formData.username}
             onChange={handleChange}
           />
+          
           <Input 
-            label="Phone number"
+            label="Email address"
+            name="email"
+            type="email" 
+            placeholder="jane@example.com" 
+            required 
+            value={formData.email}
+            onChange={handleChange}
+          />
+          
+          <Input 
+            label="Phone number (Optional)"
             name="phoneNumber"
             type="tel" 
             placeholder="+1 (555) 000-0000" 
-            required 
             value={formData.phoneNumber}
             onChange={handleChange}
           />
-          <Input 
-            label="Password"
-            name="password"
-            type="password" 
-            placeholder="••••••••" 
-            required 
-            value={formData.password}
-            onChange={handleChange}
-            minLength={8}
-          />
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="relative">
+              <Input 
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"} 
+                placeholder="••••••••" 
+                required 
+                value={formData.password}
+                onChange={handleChange}
+                minLength={8}
+              />
+              <button 
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-[34px] text-muted hover:text-foreground focus:outline-none p-1 rounded-md focus-ring transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            
+            <div className="relative">
+              <Input 
+                label="Confirm Password"
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"} 
+                placeholder="••••••••" 
+                required 
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                minLength={8}
+              />
+              <button 
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-[34px] text-muted hover:text-foreground focus:outline-none p-1 rounded-md focus-ring transition-colors"
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+              >
+                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
 
-          <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl border border-border-light dark:border-border-dark bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+          <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl border border-border-light dark:border-border-dark bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors group">
             <input 
               type="checkbox" 
               name="isStoreOwner"
               checked={formData.isStoreOwner}
               onChange={handleChange}
-              className="w-5 h-5 accent-accent-terracotta rounded"
+              className="w-5 h-5 accent-accent-terracotta rounded cursor-pointer"
             />
             <div className="flex flex-col">
-              <span className="font-medium text-sm text-foreground">Register as a Store Vendor</span>
+              <span className="font-medium text-sm text-foreground group-hover:text-accent-terracotta transition-colors">Register as a Store Vendor</span>
               <span className="text-xs text-muted">Create and manage your own hardware store on our platform.</span>
             </div>
           </label>
           
           {error && (
-            <div className="p-4 bg-accent-terracotta/10 text-accent-terracotta rounded-xl text-sm border border-accent-terracotta/20">
+            <div className="p-4 bg-accent-terracotta/10 text-accent-terracotta rounded-xl text-sm border border-accent-terracotta/20 animate-in fade-in zoom-in-95 duration-200">
               {error}
             </div>
           )}
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Creating account...' : 'Create Account'}
+          <Button 
+            type="submit" 
+            className="w-full" 
+            disabled={!isFormValid || loading}
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Creating account...
+              </span>
+            ) : (
+              'Create Account'
+            )}
           </Button>
         </form>
 
