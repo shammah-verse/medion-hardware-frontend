@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  ArrowRight, Box, Zap, Shield, Plus, X, 
-  ChevronRight, Star, Truck, RefreshCw, CreditCard 
+  ArrowRight, Box, Shield, Plus, X, 
+  Star, Truck, RefreshCw, CreditCard 
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Input } from '../components/ui/Input';
 import { productsApi } from '../api/products';
@@ -192,9 +191,9 @@ export function Home() {
                     {/* Quick Add Button */}
                     <div className="absolute bottom-4 right-4 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                       <Button 
-                        size="icon" 
-                        variant="default"
-                        className="h-10 w-10 rounded-full shadow-lg bg-foreground text-background hover:bg-foreground/90"
+                        size="sm" 
+                        variant="primary"
+                        className="h-10 w-10 p-0 rounded-full shadow-lg bg-foreground text-background hover:bg-foreground/90 flex items-center justify-center"
                         onClick={(e) => handleAddToCart(e, product.id)}
                         aria-label="Add to cart"
                       >
