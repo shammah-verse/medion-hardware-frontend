@@ -64,8 +64,8 @@ export function VendorSetup() {
       await vendorApi.createStore({
         name,
         address,
-        latitude: parseFloat(lat),
-        longitude: parseFloat(lon),
+        latitude: parseFloat(lat) || 0.0,
+        longitude: parseFloat(lon) || 0.0,
         subscriptionType
       });
       navigate('/vendor/dashboard');
