@@ -4,7 +4,8 @@ interface User {
   id: string;
   firstName: string;
   lastName: string;
-  email: string;
+  username: string;
+  email?: string;
   role: string;
 }
 

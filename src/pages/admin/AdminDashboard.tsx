@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Shield, Users, ShoppingBag, Store as StoreIcon, Trash2, Edit, X, Package } from 'lucide-react';
 import { adminApi } from '../../api/admin';
 import type { Store } from '../../api/stores';
 import type { Product } from '../../api/products';
 import { Skeleton } from '../../components/ui/Skeleton';
-import { Button } from '../../components/ui/Button';
 
 export function AdminDashboard() {
   const [stores, setStores] = useState<Store[]>([]);

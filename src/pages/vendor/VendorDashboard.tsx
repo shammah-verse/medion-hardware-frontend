@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Package, DollarSign, Edit, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Package, Plus, Edit, Trash2 } from 'lucide-react';
 import { vendorApi } from '../../api/vendor';
 import type { Store } from '../../api/stores';
 import type { Product } from '../../api/products';

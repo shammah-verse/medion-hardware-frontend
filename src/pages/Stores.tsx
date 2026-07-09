@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { MapPin, Navigation, Clock, AlertTriangle } from 'lucide-react';
 import { storesApi } from '../api/stores';
 import type { Store } from '../api/stores';
