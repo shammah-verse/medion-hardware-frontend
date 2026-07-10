@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  ArrowRight, Shield, Plus, X, 
+  ArrowRight, Shield, Plus, 
   Star, Truck, CreditCard,
   Building2,
-  Store, CheckCircle2, Package, TrendingUp
+  Store, CheckCircle2, Package
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/Button';
@@ -32,8 +32,8 @@ const staggerContainer = {
 export function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showAnnouncement, setShowAnnouncement] = useState(true);
   const [email, setEmail] = useState('');
+  const [currentSlide, setCurrentSlide] = useState(0);
   
   const addItem = useCartStore((state) => state.addItem);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -51,6 +51,11 @@ export function Home() {
       }
     };
     fetchProducts();
+    
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 3);
+    }, 4000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleAddToCart = async (e: React.MouseEvent, productId: string) => {
@@ -76,24 +81,15 @@ export function Home() {
     { name: 'Timber & Wood', icon: '🪵', desc: 'Structural and decorative wood', img: 'https://images.unsplash.com/photo-1533090360678-1a6e70eb18bd?w=600&q=80' },
   ];
 
+  const heroSlides = [
+    { img: "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80", text: "Professional Grade Tools" },
+    { img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80", text: "Premium Building Materials" },
+    { img: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=800&q=80", text: "Plumbing & Piping" }
+  ];
+
   return (
     <div className="flex flex-col w-full bg-[#FAFAFA] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 selection:bg-orange-500/30 font-sans">
       
-      {/* 1. Announcement Bar */}
-      {showAnnouncement && (
-        <div className="w-full bg-slate-900 dark:bg-emerald-900 text-white py-2.5 px-4 flex justify-between items-center text-xs sm:text-sm font-medium z-40 relative">
-          <div className="flex-1 text-center tracking-wide">
-            Welcome to the premier multi-vendor marketplace for construction and hardware. 
-          </div>
-          <button 
-            onClick={() => setShowAnnouncement(false)}
-            className="p-1 hover:opacity-70 transition-opacity focus:outline-none"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-
       {/* 1. Premium Hero Section */}
       <section className="relative w-full min-h-[90vh] flex items-center pt-20 overflow-hidden bg-slate-900 dark:bg-[#080B12]">
         {/* Abstract Background Elements */}
@@ -106,11 +102,6 @@ export function Home() {
             initial="hidden" animate="visible" variants={staggerContainer}
             className="flex-1 text-left pt-12 lg:pt-0"
           >
-            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-sm font-medium text-white mb-8 backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Trusted by 500+ Local Hardware Stores
-            </motion.div>
-            
             <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-6">
               Everything Your Next <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">Construction Project</span> Needs.
@@ -120,17 +111,22 @@ export function Home() {
               Discover premium building materials and professional tools from verified local suppliers. Shop seamlessly across multiple vendors, or grow your own hardware business online.
             </motion.p>
             
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4">
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 mb-8">
               <Link to="/products">
                 <Button size="lg" className="w-full sm:w-auto h-14 px-8 text-base font-semibold rounded-xl bg-orange-500 hover:bg-orange-600 text-white border-0 shadow-lg shadow-orange-500/25 transition-all">
                   Browse Products
                 </Button>
               </Link>
-              <Link to="/vendor">
+              <Link to={isAuthenticated ? "/vendor" : "/login"}>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 px-8 text-base font-semibold rounded-xl border-slate-700 text-white hover:bg-white/5 backdrop-blur-sm">
                   Open Your Hardware Store
                 </Button>
               </Link>
+            </motion.div>
+            
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-sm font-medium text-white backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              Trusted by 500+ Local Hardware Stores
             </motion.div>
           </motion.div>
 
@@ -138,52 +134,15 @@ export function Home() {
             initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.2 }}
             className="flex-1 relative hidden lg:block"
           >
-            <div className="relative w-full aspect-square max-w-lg mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-tr from-slate-800 to-slate-700 rounded-3xl transform rotate-3 scale-105 opacity-50 blur-sm" />
-              <div className="absolute inset-0 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex flex-col">
-                {/* Mock UI header */}
-                <div className="h-12 border-b border-slate-700 bg-slate-800/50 flex items-center px-4 gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                  <div className="w-3 h-3 rounded-full bg-amber-500/50" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/50" />
-                </div>
-                {/* Mock Dashboard visual */}
-                <div className="flex-1 p-6 flex flex-col gap-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-10">
-                  <div className="flex gap-4">
-                    <div className="h-24 flex-1 bg-slate-700/50 rounded-xl border border-slate-600/50 p-4">
-                      <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center mb-2"><TrendingUp className="w-4 h-4 text-emerald-400" /></div>
-                      <div className="w-16 h-2 bg-slate-600 rounded-full mb-2" />
-                      <div className="w-24 h-4 bg-slate-500 rounded-full" />
-                    </div>
-                    <div className="h-24 flex-1 bg-slate-700/50 rounded-xl border border-slate-600/50 p-4">
-                      <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center mb-2"><Package className="w-4 h-4 text-orange-400" /></div>
-                      <div className="w-16 h-2 bg-slate-600 rounded-full mb-2" />
-                      <div className="w-20 h-4 bg-slate-500 rounded-full" />
-                    </div>
-                  </div>
-                  <div className="flex-1 bg-slate-700/30 rounded-xl border border-slate-600/50 p-4 flex flex-col justify-end">
-                    <div className="flex items-end gap-2 h-full opacity-60">
-                      {[40, 70, 45, 90, 65, 80, 100].map((h, i) => (
-                        <div key={i} className="flex-1 bg-gradient-to-t from-emerald-500 to-emerald-400 rounded-t-sm" style={{ height: `${h}%` }} />
-                      ))}
-                    </div>
+            <div className="relative w-full aspect-square max-w-lg mx-auto rounded-3xl overflow-hidden shadow-2xl border border-slate-700/50">
+              {heroSlides.map((slide, idx) => (
+                <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ${currentSlide === idx ? 'opacity-100' : 'opacity-0'}`}>
+                  <img src={slide.img} alt={slide.text} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                    <h3 className="text-2xl font-bold text-white tracking-wide">{slide.text}</h3>
                   </div>
                 </div>
-              </div>
-              
-              {/* Floating Element */}
-              <motion.div 
-                animate={{ y: [-10, 10, -10] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-                className="absolute -bottom-8 -left-8 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 flex items-center gap-4"
-              >
-                <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
-                  <CheckCircle2 className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">Order Delivered</p>
-                  <p className="text-xs text-slate-500">2 tons of Portland Cement</p>
-                </div>
-              </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
@@ -375,9 +334,11 @@ export function Home() {
               ))}
             </ul>
 
-            <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl px-8 h-14">
-              Start Selling Today
-            </Button>
+            <Link to={isAuthenticated ? "/vendor" : "/login"}>
+              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl px-8 h-14">
+                Start Selling Today
+              </Button>
+            </Link>
           </div>
 
           {/* Pricing Cards */}

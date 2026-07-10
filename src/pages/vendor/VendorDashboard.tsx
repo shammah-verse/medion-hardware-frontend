@@ -155,6 +155,18 @@ export function VendorDashboard() {
     }
   };
 
+  const handleDownloadReceipt = () => {
+    const csvContent = "data:text/csv;charset=utf-8,Date,Description,Amount,Status\n" + 
+      new Date().toISOString().split('T')[0] + ",Store Performance Receipt,$40590.00,Completed";
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "vendor_receipt.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -203,8 +215,8 @@ export function VendorDashboard() {
             <p className="text-slate-500 text-sm mt-1">Manage your {store?.name || 'Store'} inventory and monitor performance.</p>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 h-10 px-4 rounded-xl shadow-sm text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50">
-              Download Report
+            <Button variant="outline" onClick={handleDownloadReceipt} className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 h-10 px-4 rounded-xl shadow-sm text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50">
+              Download Receipt
             </Button>
             <Button className="h-10 px-4 rounded-xl shadow-sm bg-orange-500 hover:bg-orange-600 text-white font-medium border-0 gap-2" onClick={() => openModal()}>
               <Plus className="w-4 h-4" />
