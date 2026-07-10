@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, MapPin, CreditCard, X } from 'lucide-react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useCartStore } from '../store/useCartStore';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -16,6 +17,7 @@ export function Checkout() {
   const [error, setError] = useState('');
   
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   if (!cart || cart.items.length === 0) {
     navigate('/products');
@@ -143,7 +145,7 @@ export function Checkout() {
                 <div key={item.id} className="flex justify-between items-center">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 rounded-xl bg-background overflow-hidden">
-                       {item.product.imageUrl && <img src={item.product.imageUrl} alt={item.product.name} className="w-full h-full object-cover" />}
+                       {item.product.imageUrls && item.product.imageUrls.length > 0 && <img src={item.product.imageUrls[0]} alt={item.product.name} className="w-full h-full object-cover" />}
                     </div>
                     <div>
                       <p className="font-medium text-sm text-foreground">{item.product.name}</p>
@@ -186,11 +188,38 @@ export function Checkout() {
                 <X className="w-5 h-5" />
               </button>
             </div>
+            
+            <div className="p-4 bg-accent-sage/10 flex justify-center border-b border-border-light dark:border-border-dark">
+               <Button onClick={() => {
+                 setPaymentUrl(null);
+                 setPaymentSuccess(true);
+                 setTimeout(() => {
+                   navigate('/profile/orders');
+                 }, 4000);
+               }}>Simulate Successful Payment</Button>
+            </div>
+
             <iframe 
               src={paymentUrl} 
               className="flex-1 w-full"
               title="Pesapal Checkout"
             />
+          </div>
+        </div>
+      )}
+
+      {/* Success Lottie Animation Modal */}
+      {paymentSuccess && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="w-96 h-96">
+            <DotLottieReact
+              src="https://lottie.host/0e9aec33-5140-4f79-af99-34c4ac8f2a3d/PExVMY2Lkz.lottie"
+              loop={false}
+              autoplay
+            />
+          </div>
+          <div className="absolute mt-64 text-2xl font-serif text-foreground">
+            Payment Successful!
           </div>
         </div>
       )}

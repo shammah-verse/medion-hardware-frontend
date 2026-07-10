@@ -106,8 +106,8 @@ export function ProductCatalog() {
                 <Card hoverLift className="flex flex-col overflow-hidden group border-none bg-transparent dark:bg-transparent shadow-none dark:shadow-none h-full">
                   <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-2xl mb-6 overflow-hidden relative">
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-                    {product.imageUrl ? (
-                       <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal" />
+                    {product.imageUrls && product.imageUrls.length > 0 ? (
+                       <img src={product.imageUrls[0]} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal" />
                     ) : (
                        <div className="w-full h-full flex items-center justify-center text-muted text-sm">No Image</div>
                     )}

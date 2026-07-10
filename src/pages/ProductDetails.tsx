@@ -21,6 +21,7 @@ export function ProductDetails() {
   const { isAuthenticated } = useAuthStore();
   
   const [adding, setAdding] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
   
   // Review form state
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -38,6 +39,9 @@ export function ProductDetails() {
           productsApi.getReviews(id)
         ]);
         setProduct(data);
+        if (data.imageUrls && data.imageUrls.length > 0) {
+          setSelectedImage(data.imageUrls[0]);
+        }
         setReviews(reviewsData);
       } catch (err) {
         setError('Failed to load product details.');
@@ -115,16 +119,37 @@ export function ProductDetails() {
       </button>
 
       <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 mb-24">
-        {/* Product Image */}
-        <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-[32px] overflow-hidden flex items-center justify-center relative p-8">
-          {product.imageUrl ? (
-            <img 
-              src={product.imageUrl} 
-              alt={product.name} 
-              className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
-            />
-          ) : (
-            <span className="text-muted text-lg">No image available</span>
+        {/* Product Image Gallery */}
+        <div className="flex flex-col gap-4">
+          <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-[32px] overflow-hidden flex items-center justify-center relative p-8">
+            {selectedImage ? (
+              <img 
+                src={selectedImage} 
+                alt={product.name} 
+                className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transition-opacity duration-300"
+              />
+            ) : (
+              <span className="text-muted text-lg">No image available</span>
+            )}
+          </div>
+          {product.imageUrls && product.imageUrls.length > 1 && (
+            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+              {product.imageUrls.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedImage(img)}
+                  className={`w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0 border-2 transition-all ${
+                    selectedImage === img ? 'border-foreground opacity-100' : 'border-transparent opacity-50 hover:opacity-100'
+                  }`}
+                >
+                  <img 
+                    src={img} 
+                    alt={`Thumbnail ${idx}`} 
+                    className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal bg-[#F5F5F5] dark:bg-[#221F1D]" 
+                  />
+                </button>
+              ))}
+            </div>
           )}
         </div>
 

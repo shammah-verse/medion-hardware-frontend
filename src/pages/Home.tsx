@@ -182,8 +182,8 @@ export function Home() {
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                     
-                    {product.imageUrl ? (
-                       <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal transform group-hover:scale-105 transition-transform duration-700 ease-out" />
+                    {product.imageUrls && product.imageUrls.length > 0 ? (
+                       <img src={product.imageUrls[0]} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal transform group-hover:scale-105 transition-transform duration-700 ease-out" />
                     ) : (
                        <div className="w-full h-full flex items-center justify-center text-muted text-sm font-medium">No Image</div>
                     )}
@@ -252,8 +252,8 @@ export function Home() {
                    <div className="absolute top-4 left-4 z-20 bg-background/90 backdrop-blur-sm text-foreground text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
                      New
                    </div>
-                   {product.imageUrl && (
-                     <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal transform group-hover:scale-105 transition-transform duration-700 ease-out" />
+                   {product.imageUrls && product.imageUrls.length > 0 && (
+                     <img src={product.imageUrls[0]} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal transform group-hover:scale-105 transition-transform duration-700 ease-out" />
                    )}
                 </div>
                 <div className="mt-4 flex justify-between items-center">

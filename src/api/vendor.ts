@@ -40,5 +40,32 @@ export const vendorApi = {
   addProduct: async (data: CreateProductPayload): Promise<Product> => {
     const response = await apiClient.post<Product>('/products', data);
     return response.data;
+  },
+
+  updateProduct: async (id: string, data: Partial<CreateProductPayload>): Promise<Product> => {
+    const response = await apiClient.put<Product>(`/products/${id}`, data);
+    return response.data;
+  },
+
+  deleteProduct: async (id: string): Promise<void> => {
+    await apiClient.delete(`/products/${id}`);
+  },
+
+  uploadProductImage: async (productId: string, file: File): Promise<Product> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await apiClient.post<Product>(`/products/${productId}/images`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  deleteProductImage: async (productId: string, imageUrl: string): Promise<Product> => {
+    const encodedUrl = encodeURIComponent(imageUrl);
+    const response = await apiClient.delete<Product>(`/products/${productId}/images?imageUrl=${encodedUrl}`);
+    return response.data;
   }
 };

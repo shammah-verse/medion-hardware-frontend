@@ -218,8 +218,8 @@ export function AdminDashboard() {
                   <div key={product.id} className="flex justify-between items-center p-4 border border-border-light dark:border-border-dark rounded-2xl">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-black/5 dark:bg-white/5 rounded-lg overflow-hidden flex-shrink-0">
-                         {product.imageUrl ? (
-                           <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
+                         {product.imageUrls && product.imageUrls.length > 0 ? (
+                           <img src={product.imageUrls[0]} alt={product.name} className="w-full h-full object-cover" />
                          ) : (
                            <Package className="w-6 h-6 m-3 text-muted" />
                          )}

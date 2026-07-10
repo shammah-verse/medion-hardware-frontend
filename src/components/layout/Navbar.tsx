@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Menu, User, Settings, Package, LogOut } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -8,6 +8,7 @@ import { useCartStore } from '../../store/useCartStore';
 export function Navbar() {
   const { isAuthenticated, profile, logout } = useAuthStore();
   const { openCart, cart } = useCartStore();
+  const navigate = useNavigate();
   
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -48,7 +49,7 @@ export function Navbar() {
                 onClick={() => setShowDropdown(!showDropdown)}
                 className="hidden md:flex items-center gap-2 text-sm font-medium text-muted hover:text-foreground transition-colors focus-ring rounded-full px-3 py-1 hover:bg-black/5 dark:hover:bg-white/5"
               >
-                Hi, {profile?.firstName}
+                Hi, {profile?.firstName || profile?.username || 'User'}
                 <div className="w-8 h-8 rounded-full bg-accent-sage/10 text-accent-sage flex items-center justify-center">
                   <User className="w-4 h-4" />
                 </div>
@@ -97,7 +98,16 @@ export function Navbar() {
             </div>
           )}
 
-          <button onClick={openCart} className="relative h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-ring">
+          <button 
+            onClick={() => {
+              if (isAuthenticated) {
+                openCart();
+              } else {
+                navigate('/login');
+              }
+            }} 
+            className="relative h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-ring"
+          >
             <ShoppingBag className="h-5 w-5" />
             {cart && cart.items.length > 0 && (
               <span className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent-terracotta text-[10px] font-bold text-white">
