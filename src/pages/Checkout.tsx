@@ -59,7 +59,7 @@ export function Checkout() {
 
   const handleClosePayment = () => {
     setPaymentUrl(null);
-    navigate('/');
+    navigate('/profile/orders');
   };
 
   return (

@@ -177,7 +177,7 @@ export function Home() {
                 </div>
               ))
             : featuredProducts.slice(0, 8).map((product) => (
-                <div key={product.id} className="group relative flex flex-col cursor-pointer" onClick={() => navigate(`/products`)}>
+                <div key={product.id} className="group relative flex flex-col cursor-pointer" onClick={() => navigate(`/products/${product.id}`)}>
                   <div className="relative aspect-square bg-[#F7F7F7] dark:bg-[#1A1A1A] rounded-2xl mb-4 overflow-hidden">
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
@@ -247,7 +247,7 @@ export function Home() {
              ))
           ) : (
             featuredProducts.slice(8, 11).map((product) => (
-              <div key={product.id} className="min-w-[280px] md:min-w-0 group cursor-pointer relative" onClick={() => navigate('/products')}>
+              <div key={product.id} className="min-w-[280px] md:min-w-0 group cursor-pointer relative" onClick={() => navigate(`/products/${product.id}`)}>
                 <div className="aspect-[3/4] bg-[#F0F0F0] dark:bg-[#151515] rounded-2xl overflow-hidden relative">
                    <div className="absolute top-4 left-4 z-20 bg-background/90 backdrop-blur-sm text-foreground text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
                      New

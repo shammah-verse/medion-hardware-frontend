@@ -1,5 +1,6 @@
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Menu } from 'lucide-react';
+import { ShoppingBag, Menu, User, Settings, Package, LogOut } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useCartStore } from '../../store/useCartStore';
@@ -7,6 +8,19 @@ import { useCartStore } from '../../store/useCartStore';
 export function Navbar() {
   const { isAuthenticated, profile, logout } = useAuthStore();
   const { openCart, cart } = useCartStore();
+  
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border-light dark:border-border-dark bg-background/80 backdrop-blur-md">
@@ -29,11 +43,51 @@ export function Navbar() {
 
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
-            <div className="hidden md:flex items-center gap-4 text-sm font-medium">
-              <span className="text-muted">Hi, {profile?.firstName}</span>
-              <button onClick={logout} className="text-muted hover:text-foreground transition-colors focus-ring rounded-sm">
-                Sign out
+            <div className="relative" ref={dropdownRef}>
+              <button 
+                onClick={() => setShowDropdown(!showDropdown)}
+                className="hidden md:flex items-center gap-2 text-sm font-medium text-muted hover:text-foreground transition-colors focus-ring rounded-full px-3 py-1 hover:bg-black/5 dark:hover:bg-white/5"
+              >
+                Hi, {profile?.firstName}
+                <div className="w-8 h-8 rounded-full bg-accent-sage/10 text-accent-sage flex items-center justify-center">
+                  <User className="w-4 h-4" />
+                </div>
               </button>
+              
+              {showDropdown && (
+                <div className="absolute right-0 mt-2 w-56 bg-background border border-border-light dark:border-border-dark rounded-2xl shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-2">
+                  <div className="px-4 py-2 border-b border-border-light dark:border-border-dark mb-2">
+                    <p className="text-sm font-medium text-foreground">{profile?.firstName} {profile?.lastName}</p>
+                    <p className="text-xs text-muted truncate">{profile?.email}</p>
+                  </div>
+                  
+                  <Link 
+                    to="/profile" 
+                    onClick={() => setShowDropdown(false)}
+                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <Settings className="w-4 h-4" />
+                    Account Settings
+                  </Link>
+                  
+                  <Link 
+                    to="/profile/orders" 
+                    onClick={() => setShowDropdown(false)}
+                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                  >
+                    <Package className="w-4 h-4" />
+                    Orders & Receipts
+                  </Link>
+                  
+                  <button 
+                    onClick={() => { logout(); setShowDropdown(false); }}
+                    className="w-full flex items-center gap-3 px-4 py-2 mt-2 text-sm text-accent-terracotta hover:bg-accent-terracotta/10 transition-colors border-t border-border-light dark:border-border-dark pt-3"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign out
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="hidden md:flex items-center gap-4">

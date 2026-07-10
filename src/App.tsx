@@ -4,10 +4,13 @@ import { Layout } from './components/layout/Layout';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { Home } from './pages/Home';
 import { ProductCatalog } from './pages/ProductCatalog';
+import { ProductDetails } from './pages/ProductDetails';
 import { Checkout } from './pages/Checkout';
 import { Stores } from './pages/Stores';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { Profile } from './pages/Profile';
+import { Orders } from './pages/Orders';
 import { VendorSetup } from './pages/vendor/VendorSetup';
 import { VendorDashboard } from './pages/vendor/VendorDashboard';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
@@ -27,13 +30,25 @@ export function App() {
           {/* Public & Customer Routes */}
           <Route index element={<Home />} />
           <Route path="products" element={<ProductCatalog />} />
+          <Route path="products/:id" element={<ProductDetails />} />
           <Route path="stores" element={<Stores />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           
+          {/* Protected Customer Routes */}
           <Route path="checkout" element={
             <ProtectedRoute>
               <Checkout />
+            </ProtectedRoute>
+          } />
+          <Route path="profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="profile/orders" element={
+            <ProtectedRoute>
+              <Orders />
             </ProtectedRoute>
           } />
 

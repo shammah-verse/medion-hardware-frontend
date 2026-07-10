@@ -98,36 +98,42 @@ export function ProductCatalog() {
               </div>
             ))
           : filteredProducts.map((product) => (
-              <Card key={product.id} hoverLift className="flex flex-col overflow-hidden group border-none bg-transparent dark:bg-transparent shadow-none dark:shadow-none">
-                <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-2xl mb-6 overflow-hidden relative">
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-                  {product.imageUrl ? (
-                     <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal" />
-                  ) : (
-                     <div className="w-full h-full flex items-center justify-center text-muted text-sm">No Image</div>
-                  )}
+              <div 
+                key={product.id}
+                onClick={() => navigate(`/products/${product.id}`)}
+                className="cursor-pointer"
+              >
+                <Card hoverLift className="flex flex-col overflow-hidden group border-none bg-transparent dark:bg-transparent shadow-none dark:shadow-none h-full">
+                  <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-2xl mb-6 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+                    {product.imageUrl ? (
+                       <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal" />
+                    ) : (
+                       <div className="w-full h-full flex items-center justify-center text-muted text-sm">No Image</div>
+                    )}
+                    
+                    {/* Quick Add Button */}
+                    <div className="absolute bottom-4 right-4 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <Button 
+                        size="sm" 
+                        className="h-10 w-10 p-0 rounded-full shadow-lg"
+                        onClick={(e) => handleAddToCart(e, product.id)}
+                        aria-label="Add to cart"
+                      >
+                        <Plus className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  </div>
                   
-                  {/* Quick Add Button */}
-                  <div className="absolute bottom-4 right-4 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                    <Button 
-                      size="sm" 
-                      className="h-10 w-10 p-0 rounded-full shadow-lg"
-                      onClick={(e) => handleAddToCart(e, product.id)}
-                      aria-label="Add to cart"
-                    >
-                      <Plus className="h-5 w-5" />
-                    </Button>
+                  <div className="flex justify-between items-start px-2">
+                    <div>
+                      <h3 className="text-lg font-medium text-foreground mb-1 group-hover:text-accent-terracotta transition-colors">{product.name}</h3>
+                      <p className="text-muted">{product.category}</p>
+                    </div>
+                    <span className="text-lg text-foreground">${product.price.toFixed(2)}</span>
                   </div>
-                </div>
-                
-                <div className="flex justify-between items-start px-2">
-                  <div>
-                    <h3 className="text-lg font-medium text-foreground mb-1">{product.name}</h3>
-                    <p className="text-muted">{product.category}</p>
-                  </div>
-                  <span className="text-lg text-foreground">${product.price.toFixed(2)}</span>
-                </div>
-              </Card>
+                </Card>
+              </div>
             ))}
       </div>
     </div>
