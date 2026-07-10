@@ -9,6 +9,7 @@ export interface Product {
   category: string;
   imageUrls: string[];
   active: boolean;
+  storeName?: string;
 }
 
 export interface Review {
