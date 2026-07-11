@@ -12,6 +12,7 @@ import { Register } from './pages/Register';
 import { Profile } from './pages/Profile';
 import { Orders } from './pages/Orders';
 import { VendorSetup } from './pages/vendor/VendorSetup';
+import { VendorStores } from './pages/vendor/VendorStores';
 import { VendorDashboard } from './pages/vendor/VendorDashboard';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { useAuthStore } from './store/useAuthStore';
@@ -56,6 +57,11 @@ export function App() {
           <Route path="vendor/setup" element={
             <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
               <VendorSetup />
+            </ProtectedRoute>
+          } />
+          <Route path="vendor/stores" element={
+            <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
+              <VendorStores />
             </ProtectedRoute>
           } />
           <Route path="vendor/dashboard" element={

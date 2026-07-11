@@ -8,6 +8,8 @@ export interface Store {
   longitude: number;
   distance: number; // distance from user in kilometers or miles
   openingHours: string;
+  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  ownerName?: string;
 }
 
 export const storesApi = {
@@ -15,6 +17,11 @@ export const storesApi = {
     const response = await apiClient.get<Store>('/stores/nearest', {
       params: { lat, lon }
     });
+    return response.data;
+  },
+
+  getAll: async (): Promise<Store[]> => {
+    const response = await apiClient.get<Store[]>('/stores');
     return response.data;
   }
 };

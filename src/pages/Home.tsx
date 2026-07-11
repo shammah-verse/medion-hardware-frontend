@@ -4,14 +4,18 @@ import {
   ArrowRight, Shield, Plus, 
   Star, Truck, CreditCard,
   Building2,
-  Store, CheckCircle2, Package
+  Store, CheckCircle2, Package,
+  ChevronLeft, ChevronRight, Search
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useRef } from 'react';
 import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Input } from '../components/ui/Input';
 import { productsApi } from '../api/products';
 import type { Product } from '../api/products';
+import { categoriesApi } from '../api/categories';
+import type { Category } from '../api/categories';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
 
@@ -31,9 +35,13 @@ const staggerContainer = {
 
 export function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
   const [email, setEmail] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const addItem = useCartStore((state) => state.addItem);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -47,16 +55,40 @@ export function Home() {
       } catch (error) {
         console.error('Failed to fetch featured products', error);
       } finally {
-        setLoading(false);
+        setLoadingProducts(false);
       }
     };
+    const fetchCategories = async () => {
+      try {
+        const data = await categoriesApi.getFeaturedCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error('Failed to fetch categories', error);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+    
     fetchProducts();
+    fetchCategories();
     
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % 3);
     }, 4000);
     return () => clearInterval(timer);
   }, []);
+
+  const scrollCategories = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 400; // pixels to scroll
+      const newScrollPosition = scrollContainerRef.current.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
+      
+      scrollContainerRef.current.scrollTo({
+        left: newScrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const handleAddToCart = async (e: React.MouseEvent, productId: string) => {
     e.stopPropagation();
@@ -72,14 +104,6 @@ export function Home() {
     }
   };
 
-  const categories = [
-    { name: 'Cement & Concrete', icon: '🧱', desc: 'Premium grade building materials', img: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&q=80' },
-    { name: 'Paint & Finishes', icon: '🎨', desc: 'Interior and exterior coatings', img: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&q=80' },
-    { name: 'Power Tools', icon: '⚙️', desc: 'Professional grade equipment', img: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80' },
-    { name: 'Plumbing & PVC', icon: '🚰', desc: 'Pipes, fittings, and fixtures', img: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=600&q=80' },
-    { name: 'Roofing Sheets', icon: '🏠', desc: 'Durable weather protection', img: 'https://images.unsplash.com/photo-1632759145351-1d592919f522?w=600&q=80' },
-    { name: 'Timber & Wood', icon: '🪵', desc: 'Structural and decorative wood', img: 'https://images.unsplash.com/photo-1533090360678-1a6e70eb18bd?w=600&q=80' },
-  ];
 
   const heroSlides = [
     { img: "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80", text: "Professional Grade Tools" },
@@ -206,36 +230,98 @@ export function Home() {
         </div>
       </section>
 
-      {/* 4. Shop by Category */}
-      <section className="py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
+      {/* 4. Shop by Category (Premium Slider) */}
+      <section className="py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Shop by Category</h2>
-              <p className="text-slate-500">Explore premium materials across thousands of stores.</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore by Category</h2>
+              <p className="text-slate-500 max-w-xl">Find exactly what you need from our comprehensive selection of professional products and services.</p>
             </div>
-            <Link to="/products" className="text-orange-500 font-semibold flex items-center gap-2 hover:gap-3 transition-all mt-4 md:mt-0">
-              View All Categories <ArrowRight className="w-5 h-5" />
-            </Link>
+            <div className="flex items-center gap-4 mt-6 md:mt-0">
+              <Link to="/categories" className="text-orange-500 font-semibold flex items-center gap-2 hover:gap-3 transition-all hidden md:flex mr-4">
+                View All <ArrowRight className="w-5 h-5" />
+              </Link>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full w-12 h-12 p-0 flex items-center justify-center border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  onClick={() => scrollCategories('left')}
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full w-12 h-12 p-0 flex items-center justify-center border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  onClick={() => scrollCategories('right')}
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </Button>
+              </div>
+            </div>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map((cat, i) => (
-              <Link key={i} to={`/products?category=${cat.name}`} className="group relative block aspect-[4/5] rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-500/50 transition-colors">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10" />
-                <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700 ease-out" />
-                
-                <div className="absolute inset-0 z-20 p-5 flex flex-col justify-between">
-                  <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-xl shadow-lg border border-white/30 transform group-hover:-translate-y-1 transition-transform">
-                    {cat.icon}
+          <div className="relative -mx-6 px-6 lg:-mx-8 lg:px-8">
+            <div 
+              ref={scrollContainerRef}
+              className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', cursor: 'grab' }}
+            >
+              {loadingCategories ? (
+                Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="min-w-[280px] md:min-w-[320px] aspect-[4/5] rounded-[32px] snap-center shrink-0">
+                    <Skeleton className="w-full h-full rounded-[32px]" />
                   </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg leading-tight mb-1">{cat.name}</h3>
-                    <p className="text-white/70 text-xs">{cat.desc}</p>
-                  </div>
+                ))
+              ) : categories.length === 0 ? (
+                <div className="w-full py-12 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
+                  <Search className="w-12 h-12 text-slate-400 mb-4" />
+                  <p className="text-slate-500 font-medium text-lg">No categories found.</p>
+                  <p className="text-slate-400 text-sm">Please check back later or update backend API.</p>
                 </div>
+              ) : (
+                categories.map((cat) => (
+                  <Link 
+                    key={cat.id} 
+                    to={`/categories/${cat.id}`} 
+                    className="group relative block min-w-[280px] md:min-w-[320px] aspect-[4/5] rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 hover:border-orange-500/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 snap-center shrink-0"
+                    draggable="false"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80 z-10" />
+                    <img src={cat.imageUrl} alt={cat.name} draggable="false" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-transform duration-700 ease-out" />
+                    
+                    <div className="absolute top-6 right-6 z-20">
+                      <div className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold text-white shadow-sm border border-white/20">
+                        {cat.itemCount} Items
+                      </div>
+                    </div>
+                    
+                    <div className="absolute inset-0 z-20 p-8 flex flex-col justify-end">
+                      <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-lg border border-white/30 transform group-hover:-translate-y-2 group-hover:scale-110 transition-transform duration-300 mb-4">
+                        {/* Assuming icon might be an emoji or an image URL */}
+                        {cat.icon.length < 5 ? cat.icon : <img src={cat.icon} alt="icon" className="w-6 h-6 invert" />}
+                      </div>
+                      <div>
+                        <h3 className="text-white font-bold text-2xl leading-tight mb-2 tracking-tight group-hover:text-orange-400 transition-colors">{cat.name}</h3>
+                        <p className="text-white/80 text-sm leading-relaxed mb-4 line-clamp-2">{cat.description}</p>
+                        
+                        <div className="flex items-center text-white text-sm font-bold opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                          Explore {cat.type === 'SERVICE' ? 'Services' : 'Products'} <ArrowRight className="w-4 h-4 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+            
+            <div className="md:hidden mt-4 text-center">
+              <Link to="/categories" className="text-orange-500 font-bold flex items-center justify-center gap-2">
+                View All Categories <ArrowRight className="w-5 h-5" />
               </Link>
-            ))}
+            </div>
           </div>
         </div>
       </section>
@@ -251,7 +337,7 @@ export function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {loading
+            {loadingProducts
               ? Array.from({ length: 8 }).map((_, i) => (
                   <div key={i} className="flex flex-col gap-4">
                     <Skeleton className="aspect-square w-full rounded-3xl" />

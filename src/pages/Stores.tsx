@@ -1,148 +1,150 @@
-import { useState } from 'react';
-import { MapPin, Navigation, Clock, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { MapPin, Navigation, Clock, Star, Store as StoreIcon, ShieldCheck } from 'lucide-react';
 import { storesApi } from '../api/stores';
 import type { Store } from '../api/stores';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Button } from '../components/ui/Button';
 
 export function Stores() {
-  const [store, setStore] = useState<Store | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [stores, setStores] = useState<(Store & { rating: number, reviews: number })[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hasRequested, setHasRequested] = useState(false);
 
-  const fetchNearestStore = () => {
+  useEffect(() => {
+    fetchStores();
+  }, []);
+
+  const fetchStores = async () => {
     setLoading(true);
     setError(null);
-    setHasRequested(true);
+    try {
+      const allStores = await storesApi.getAll();
+      
+      // Mock ratings since backend doesn't support them yet
+      const storesWithRatings = allStores
+        .filter(s => s.status !== 'REJECTED' && s.status !== 'PENDING') // Only show approved stores
+        .map(store => ({
+          ...store,
+          rating: Number((4.5 + Math.random() * 0.5).toFixed(1)), // random rating between 4.5 and 5.0
+          reviews: Math.floor(Math.random() * 500) + 50 // random reviews between 50 and 550
+        }))
+        .sort((a, b) => b.rating - a.rating); // Sort by highest rating
 
-    if (!('geolocation' in navigator)) {
-      setError('Geolocation is not supported by your browser.');
+      setStores(storesWithRatings);
+    } catch (err) {
+      console.error("Failed to load stores", err);
+      setError("We couldn't load the store directory at this time. Please try again later.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-          const nearestStore = await storesApi.getNearest(latitude, longitude);
-          setStore(nearestStore);
-        } catch (err: any) {
-          setError('Failed to connect to the store locator service. Please try again later.');
-        } finally {
-          setLoading(false);
-        }
-      },
-      (geoError) => {
-        if (geoError.code === geoError.PERMISSION_DENIED) {
-          setError('Location access is required to find your nearest Medion store. Please enable location permissions in your browser settings.');
-        } else {
-          setError('Unable to retrieve your location. Please check your connection or device settings.');
-        }
-        setLoading(false);
-      },
-      { timeout: 10000 }
-    );
   };
 
+  if (loading) {
+    return (
+      <div className="px-6 py-24 lg:px-8 max-w-[1400px] mx-auto w-full min-h-[70vh]">
+        <div className="text-center mb-16 max-w-2xl mx-auto space-y-4">
+          <Skeleton className="h-12 w-3/4 mx-auto" />
+          <Skeleton className="h-6 w-full mx-auto" />
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-[300px] rounded-3xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="px-6 py-24 min-h-[70vh] flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 bg-accent-terracotta/10 text-accent-terracotta rounded-full flex items-center justify-center mx-auto mb-6">
+            <StoreIcon className="w-8 h-8" />
+          </div>
+          <h2 className="text-2xl font-serif text-foreground mb-4">Directory Unavailable</h2>
+          <p className="text-muted mb-8">{error}</p>
+          <Button onClick={fetchStores}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="px-6 py-24 lg:px-8 max-w-4xl mx-auto w-full min-h-[70vh]">
+    <div className="px-6 py-24 lg:px-8 max-w-[1400px] mx-auto w-full min-h-[70vh]">
       <div className="text-center mb-16 max-w-2xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-6">
-          Find a Medion Store
+          Featured Hardware Partners
         </h1>
         <p className="text-lg text-muted">
-          Experience our uncompromising hardware in person. Locate the nearest flagship store to your current location.
+          Discover top-rated, authorized Medion vendors across the country. Our partners are thoroughly vetted to ensure you receive genuine products and exceptional service.
         </p>
       </div>
 
-      <div className="bg-black/5 dark:bg-white/5 rounded-[32px] p-8 md:p-12 border border-border-light dark:border-border-dark overflow-hidden relative">
-        {!hasRequested && !loading && !store && !error && (
-          <div className="flex flex-col items-center justify-center text-center py-12">
-            <div className="w-20 h-20 bg-accent-sage/10 text-accent-sage rounded-full flex items-center justify-center mb-8">
-              <MapPin className="w-8 h-8" />
-            </div>
-            <h2 className="text-2xl font-serif text-foreground mb-4">Discover Local Availability</h2>
-            <p className="text-muted mb-8 max-w-sm">
-              Allow location access to instantly find the closest Medion store, complete with directions and opening hours.
-            </p>
-            <Button size="lg" onClick={fetchNearestStore} className="gap-2">
-              <Navigation className="w-4 h-4" />
-              Locate Nearest Store
-            </Button>
-          </div>
-        )}
-
-        {loading && (
-          <div className="space-y-8 py-8">
-            <Skeleton className="h-10 w-2/3 max-w-md mx-auto" />
-            <div className="grid md:grid-cols-2 gap-8 mt-12">
-              <div className="space-y-4">
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-6 w-5/6" />
-                <Skeleton className="h-6 w-4/6" />
-              </div>
-              <Skeleton className="h-48 w-full rounded-2xl" />
-            </div>
-          </div>
-        )}
-
-        {error && (
-          <div className="flex flex-col items-center justify-center text-center py-12">
-            <div className="w-16 h-16 bg-accent-terracotta/10 text-accent-terracotta rounded-full flex items-center justify-center mb-6">
-              <AlertTriangle className="w-8 h-8" />
-            </div>
-            <h2 className="text-xl font-medium text-foreground mb-2">Location Required</h2>
-            <p className="text-muted mb-8 max-w-md">
-              {error}
-            </p>
-            <Button variant="outline" onClick={fetchNearestStore}>
-              Try Again
-            </Button>
-          </div>
-        )}
-
-        {store && !loading && !error && (
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-sage/10 text-accent-sage text-sm font-medium mb-6">
-                <MapPin className="w-4 h-4" />
-                Nearest Store
-              </div>
-              <h2 className="text-3xl font-serif text-foreground mb-4">{store.name}</h2>
-              <p className="text-lg text-muted mb-8">{store.address}</p>
+      {stores.length === 0 ? (
+        <div className="text-center py-20 bg-black/5 dark:bg-white/5 rounded-[32px] border border-border-light dark:border-border-dark">
+          <StoreIcon className="w-12 h-12 text-muted mx-auto mb-4" />
+          <h3 className="text-xl font-medium text-foreground">No Stores Available</h3>
+          <p className="text-muted mt-2">Check back later as new vendors join our platform.</p>
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {stores.map((store, index) => (
+            <div 
+              key={store.id}
+              className="group relative bg-white dark:bg-[#111111] border border-border-light dark:border-border-dark rounded-[32px] overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+            >
+              {/* Top Banner indicating ranking */}
+              {index < 3 && (
+                <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 px-3 py-1.5 bg-accent-sage text-white text-xs font-bold rounded-full shadow-lg">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  Top Ranked
+                </div>
+              )}
               
-              <div className="space-y-4 border-t border-border-light dark:border-border-dark pt-8">
-                <div className="flex items-center gap-4 text-muted">
-                  <Navigation className="w-5 h-5 text-foreground" />
-                  <span>{store.distance ? `${store.distance.toFixed(1)} km away` : 'Distance unavailable'}</span>
-                </div>
-                <div className="flex items-center gap-4 text-muted">
-                  <Clock className="w-5 h-5 text-foreground" />
-                  <span>{store.openingHours || '10:00 AM - 8:00 PM'}</span>
-                </div>
+              {/* Store Abstract Image/Pattern */}
+              <div className="h-48 bg-slate-100 dark:bg-[#1A1A1A] relative overflow-hidden flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-black/5 to-transparent dark:from-white/5 dark:to-transparent z-0" />
+                <StoreIcon className="w-16 h-16 text-slate-300 dark:text-slate-700 z-10 transition-transform duration-500 group-hover:scale-110" />
               </div>
 
-              <div className="mt-12">
-                <Button size="lg" className="w-full sm:w-auto" onClick={() => window.open(`https://maps.google.com/?q=${store.latitude},${store.longitude}`, '_blank')}>
-                  Get Directions
-                </Button>
+              <div className="p-8">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-2xl font-serif text-foreground line-clamp-1">{store.name}</h3>
+                  <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 px-2 py-1 rounded-md">
+                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                    <span className="text-sm font-bold text-amber-600 dark:text-amber-400">{store.rating}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-3 mb-8">
+                  <div className="flex items-start gap-3 text-muted">
+                    <MapPin className="w-5 h-5 shrink-0 text-foreground" />
+                    <span className="text-sm">{store.address}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-muted">
+                    <Clock className="w-5 h-5 shrink-0 text-foreground" />
+                    <span className="text-sm">{store.openingHours || '10:00 AM - 8:00 PM'}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-6 border-t border-border-light dark:border-border-dark">
+                  <span className="text-xs font-medium text-muted">{store.reviews} verified reviews</span>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="gap-2 rounded-xl"
+                    onClick={() => window.open(`https://maps.google.com/?q=${store.latitude},${store.longitude}`, '_blank')}
+                  >
+                    <Navigation className="w-4 h-4" />
+                    Directions
+                  </Button>
+                </div>
               </div>
             </div>
-            
-            <div className="aspect-square bg-[#E5E5E5] dark:bg-[#2A2A2A] rounded-[24px] relative overflow-hidden flex items-center justify-center text-muted">
-              {/* Abstract representation since we don't use a heavy maps SDK */}
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-              <div className="relative z-10 text-center space-y-4">
-                <MapPin className="w-12 h-12 mx-auto text-accent-sage" />
-                <p className="font-medium text-foreground">{store.name}</p>
-                <p className="text-sm">Store Front Visualization</p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

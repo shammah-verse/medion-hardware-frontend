@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Plus, Edit, Trash2, TrendingUp, DollarSign, ShoppingCart, Star, Search, Filter } from 'lucide-react';
+import { Package, Plus, Edit, Trash2, TrendingUp, DollarSign, ShoppingCart, Star, Search, Filter, ArrowLeft } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { vendorApi } from '../../api/vendor';
 import type { Store } from '../../api/stores';
@@ -7,6 +7,7 @@ import type { Product } from '../../api/products';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { Input } from '../../components/ui/Input';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 // Mock Data for Recharts
 const revenueData = [
@@ -30,6 +31,10 @@ export function VendorDashboard() {
   const [store, setStore] = useState<Store | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const storeId = searchParams.get('storeId');
   
   // Modal & Form State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -170,10 +175,17 @@ export function VendorDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const storeData = await vendorApi.getMyStore();
+        let storeData: Store | null = null;
+        if (storeId) {
+          const myStores = await vendorApi.getMyStores();
+          storeData = myStores.find(s => s.id === storeId) || null;
+        } else {
+          storeData = await vendorApi.getMyStore();
+        }
+        
         setStore(storeData);
         
-        const productsData = await vendorApi.getStoreProducts();
+        const productsData = await vendorApi.getStoreProducts(storeId || undefined);
         setProducts(productsData);
       } catch (err) {
         console.error("Failed to load dashboard data", err);
@@ -210,9 +222,14 @@ export function VendorDashboard() {
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Store Overview</h1>
-            <p className="text-slate-500 text-sm mt-1">Manage your {store?.name || 'Store'} inventory and monitor performance.</p>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" className="h-10 w-10 p-0 rounded-full" onClick={() => navigate('/vendor/stores')}>
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{store?.name || 'Store'} Overview</h1>
+              <p className="text-slate-500 text-sm mt-1">Manage your inventory and monitor performance.</p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline" onClick={handleDownloadReceipt} className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 h-10 px-4 rounded-xl shadow-sm text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50">

@@ -25,14 +25,34 @@ export const vendorApi = {
     return response.data;
   },
 
+  getMyStores: async (): Promise<Store[]> => {
+    // Currently backend only supports 1 store, but this is future-proof
+    // For now we'll call /stores/my-store and wrap in array if we have to, 
+    // or just call /stores/my-stores assuming backend adds it.
+    try {
+      const response = await apiClient.get<Store[]>('/stores/my-stores');
+      return response.data;
+    } catch (e: any) {
+      // Fallback if the endpoint doesn't exist yet, we try the old one and wrap it
+      if (e.response?.status === 404) {
+        const response = await apiClient.get<Store>('/stores/my-store');
+        return [response.data];
+      }
+      throw e;
+    }
+  },
+
   createStore: async (data: CreateStorePayload): Promise<Store> => {
     const response = await apiClient.post<Store>('/stores', data);
     return response.data;
   },
 
-  getStoreProducts: async (): Promise<Product[]> => {
-    // Assuming backend filters by store id based on JWT or we hit a specific endpoint
-    // Fallback to active products if backend doesn't have a specific vendor products endpoint yet
+  getStoreProducts: async (storeId?: string): Promise<Product[]> => {
+    // If storeId is provided, fetch for that store, otherwise fetch all active (legacy behavior)
+    if (storeId) {
+      const response = await apiClient.get<Product[]>(`/stores/${storeId}/products`);
+      return response.data;
+    }
     const response = await apiClient.get<Product[]>('/products/active'); 
     return response.data;
   },
