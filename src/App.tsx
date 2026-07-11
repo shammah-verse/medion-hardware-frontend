@@ -18,6 +18,8 @@ import { Orders } from './pages/Orders';
 import { VendorSetup } from './pages/vendor/VendorSetup';
 import { VendorStores } from './pages/vendor/VendorStores';
 import { VendorDashboard } from './pages/vendor/VendorDashboard';
+import { Wallet as VendorWallet } from './pages/vendor/Wallet';
+import { Verification as VendorVerification } from './pages/vendor/Verification';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { useAuthStore } from './store/useAuthStore';
 
@@ -34,6 +36,7 @@ export function App() {
         <Route path="/" element={<Layout />}>
           {/* Public & Customer Routes */}
           <Route index element={<Home />} />
+
           <Route path="products" element={<ProductCatalog />} />
           <Route path="products/:id" element={<ProductDetails />} />
           <Route path="categories" element={<Categories />} />
@@ -75,6 +78,23 @@ export function App() {
           <Route path="vendor/dashboard" element={
             <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
               <VendorDashboard />
+            </ProtectedRoute>
+          } />
+          {/*
+          <Route path="vendor/products/new" element={
+            <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
+              <CreateProduct />
+            </ProtectedRoute>
+          } />
+          */}
+          <Route path="vendor/wallet" element={
+            <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
+              <VendorWallet />
+            </ProtectedRoute>
+          } />
+          <Route path="vendor/verification" element={
+            <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
+              <VendorVerification />
             </ProtectedRoute>
           } />
 

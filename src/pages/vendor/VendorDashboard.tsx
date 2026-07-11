@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Plus, Edit, Trash2, TrendingUp, DollarSign, ShoppingCart, Star, Search, Filter, ArrowLeft } from 'lucide-react';
+import { Package, Plus, Edit, Trash2, TrendingUp, DollarSign, ShoppingCart, Star, Search, Filter, ArrowLeft, Wallet, ShieldCheck, Store as StoreIcon } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { vendorApi } from '../../api/vendor';
 import type { Store } from '../../api/stores';
@@ -240,6 +240,38 @@ export function VendorDashboard() {
               Add Product
             </Button>
           </div>
+        </div>
+
+        {/* Quick Actions Panel */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <button 
+            onClick={() => navigate('/vendor/products/new')}
+            className="bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 text-emerald-600 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-colors"
+          >
+            <Plus className="w-6 h-6" />
+            <span className="font-semibold text-sm">Add Product</span>
+          </button>
+          <button 
+            onClick={() => navigate('/vendor/wallet')}
+            className="bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 text-blue-600 border border-blue-200 dark:border-blue-800 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-colors"
+          >
+            <Wallet className="w-6 h-6" />
+            <span className="font-semibold text-sm">Wallet</span>
+          </button>
+          <button 
+            onClick={() => navigate('/vendor/verification')}
+            className="bg-orange-50 hover:bg-orange-100 dark:bg-orange-900/20 dark:hover:bg-orange-900/40 text-orange-600 border border-orange-200 dark:border-orange-800 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-colors"
+          >
+            <ShieldCheck className="w-6 h-6" />
+            <span className="font-semibold text-sm">Verification</span>
+          </button>
+          <button 
+            onClick={() => navigate('/vendor/stores')}
+            className="bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/40 text-purple-600 border border-purple-200 dark:border-purple-800 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-colors"
+          >
+            <StoreIcon className="w-6 h-6" />
+            <span className="font-semibold text-sm">My Store</span>
+          </button>
         </div>
 
         {/* Premium KPI Cards */}
