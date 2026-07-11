@@ -9,6 +9,8 @@ import { Checkout } from './pages/Checkout';
 import { Stores } from './pages/Stores';
 import { Categories } from './pages/Categories';
 import { CategoryDetails } from './pages/CategoryDetails';
+import { Services } from './pages/Services';
+import { ServiceDetails } from './pages/ServiceDetails';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Profile } from './pages/Profile';
@@ -36,6 +38,8 @@ export function App() {
           <Route path="products/:id" element={<ProductDetails />} />
           <Route path="categories" element={<Categories />} />
           <Route path="categories/:id" element={<CategoryDetails />} />
+          <Route path="services" element={<Services />} />
+          <Route path="services/:id" element={<ServiceDetails />} />
           <Route path="stores" element={<Stores />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
