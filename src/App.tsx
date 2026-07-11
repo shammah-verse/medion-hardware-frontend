@@ -7,6 +7,8 @@ import { ProductCatalog } from './pages/ProductCatalog';
 import { ProductDetails } from './pages/ProductDetails';
 import { Checkout } from './pages/Checkout';
 import { Stores } from './pages/Stores';
+import { Categories } from './pages/Categories';
+import { CategoryDetails } from './pages/CategoryDetails';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Profile } from './pages/Profile';
@@ -32,6 +34,8 @@ export function App() {
           <Route index element={<Home />} />
           <Route path="products" element={<ProductCatalog />} />
           <Route path="products/:id" element={<ProductDetails />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="categories/:id" element={<CategoryDetails />} />
           <Route path="stores" element={<Stores />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
