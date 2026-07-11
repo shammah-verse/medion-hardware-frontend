@@ -54,14 +54,19 @@ export function VendorSetup() {
     setError('');
 
     try {
-      await vendorApi.createStore({
+      const result = await vendorApi.createStore({
         name,
         address,
         latitude: parseFloat(lat) || 0.0,
         longitude: parseFloat(lon) || 0.0,
         subscriptionType
       });
-      navigate('/vendor/dashboard');
+      
+      if (result.paymentUrl) {
+        window.location.href = result.paymentUrl;
+      } else {
+        navigate('/vendor/dashboard');
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to create your store. Please try again.');
     } finally {

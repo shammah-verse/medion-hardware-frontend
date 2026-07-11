@@ -8,7 +8,7 @@ export interface Store {
   longitude: number;
   distance: number; // distance from user in kilometers or miles
   openingHours: string;
-  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  status?: 'PENDING' | 'PENDING_PAYMENT' | 'ACTIVE' | 'REJECTED' | 'APPROVED';
   ownerName?: string;
 }
 

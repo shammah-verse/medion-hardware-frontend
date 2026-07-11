@@ -16,6 +16,7 @@ import { Register } from './pages/Register';
 import { Profile } from './pages/Profile';
 import { Orders } from './pages/Orders';
 import { VendorSetup } from './pages/vendor/VendorSetup';
+import { StoreSetupSuccess } from './pages/vendor/StoreSetupSuccess';
 import { VendorStores } from './pages/vendor/VendorStores';
 import { VendorDashboard } from './pages/vendor/VendorDashboard';
 import { Wallet as VendorWallet } from './pages/vendor/Wallet';
@@ -68,6 +69,11 @@ export function App() {
           <Route path="vendor/setup" element={
             <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
               <VendorSetup />
+            </ProtectedRoute>
+          } />
+          <Route path="vendor/setup/success" element={
+            <ProtectedRoute allowedRoles={['STORE_VENDOR']}>
+              <StoreSetupSuccess />
             </ProtectedRoute>
           } />
           <Route path="vendor/stores" element={

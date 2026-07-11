@@ -518,7 +518,11 @@ export function AdminDashboard() {
                           <td className="px-6 py-4">
                             {store.status === 'PENDING' ? (
                               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                                <div className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Pending
+                                <div className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Pending Review
+                              </span>
+                            ) : store.status === 'PENDING_PAYMENT' ? (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                                <div className="w-1.5 h-1.5 rounded-full bg-slate-400" /> Pending Payment
                               </span>
                             ) : store.status === 'REJECTED' ? (
                               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400">

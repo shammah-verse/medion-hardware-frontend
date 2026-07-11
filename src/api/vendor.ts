@@ -42,8 +42,8 @@ export const vendorApi = {
     }
   },
 
-  createStore: async (data: CreateStorePayload): Promise<Store> => {
-    const response = await apiClient.post<Store>('/stores', data);
+  createStore: async (data: CreateStorePayload): Promise<{ store: Store; paymentUrl?: string }> => {
+    const response = await apiClient.post<{ store: Store; paymentUrl?: string }>('/stores', data);
     return response.data;
   },
 
