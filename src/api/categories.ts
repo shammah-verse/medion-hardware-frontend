@@ -29,7 +29,13 @@ export const categoriesApi = {
     } catch (error) {
       // Fallback if backend hasn't implemented featured categories yet
       const response = await apiClient.get<Category[]>('/categories');
-      return response.data.slice(0, 8); // Return top 8 categories
+      const categories = response.data;
+      const sorted = [...categories].sort((a, b) => {
+        if (a.type === 'SERVICE' && b.type !== 'SERVICE') return -1;
+        if (a.type !== 'SERVICE' && b.type === 'SERVICE') return 1;
+        return 0;
+      });
+      return sorted.slice(0, 8); // Return top 8 categories
     }
   }
 };

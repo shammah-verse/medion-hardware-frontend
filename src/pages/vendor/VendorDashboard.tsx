@@ -245,7 +245,7 @@ export function VendorDashboard() {
         {/* Quick Actions Panel */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <button 
-            onClick={() => navigate('/vendor/products/new')}
+            onClick={() => openModal()}
             className="bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 text-emerald-600 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-colors"
           >
             <Plus className="w-6 h-6" />

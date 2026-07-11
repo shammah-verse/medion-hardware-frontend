@@ -118,7 +118,7 @@ export function Categories() {
                 
                 <div className="absolute inset-0 z-20 p-8 flex flex-col justify-end">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-xl shadow-lg border border-white/30 transform group-hover:-translate-y-2 transition-transform duration-300 mb-4">
-                    {cat.icon.length < 5 ? cat.icon : <img src={cat.icon} alt="icon" className="w-5 h-5 invert" />}
+                    {cat.icon ? (cat.icon.length < 5 ? cat.icon : <img src={cat.icon} alt="icon" className="w-5 h-5 invert" />) : <Grid className="w-5 h-5 text-white" />}
                   </div>
                   <div>
                     <h3 className="text-white font-bold text-2xl leading-tight mb-2 tracking-tight">{cat.name}</h3>

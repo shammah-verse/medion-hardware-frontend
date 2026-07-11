@@ -19,16 +19,9 @@ export function VendorSetup() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if they already have a store
-    vendorApi.getMyStore()
-      .then(() => navigate('/vendor/dashboard'))
-      .catch((err) => {
-        // 404 means no store yet, which is expected here.
-        if (err.response?.status !== 404) {
-          console.error("Error checking store status", err);
-        }
-      });
-  }, [navigate]);
+    // Note: We now allow multiple stores, so we don't automatically redirect
+    // if they already have one.
+  }, []);
 
   const handleGetLocation = () => {
     setLoadingLocation(true);
