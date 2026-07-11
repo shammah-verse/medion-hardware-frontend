@@ -23,7 +23,13 @@ export const categoriesApi = {
   },
 
   getFeaturedCategories: async (): Promise<Category[]> => {
-    const response = await apiClient.get<Category[]>('/categories/featured');
-    return response.data;
+    try {
+      const response = await apiClient.get<Category[]>('/categories/featured');
+      return response.data;
+    } catch (error) {
+      // Fallback if backend hasn't implemented featured categories yet
+      const response = await apiClient.get<Category[]>('/categories');
+      return response.data.slice(0, 8); // Return top 8 categories
+    }
   }
 };
