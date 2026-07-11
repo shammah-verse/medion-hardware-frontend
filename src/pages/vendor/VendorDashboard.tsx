@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Package, Plus, Edit, Trash2, TrendingUp, DollarSign, ShoppingCart, Star, Search, Filter, ArrowLeft, Wallet, ShieldCheck, Store as StoreIcon } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { vendorApi } from '../../api/vendor';
-import type { Store } from '../../api/stores';
+import { storesApi } from '../../api/stores';
+import type { Store, StoreAnalytics } from '../../api/stores';
 import type { Product } from '../../api/products';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
@@ -30,6 +31,7 @@ const categoryData = [
 export function VendorDashboard() {
   const [store, setStore] = useState<Store | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const [analytics, setAnalytics] = useState<StoreAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   
   const [searchParams] = useSearchParams();
@@ -187,6 +189,15 @@ export function VendorDashboard() {
         
         const productsData = await vendorApi.getStoreProducts(storeId || undefined);
         setProducts(productsData);
+        
+        if (storeData) {
+          try {
+            const stats = await storesApi.getStoreAnalytics(storeData.id);
+            setAnalytics(stats);
+          } catch (e) {
+            console.error("Failed to load analytics", e);
+          }
+        }
       } catch (err) {
         console.error("Failed to load dashboard data", err);
       } finally {
@@ -288,7 +299,7 @@ export function VendorDashboard() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">Total Revenue</p>
-              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">$40,590.00</h3>
+              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">${analytics ? analytics.totalSales.toFixed(2) : '0.00'}</h3>
             </div>
           </div>
           
@@ -304,7 +315,7 @@ export function VendorDashboard() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">Total Orders</p>
-              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">1,248</h3>
+              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">{analytics ? analytics.totalOrders : 0}</h3>
             </div>
           </div>
 
@@ -317,7 +328,7 @@ export function VendorDashboard() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">Active Products</p>
-              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">{products.length}</h3>
+              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">{analytics ? analytics.totalProducts : products.length}</h3>
             </div>
           </div>
 
@@ -332,16 +343,9 @@ export function VendorDashboard() {
               </span>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500 mb-1">Store Rating</p>
+              <p className="text-sm font-medium text-slate-500 mb-1">Followers</p>
               <div className="flex items-center gap-2">
-                <h3 className="text-3xl font-bold text-slate-900 dark:text-white">4.9</h3>
-                <div className="flex">
-                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                </div>
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white">{analytics ? analytics.totalFollowers : 0}</h3>
               </div>
             </div>
           </div>

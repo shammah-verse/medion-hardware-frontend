@@ -4,11 +4,13 @@ import { storesApi } from '../api/stores';
 import type { Store } from '../api/stores';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Button } from '../components/ui/Button';
+import { useNavigate } from 'react-router-dom';
 
 export function Stores() {
   const [stores, setStores] = useState<(Store & { rating: number, reviews: number })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchStores();
@@ -92,7 +94,8 @@ export function Stores() {
           {stores.map((store, index) => (
             <div 
               key={store.id}
-              className="group relative bg-white dark:bg-[#111111] border border-border-light dark:border-border-dark rounded-[32px] overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+              onClick={() => navigate(`/stores/${store.id}`)}
+              className="group relative bg-white dark:bg-[#111111] border border-border-light dark:border-border-dark rounded-[32px] overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer"
             >
               {/* Top Banner indicating ranking */}
               {index < 3 && (

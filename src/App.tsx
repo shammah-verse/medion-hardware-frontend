@@ -7,6 +7,7 @@ import { ProductCatalog } from './pages/ProductCatalog';
 import { ProductDetails } from './pages/ProductDetails';
 import { Checkout } from './pages/Checkout';
 import { Stores } from './pages/Stores';
+import { StoreProfile } from './pages/StoreProfile';
 import { Categories } from './pages/Categories';
 import { CategoryDetails } from './pages/CategoryDetails';
 import { Services } from './pages/Services';
@@ -45,6 +46,7 @@ export function App() {
           <Route path="services" element={<Services />} />
           <Route path="services/:id" element={<ServiceDetails />} />
           <Route path="stores" element={<Stores />} />
+          <Route path="stores/:id" element={<StoreProfile />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           
