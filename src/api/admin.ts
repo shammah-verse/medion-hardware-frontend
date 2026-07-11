@@ -4,8 +4,15 @@ import type { Product } from './products';
 
 export const adminApi = {
   getAllStores: async (): Promise<Store[]> => {
-    const response = await apiClient.get<Store[]>('/stores');
-    return response.data;
+    try {
+      // Try hitting the admin endpoint which should return ALL stores including PENDING
+      const response = await apiClient.get<Store[]>('/admin/stores');
+      return response.data;
+    } catch (error) {
+      // Fallback to customer-facing /stores endpoint
+      const response = await apiClient.get<Store[]>('/stores');
+      return response.data;
+    }
   },
   
   deleteStore: async (storeId: string): Promise<void> => {
