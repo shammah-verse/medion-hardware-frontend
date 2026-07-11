@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Menu, User, Settings, Package, LogOut } from 'lucide-react';
+import { ShoppingBag, Menu, User, Settings, Package, LogOut, Search } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useCartStore } from '../../store/useCartStore';
+import { SearchOverlay } from './SearchOverlay';
 
 export function Navbar() {
   const { isAuthenticated, profile, logout } = useAuthStore();
@@ -11,6 +12,7 @@ export function Navbar() {
   const navigate = useNavigate();
   
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -98,6 +100,13 @@ export function Navbar() {
             </div>
           )}
 
+          <button
+            onClick={() => setShowSearch(true)}
+            className="relative h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-ring"
+          >
+            <Search className="h-5 w-5" />
+          </button>
+
           <button 
             onClick={() => {
               if (isAuthenticated) {
@@ -120,6 +129,8 @@ export function Navbar() {
           </Button>
         </div>
       </div>
+      
+      <SearchOverlay isOpen={showSearch} onClose={() => setShowSearch(false)} />
     </nav>
   );
 }
