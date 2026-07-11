@@ -39,8 +39,10 @@ export function ProductDetails() {
           productsApi.getReviews(id)
         ]);
         setProduct(data);
-        if (data.imageUrls && data.imageUrls.length > 0) {
+        if (data.imageUrls && data.imageUrls.length > 0 && data.imageUrls[0].startsWith('http') && !data.imageUrls[0].includes('example.com')) {
           setSelectedImage(data.imageUrls[0]);
+        } else {
+          setSelectedImage(`https://loremflickr.com/800/800/${encodeURIComponent((data.name || '').split(' ')[0] || 'tool')},tool?lock=${data.id ? data.id.charCodeAt(0) : 1}`);
         }
         setReviews(reviewsData);
       } catch (err) {

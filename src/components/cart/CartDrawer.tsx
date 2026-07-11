@@ -47,11 +47,11 @@ export function CartDrawer() {
             cart.items.map((item) => (
               <div key={item.id} className="flex gap-4">
                 <div className="w-20 h-20 rounded-xl bg-black/5 dark:bg-white/5 overflow-hidden flex-shrink-0">
-                  {item.product.imageUrls && item.product.imageUrls.length > 0 ? (
-                    <img src={item.product.imageUrls[0]} alt={item.product.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-xs text-muted">No Img</div>
-                  )}
+                  <img 
+                    src={item.product?.imageUrls && item.product.imageUrls.length > 0 && item.product.imageUrls[0].startsWith('http') && !item.product.imageUrls[0].includes('example.com') ? item.product.imageUrls[0] : `https://loremflickr.com/800/800/${encodeURIComponent((item.product?.name || '').split(' ')[0] || 'tool')},tool?lock=${item.product?.id ? item.product.id.charCodeAt(0) : 1}`} 
+                    alt={item.product?.name} 
+                    className="w-full h-full object-cover" 
+                  />
                 </div>
                 <div className="flex-1 flex flex-col justify-between">
                   <div className="flex justify-between items-start">

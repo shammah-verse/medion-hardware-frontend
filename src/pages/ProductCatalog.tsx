@@ -97,20 +97,20 @@ export function ProductCatalog() {
                 </div>
               </div>
             ))
-          : filteredProducts.map((product) => (
+          : filteredProducts.map((product, index) => (
               <div 
-                key={product.id}
+                key={product?.id || index}
                 onClick={() => navigate(`/products/${product.id}`)}
                 className="cursor-pointer"
               >
                 <Card hoverLift className="flex flex-col overflow-hidden group border-none bg-transparent dark:bg-transparent shadow-none dark:shadow-none h-full">
                   <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-2xl mb-6 overflow-hidden relative">
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-                    {product.imageUrls && product.imageUrls.length > 0 ? (
-                       <img src={product.imageUrls[0]} alt={product.name} className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal" />
-                    ) : (
-                       <div className="w-full h-full flex items-center justify-center text-muted text-sm">No Image</div>
-                    )}
+                    <img 
+                      src={product?.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://loremflickr.com/800/800/${encodeURIComponent((product?.name || '').split(' ')[0] || 'tool')},tool?lock=${product?.id ? product.id.charCodeAt(0) : 1}`} 
+                      alt={product?.name} 
+                      className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform duration-700" 
+                    />
                     
                     {/* Quick Add Button */}
                     <div className="absolute bottom-4 right-4 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
@@ -125,12 +125,13 @@ export function ProductCatalog() {
                     </div>
                   </div>
                   
-                  <div className="flex justify-between items-start px-2">
-                    <div>
-                      <h3 className="text-lg font-medium text-foreground mb-1 group-hover:text-accent-terracotta transition-colors">{product.name}</h3>
-                      <p className="text-muted">{product.category}</p>
+                  <div className="flex justify-between items-start px-2 pb-2">
+                    <div className="flex-1 pr-4">
+                      <h3 className="text-lg font-medium text-foreground mb-1 group-hover:text-accent-terracotta transition-colors line-clamp-1">{product.name}</h3>
+                      <p className="text-muted text-xs mb-2">{product.category}</p>
+                      <p className="text-sm text-muted line-clamp-2">{product.description || 'Professional grade equipment for your next project.'}</p>
                     </div>
-                    <span className="text-lg text-foreground">${product.price.toFixed(2)}</span>
+                    <span className="text-lg text-foreground font-medium shrink-0">${product.price.toFixed(2)}</span>
                   </div>
                 </Card>
               </div>

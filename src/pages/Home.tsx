@@ -61,7 +61,24 @@ export function Home() {
     const fetchCategories = async () => {
       try {
         const data = await categoriesApi.getFeaturedCategories();
-        setCategories(data);
+        
+        // Ensure Services card is present
+        const hasServices = data.some(c => c.type === 'SERVICE');
+        const finalCategories = hasServices ? data : [
+          {
+            id: 'services-static',
+            name: 'Local Services',
+            description: 'Book professional contractors, mechanics, and local experts.',
+            imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80',
+            icon: '🛠️',
+            itemCount: 24,
+            featured: true,
+            type: 'SERVICE'
+          } as Category,
+          ...data
+        ];
+        
+        setCategories(finalCategories);
       } catch (error) {
         console.error('Failed to fetch categories', error);
       } finally {
@@ -285,7 +302,7 @@ export function Home() {
                 categories.map((cat) => (
                   <Link 
                     key={cat.id} 
-                    to={`/categories/${cat.id}`} 
+                    to={cat.type === 'SERVICE' || cat.id === 'services-static' ? '/services' : `/categories/${cat.id}`} 
                     className="group relative block min-w-[280px] md:min-w-[320px] aspect-[4/5] rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 hover:border-orange-500/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 snap-center shrink-0"
                     draggable="false"
                   >
@@ -361,11 +378,11 @@ export function Home() {
                         </span>
                       </div>
 
-                      {product.imageUrls && product.imageUrls.length > 0 ? (
-                         <img src={product.imageUrls[0]} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" />
-                      ) : (
-                         <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm font-medium">No Image</div>
-                      )}
+                      <img 
+                        src={product.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://loremflickr.com/800/800/${encodeURIComponent((product.name || '').split(' ')[0] || 'tool')},tool?lock=${product.id ? product.id.charCodeAt(0) : 1}`} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" 
+                      />
                       
                       {/* Quick Add Button */}
                       <div className="absolute bottom-3 right-3 z-20 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
@@ -382,6 +399,7 @@ export function Home() {
                     <div className="flex flex-col px-2 pb-2">
                       <p className="text-xs font-semibold text-orange-500 mb-1">{product.category}</p>
                       <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight mb-2 line-clamp-1">{product.name}</h3>
+                      <p className="text-sm text-slate-500 line-clamp-2 mb-3">{product.description || 'Professional grade equipment for your next project.'}</p>
                       <div className="flex justify-between items-center mt-auto">
                         <span className="text-lg font-black text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
                         <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">

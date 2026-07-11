@@ -198,11 +198,11 @@ export function CategoryDetails() {
                   onClick={() => navigate(`/products/${product.id}`)}
                 >
                   <div className={`relative bg-slate-50 dark:bg-slate-900 rounded-2xl overflow-hidden ${viewMode === 'LIST' ? 'w-48 h-48 shrink-0' : 'aspect-square mb-4'}`}>
-                    {product.imageUrls && product.imageUrls.length > 0 ? (
-                        <img src={product.imageUrls[0]} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm font-medium">No Image</div>
-                    )}
+                    <img 
+                      src={product.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://loremflickr.com/800/800/${encodeURIComponent((product.name || '').split(' ')[0] || 'tool')},tool?lock=${product.id ? product.id.charCodeAt(0) : 1}`} 
+                      alt={product.name} 
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" 
+                    />
                     
                     {/* Quick Add Button */}
                     <div className="absolute bottom-3 right-3 z-20 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
@@ -219,9 +219,7 @@ export function CategoryDetails() {
                   <div className={`flex flex-col ${viewMode === 'LIST' ? 'flex-1 py-2' : 'px-2 pb-2'}`}>
                     <p className="text-xs font-semibold text-orange-500 mb-1">{product.storeName || 'Vendor Pro'}</p>
                     <h3 className={`font-bold text-slate-900 dark:text-white leading-tight mb-2 ${viewMode === 'LIST' ? 'text-xl' : 'text-base line-clamp-1'}`}>{product.name}</h3>
-                    {viewMode === 'LIST' && (
-                      <p className="text-sm text-slate-500 mb-4 line-clamp-2">{product.description}</p>
-                    )}
+                    <p className={`text-sm text-slate-500 mb-4 ${viewMode === 'LIST' ? 'line-clamp-2' : 'line-clamp-2'}`}>{product.description || 'Professional grade equipment for your next project.'}</p>
                     <div className="flex justify-between items-center mt-auto">
                       <span className="text-lg font-black text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
                       <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">

@@ -99,7 +99,7 @@ export function Categories() {
             {filteredCategories.map(cat => (
               <Link 
                 key={cat.id} 
-                to={`/categories/${cat.id}`} 
+                to={cat.type === 'SERVICE' ? '/services' : `/categories/${cat.id}`} 
                 className="group relative block aspect-square rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 hover:border-orange-500/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80 z-10" />
