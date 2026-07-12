@@ -5,11 +5,13 @@ export interface LoginPayload {
   password: string;
 }
 
-export interface RegisterPayload extends LoginPayload {
+export interface RegisterPayload {
   email: string;
+  password: string;
   firstName: string;
   lastName: string;
-  role: "CUSTOMER" | "STORE_VENDOR" | "ADMIN";
+  role?: "CUSTOMER" | "STORE_VENDOR" | "ADMIN";
+  username?: string; // Optional since backend auto-generates it
 }
 
 export interface AuthResponse {

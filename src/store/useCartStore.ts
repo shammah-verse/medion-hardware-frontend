@@ -10,8 +10,8 @@ interface CartState {
   
   fetchCart: () => Promise<void>;
   addItem: (productId: string, quantity: number) => Promise<void>;
-  updateQuantity: (itemId: string, quantity: number) => Promise<void>;
-  removeItem: (itemId: string) => Promise<void>;
+  updateQuantity: (productId: string, quantity: number) => Promise<void>;
+  removeItem: (productId: string) => Promise<void>;
   clearCart: () => void;
   toggleCart: () => void;
   openCart: () => void;
@@ -47,7 +47,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
   },
 
-  updateQuantity: async (itemId: string, quantity: number) => {
+  updateQuantity: async (productId: string, quantity: number) => {
     const previousCart = get().cart;
     if (!previousCart) return;
 
@@ -55,7 +55,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     const optimisticCart = {
       ...previousCart,
       items: previousCart.items.map(item => 
-        item.id === itemId ? { ...item, quantity } : item
+        item.product.id === productId ? { ...item, quantity } : item
       )
     };
     // Recalculate total
@@ -63,7 +63,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     set({ cart: optimisticCart });
 
     try {
-      const serverCart = await cartApi.updateQuantity(itemId, quantity);
+      const serverCart = await cartApi.updateQuantity(productId, quantity);
       set({ cart: serverCart }); // Sync with truth
     } catch (err: any) {
       // Revert on failure
@@ -71,20 +71,20 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
   },
 
-  removeItem: async (itemId: string) => {
+  removeItem: async (productId: string) => {
     const previousCart = get().cart;
     if (!previousCart) return;
 
     // Optimistic Update
     const optimisticCart = {
       ...previousCart,
-      items: previousCart.items.filter(item => item.id !== itemId)
+      items: previousCart.items.filter(item => item.product.id !== productId)
     };
     optimisticCart.totalAmount = optimisticCart.items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
     set({ cart: optimisticCart });
 
     try {
-      const serverCart = await cartApi.removeItem(itemId);
+      const serverCart = await cartApi.removeItem(productId);
       set({ cart: serverCart });
     } catch (err: any) {
       set({ cart: previousCart, error: 'Failed to remove item' });

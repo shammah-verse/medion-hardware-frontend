@@ -17,8 +17,10 @@ export interface OrderResponse {
 }
 
 export const ordersApi = {
-  checkout: async (payload: CheckoutPayload): Promise<OrderResponse> => {
-    const response = await apiClient.post<OrderResponse>('/orders/checkout', payload);
+  checkout: async (_payload?: CheckoutPayload): Promise<OrderResponse> => {
+    // The integration guide strictly specifies POST /api/v1/orders/checkout with NO payload.
+    // If we need to send the payload, the backend might ignore it, but we send `{}` to avoid parser issues.
+    const response = await apiClient.post<OrderResponse>('/orders/checkout');
     return response.data;
   },
   

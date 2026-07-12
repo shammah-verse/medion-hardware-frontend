@@ -301,7 +301,7 @@ export function AdminDashboard() {
         </div>
       </div>
 
-      <div className="flex-1 p-6 lg:p-10 overflow-y-auto">
+      <div className="flex-1 p-6 lg:p-10 overflow-y-auto pb-24 lg:pb-10">
         <div className="max-w-[1400px] mx-auto w-full">
           
           {/* Header Section */}
@@ -670,6 +670,31 @@ export function AdminDashboard() {
           )}
           
         </div>
+      </div>
+
+      {/* Admin Mobile Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex justify-around items-center h-16 lg:hidden z-40 px-4">
+        <button 
+          onClick={() => setActiveTab('OVERVIEW')}
+          className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeTab === 'OVERVIEW' ? 'text-emerald-500' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'}`}
+        >
+          <LayoutDashboard className="w-5 h-5" />
+          <span className="text-[10px] font-medium">Overview</span>
+        </button>
+        <button 
+          onClick={() => setActiveTab('STORES')}
+          className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeTab === 'STORES' ? 'text-emerald-500' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'}`}
+        >
+          <StoreIcon className="w-5 h-5" />
+          <span className="text-[10px] font-medium">Stores</span>
+        </button>
+        <button 
+          onClick={() => setActiveTab('PRODUCTS')}
+          className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeTab === 'PRODUCTS' ? 'text-emerald-500' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'}`}
+        >
+          <Package className="w-5 h-5" />
+          <span className="text-[10px] font-medium">Products</span>
+        </button>
       </div>
 
       {/* Slide-out Drawer for Store Inventory */}

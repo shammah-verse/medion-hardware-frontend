@@ -33,13 +33,13 @@ export const cartApi = {
   // Note: The Postman spec didn't explicitly detail remove/update endpoints, 
   // but a standard REST setup uses these. If they don't exist, we might just use POST /cart/items.
   // We'll stub them out for completeness and UI functionality.
-  removeItem: async (itemId: string): Promise<Cart> => {
-    const response = await apiClient.delete<Cart>(`/cart/items/${itemId}`);
+  removeItem: async (productId: string): Promise<Cart> => {
+    const response = await apiClient.delete<Cart>(`/cart/items/${productId}`);
     return response.data;
   },
   
-  updateQuantity: async (itemId: string, quantity: number): Promise<Cart> => {
-    const response = await apiClient.put<Cart>(`/cart/items/${itemId}`, { quantity });
+  updateQuantity: async (productId: string, quantity: number): Promise<Cart> => {
+    const response = await apiClient.put<Cart>(`/cart/items/${productId}`, { quantity });
     return response.data;
   }
 };

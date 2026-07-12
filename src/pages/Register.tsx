@@ -10,7 +10,6 @@ export function Register() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    username: '',
     email: '',
     phoneNumber: '',
     password: '',
@@ -33,7 +32,6 @@ export function Register() {
   };
 
   const validateForm = () => {
-    if (formData.username.length < 3) return 'Username must be at least 3 characters long.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return 'Please enter a valid email address.';
     if (formData.password.length < 8) return 'Password must be at least 8 characters long.';
     if (formData.password !== formData.confirmPassword) return 'Passwords do not match.';
@@ -42,7 +40,6 @@ export function Register() {
 
   // Allow submission only if basic constraints are met (prevents empty submits)
   const isFormValid = 
-    formData.username.trim().length > 0 && 
     formData.email.trim().length > 0 && 
     formData.password.length > 0 && 
     formData.confirmPassword.length > 0;
@@ -126,16 +123,6 @@ export function Register() {
               onChange={handleChange}
             />
           </div>
-          
-          <Input 
-            label="Username"
-            name="username"
-            type="text" 
-            placeholder="janedoe" 
-            required 
-            value={formData.username}
-            onChange={handleChange}
-          />
           
           <Input 
             label="Email address"

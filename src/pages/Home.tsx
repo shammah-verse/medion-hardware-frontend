@@ -131,7 +131,7 @@ export function Home() {
     <div className="flex flex-col w-full bg-[#FAFAFA] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 selection:bg-orange-500/30 font-sans">
       
       {/* 1. Premium Hero Section */}
-      <section className="relative w-full min-h-[90vh] flex items-center pt-20 overflow-hidden bg-slate-900 dark:bg-[#080B12]">
+      <section className="relative w-full min-h-[90vh] flex items-center pt-12 md:pt-20 overflow-hidden bg-slate-900 dark:bg-[#080B12]">
         {/* Abstract Background Elements */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-orange-500/10 via-emerald-500/5 to-transparent blur-3xl" />
         <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-blue-500/10 to-transparent blur-3xl" />
@@ -352,10 +352,10 @@ export function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-h-[800px] overflow-y-auto pr-4 snap-y scrollbar-hide py-4">
+          <div className="flex md:grid md:grid-cols-3 lg:grid-cols-4 gap-6 max-h-[800px] overflow-x-auto md:overflow-x-visible overflow-y-hidden md:overflow-y-auto snap-x snap-mandatory md:snap-none scrollbar-hide py-4 md:pr-4 -mx-6 px-6 md:mx-0 md:px-0">
             {loadingProducts
               ? Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="flex flex-col gap-4 shrink-0">
+                  <div key={i} className="flex flex-col gap-4 min-w-[280px] md:min-w-0 shrink-0 snap-center md:snap-align-none">
                     <Skeleton className="aspect-square w-full rounded-3xl" />
                     <div className="space-y-2 px-2">
                       <Skeleton className="h-5 w-2/3" />
@@ -367,7 +367,7 @@ export function Home() {
                   <motion.div 
                     whileHover={{ y: -8 }}
                     key={product.id} 
-                    className="group flex flex-col snap-center cursor-pointer bg-white dark:bg-slate-800 rounded-3xl p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
+                    className="group flex flex-col min-w-[280px] md:min-w-0 shrink-0 snap-center md:snap-align-none cursor-pointer bg-white dark:bg-slate-800 rounded-3xl p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
                     onClick={() => navigate(`/products/${product.id}`)}
                   >
                     <div className="relative aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl mb-4 overflow-hidden">

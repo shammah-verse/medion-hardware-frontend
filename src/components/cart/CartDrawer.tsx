@@ -62,22 +62,22 @@ export function CartDrawer() {
                     <p className="font-medium text-foreground">${(item.product.price * item.quantity).toFixed(2)}</p>
                   </div>
                   <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center gap-3 border border-border-light dark:border-border-dark rounded-lg px-2 py-1">
+                    <div className="flex items-center gap-2 border border-border-light dark:border-border-dark rounded-xl px-1">
                       <button 
-                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                        className="text-muted hover:text-foreground w-4"
+                        onClick={() => updateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
+                        className="text-muted hover:text-foreground w-11 h-11 flex items-center justify-center font-medium"
                       >-</button>
-                      <span className="text-xs font-medium w-4 text-center">{item.quantity}</span>
+                      <span className="text-sm font-bold w-6 text-center">{item.quantity}</span>
                       <button 
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="text-muted hover:text-foreground w-4"
+                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                        className="text-muted hover:text-foreground w-11 h-11 flex items-center justify-center font-medium"
                       >+</button>
                     </div>
                     <button 
-                      onClick={() => removeItem(item.id)}
-                      className="text-muted hover:text-accent-terracotta transition-colors text-xs flex items-center gap-1"
+                      onClick={() => removeItem(item.product.id)}
+                      className="text-muted hover:text-accent-terracotta transition-colors text-sm flex items-center justify-center h-11 px-2 gap-1"
                     >
-                      <Trash2 className="w-3 h-3" /> Remove
+                      <Trash2 className="w-4 h-4" /> <span className="hidden sm:inline">Remove</span>
                     </button>
                   </div>
                 </div>

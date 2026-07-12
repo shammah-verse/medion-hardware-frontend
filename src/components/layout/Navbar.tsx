@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Menu, User, Settings, Package, LogOut, Search } from 'lucide-react';
+import { ShoppingBag, Menu, User, Settings, Package, LogOut, Search, X } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useCartStore } from '../../store/useCartStore';
@@ -13,6 +13,7 @@ export function Navbar() {
   
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,21 +34,35 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border-light dark:border-border-dark bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-6 lg:px-8">
-        <div className="flex flex-1 items-center gap-8">
+      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-6 lg:px-8 relative">
+        <div className="flex items-center">
           <Link to="/" className="text-2xl font-semibold tracking-tight text-foreground font-serif">
             Medion.
           </Link>
-          <div className="hidden md:flex gap-8 text-sm font-medium text-muted">
-            <Link to="/products" className="hover:text-foreground transition-colors">Catalog</Link>
-            <Link to="/stores" className="hover:text-foreground transition-colors">Stores</Link>
-            {isAuthenticated && profile?.role === 'STORE_VENDOR' && (
-              <Link to="/vendor/dashboard" className="hover:text-foreground transition-colors text-accent-terracotta">Vendor Portal</Link>
-            )}
-            {isAuthenticated && profile?.role === 'ADMIN' && (
-              <Link to="/admin/dashboard" className="hover:text-foreground transition-colors text-accent-terracotta">Admin Panel</Link>
-            )}
-          </div>
+        </div>
+
+        {/* Centered Navigation Links */}
+        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-10 text-sm font-medium text-muted">
+          <Link to="/products" className="group relative py-1 hover:text-orange-500 transition-colors duration-300">
+            Catalog
+            <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-orange-500 transition-all duration-300 ease-out group-hover:w-full rounded-full"></span>
+          </Link>
+          <Link to="/stores" className="group relative py-1 hover:text-orange-500 transition-colors duration-300">
+            Stores
+            <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-orange-500 transition-all duration-300 ease-out group-hover:w-full rounded-full"></span>
+          </Link>
+          {isAuthenticated && profile?.role === 'STORE_VENDOR' && (
+            <Link to="/vendor/dashboard" className="group relative py-1 text-orange-500 transition-colors duration-300">
+              Vendor Portal
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 opacity-30 rounded-full"></span>
+            </Link>
+          )}
+          {isAuthenticated && profile?.role === 'ADMIN' && (
+            <Link to="/admin/dashboard" className="group relative py-1 text-orange-500 transition-colors duration-300">
+              Admin Panel
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-orange-500 opacity-30 rounded-full"></span>
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center gap-4">
@@ -131,9 +146,70 @@ export function Navbar() {
               </span>
             )}
           </button>
-          <Button variant="ghost" size="sm" className="md:hidden h-12 w-12 rounded-full p-0">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="md:hidden h-12 w-12 rounded-full p-0 hover:bg-black/5 dark:hover:bg-white/5"
+            onClick={() => setShowMobileMenu(true)}
+          >
             <Menu className="h-5 w-5" />
           </Button>
+        </div>
+      </div>
+      
+      {/* Mobile Menu Drawer */}
+      <div 
+        className={`fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm transition-opacity md:hidden ${showMobileMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setShowMobileMenu(false)}
+      >
+        <div 
+          className={`absolute right-0 top-0 h-full w-4/5 max-w-sm bg-background border-l border-border-light dark:border-border-dark shadow-2xl p-6 transition-transform duration-300 ${showMobileMenu ? 'translate-x-0' : 'translate-x-full'}`}
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-xl font-serif font-bold text-foreground">Menu</h2>
+            <button 
+              onClick={() => setShowMobileMenu(false)}
+              className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          
+          <div className="flex flex-col gap-6">
+            <Link to="/products" className="text-lg font-medium hover:text-orange-500 transition-colors" onClick={() => setShowMobileMenu(false)}>Catalog</Link>
+            <Link to="/stores" className="text-lg font-medium hover:text-orange-500 transition-colors" onClick={() => setShowMobileMenu(false)}>Stores</Link>
+            
+            {isAuthenticated && profile?.role === 'STORE_VENDOR' && (
+              <Link to="/vendor/dashboard" className="text-lg font-medium text-orange-500" onClick={() => setShowMobileMenu(false)}>Vendor Portal</Link>
+            )}
+            {isAuthenticated && profile?.role === 'ADMIN' && (
+              <Link to="/admin/dashboard" className="text-lg font-medium text-orange-500" onClick={() => setShowMobileMenu(false)}>Admin Panel</Link>
+            )}
+
+            <div className="h-px bg-border-light dark:bg-border-dark my-2"></div>
+
+            {isAuthenticated ? (
+              <>
+                <Link to="/profile" className="flex items-center gap-3 text-base text-muted hover:text-foreground" onClick={() => setShowMobileMenu(false)}>
+                  <Settings className="w-5 h-5" /> Account Settings
+                </Link>
+                <Link to="/profile/orders" className="flex items-center gap-3 text-base text-muted hover:text-foreground" onClick={() => setShowMobileMenu(false)}>
+                  <Package className="w-5 h-5" /> Orders & Receipts
+                </Link>
+                <button 
+                  onClick={() => { logout(); setShowMobileMenu(false); }}
+                  className="flex items-center gap-3 text-base text-accent-terracotta"
+                >
+                  <LogOut className="w-5 h-5" /> Sign out
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className="flex items-center gap-3 text-base font-medium text-foreground bg-black/5 dark:bg-white/5 p-3 rounded-xl justify-center mt-4" onClick={() => setShowMobileMenu(false)}>
+                Sign in
+              </Link>
+            )}
+          </div>
         </div>
       </div>
       
