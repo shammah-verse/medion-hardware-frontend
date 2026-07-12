@@ -147,9 +147,9 @@ export function Navbar() {
             )}
           </button>
           <Button 
-            variant="ghost" 
+            variant="outline" 
             size="sm" 
-            className="md:hidden h-10 w-10 md:h-12 md:w-12 rounded-full p-0 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 shadow-sm"
+            className="md:hidden h-10 w-10 md:h-12 md:w-12 rounded-full p-0 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-md border border-slate-200 dark:border-slate-700"
             onClick={() => setShowMobileMenu(true)}
           >
             <Menu className="h-5 w-5 text-foreground" />

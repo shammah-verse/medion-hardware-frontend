@@ -191,22 +191,22 @@ export function Home() {
       {/* 2. Marketplace Statistics */}
       <section className="relative -mt-12 z-20 max-w-7xl mx-auto px-4 lg:px-8 w-full">
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-4 md:p-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 divide-x-0 lg:divide-x divide-slate-100 dark:divide-slate-700">
-            <div className="flex flex-col items-center text-center px-2 md:px-4 space-y-1 md:space-y-2">
-              <span className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">500+</span>
-              <span className="text-xs md:text-sm font-medium text-slate-500 flex items-center gap-1 md:gap-2"><Store className="w-3 h-3 md:w-4 md:h-4"/> Verified Vendors</span>
+          <div className="flex items-center justify-between lg:grid lg:grid-cols-4 gap-2 md:gap-8 divide-x-0 lg:divide-x divide-slate-100 dark:divide-slate-700">
+            <div className="flex flex-col items-center text-center px-1 md:px-4 space-y-1 md:space-y-2">
+              <span className="text-lg sm:text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">500+</span>
+              <span className="text-[10px] sm:text-xs md:text-sm font-medium text-slate-500 flex flex-col sm:flex-row items-center gap-1 md:gap-2"><Store className="w-3 h-3 md:w-4 md:h-4"/> <span className="text-center">Verified Vendors</span></span>
             </div>
-            <div className="flex flex-col items-center text-center px-2 md:px-4 space-y-1 md:space-y-2">
-              <span className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">50k+</span>
-              <span className="text-xs md:text-sm font-medium text-slate-500 flex items-center gap-1 md:gap-2"><Package className="w-3 h-3 md:w-4 md:h-4"/> Products Listed</span>
+            <div className="flex flex-col items-center text-center px-1 md:px-4 space-y-1 md:space-y-2">
+              <span className="text-lg sm:text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">50k+</span>
+              <span className="text-[10px] sm:text-xs md:text-sm font-medium text-slate-500 flex flex-col sm:flex-row items-center gap-1 md:gap-2"><Package className="w-3 h-3 md:w-4 md:h-4"/> <span className="text-center">Products Listed</span></span>
             </div>
-            <div className="flex flex-col items-center text-center px-2 md:px-4 space-y-1 md:space-y-2">
-              <span className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">120k</span>
-              <span className="text-xs md:text-sm font-medium text-slate-500 flex items-center gap-1 md:gap-2"><Truck className="w-3 h-3 md:w-4 md:h-4"/> Orders Delivered</span>
+            <div className="flex flex-col items-center text-center px-1 md:px-4 space-y-1 md:space-y-2">
+              <span className="text-lg sm:text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">120k</span>
+              <span className="text-[10px] sm:text-xs md:text-sm font-medium text-slate-500 flex flex-col sm:flex-row items-center gap-1 md:gap-2"><Truck className="w-3 h-3 md:w-4 md:h-4"/> <span className="text-center">Orders Delivered</span></span>
             </div>
-            <div className="flex flex-col items-center text-center px-2 md:px-4 space-y-1 md:space-y-2">
-              <span className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">99%</span>
-              <span className="text-xs md:text-sm font-medium text-slate-500 flex items-center gap-1 md:gap-2"><Star className="w-3 h-3 md:w-4 md:h-4 text-amber-400"/> Satisfaction</span>
+            <div className="flex flex-col items-center text-center px-1 md:px-4 space-y-1 md:space-y-2">
+              <span className="text-lg sm:text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">99%</span>
+              <span className="text-[10px] sm:text-xs md:text-sm font-medium text-slate-500 flex flex-col sm:flex-row items-center gap-1 md:gap-2"><Star className="w-3 h-3 md:w-4 md:h-4 text-amber-400"/> <span className="text-center">Satisfaction</span></span>
             </div>
           </div>
         </div>
@@ -249,16 +249,16 @@ export function Home() {
       {/* 4. Shop by Category (Premium Slider) */}
       <section className="py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+          <div className="flex flex-row justify-between items-end mb-8 md:mb-12">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore by Category</h2>
-              <p className="text-slate-500 max-w-xl">Find exactly what you need from our comprehensive selection of professional products and services.</p>
+              <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">Explore by Category</h2>
+              <p className="text-sm md:text-base text-slate-500 max-w-xl hidden md:block">Find exactly what you need from our comprehensive selection of professional products and services.</p>
             </div>
-            <div className="flex items-center gap-4 mt-6 md:mt-0">
-              <Link to="/categories" className="text-orange-500 font-semibold flex items-center gap-2 hover:gap-3 transition-all hidden md:flex mr-4">
-                View All <ArrowRight className="w-5 h-5" />
+            <div className="flex items-center gap-4">
+              <Link to="/categories" className="text-orange-500 text-sm md:text-base font-semibold flex items-center gap-1 md:gap-2 hover:gap-3 transition-all">
+                View All <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
               </Link>
-              <div className="flex gap-2">
+              <div className="hidden md:flex gap-2">
                 <Button 
                   variant="outline" 
                   size="sm" 
@@ -288,32 +288,31 @@ export function Home() {
           ) : (
             <div 
               ref={scrollContainerRef}
-              className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6"
+              className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 md:grid md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6"
             >
               {categories.map((cat) => (
                   <Link 
                     key={cat.id} 
                     to={cat.type === 'SERVICE' || cat.id === 'services-static' ? '/services' : `/categories/${cat.id}`} 
-                    className="group relative block aspect-[4/5] rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 hover:border-orange-500/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 shrink-0"
+                    className="w-[120px] md:w-auto shrink-0 snap-center group relative block aspect-square md:aspect-[4/5] rounded-[20px] md:rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 hover:border-orange-500/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
                   >
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80 z-10" />
                     <img src={cat.imageUrl} alt={cat.name} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-transform duration-700 ease-out" />
                     
-                    <div className="absolute top-6 right-6 z-20">
+                    <div className="absolute top-4 right-4 z-20 hidden md:block">
                       <div className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold text-white shadow-sm border border-white/20">
                         {cat.itemCount} Items
                       </div>
                     </div>
-                    
-                    <div className="absolute inset-0 z-20 p-8 flex flex-col justify-end">
-                      <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-lg border border-white/30 transform group-hover:-translate-y-2 group-hover:scale-110 transition-transform duration-300 mb-4">
-                        {cat.icon ? (cat.icon.length < 5 ? cat.icon : <img src={cat.icon} alt="icon" className="w-6 h-6 invert" />) : <Package className="w-6 h-6 text-white" />}
+                    <div className="absolute inset-0 p-3 md:p-6 flex flex-col justify-end z-20">
+                      <div className="w-8 h-8 md:w-12 md:h-12 bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl flex items-center justify-center mb-2 md:mb-4 transform group-hover:scale-110 transition-transform duration-500">
+                        {cat.icon ? (cat.icon.length < 5 ? cat.icon : <img src={cat.icon} alt="icon" className="w-4 h-4 md:w-6 md:h-6 invert" />) : <Package className="w-4 h-4 md:w-6 md:h-6 text-white" />}
                       </div>
                       <div>
-                        <h3 className="text-white font-bold text-2xl leading-tight mb-2 tracking-tight group-hover:text-orange-400 transition-colors">{cat.name}</h3>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-white">{cat.itemCount || 0} items</span>
-                          <ArrowRight className="w-4 h-4 text-white transition-transform group-hover:translate-x-1" />
+                        <h3 className="text-white font-bold text-sm md:text-2xl leading-tight mb-1 md:mb-2 tracking-tight group-hover:text-orange-400 transition-colors">{cat.name}</h3>
+                        <div className="flex items-center gap-1 md:gap-2">
+                          <span className="text-[10px] md:text-sm font-semibold text-white">{cat.itemCount || 0} items</span>
+                          <ArrowRight className="w-3 h-3 md:w-4 md:h-4 text-white transition-transform group-hover:translate-x-1" />
                         </div>
                       </div>
                     </div>
@@ -333,26 +332,26 @@ export function Home() {
               <p className="text-slate-500">Hand-picked premium materials from top-rated vendors.</p>
             </div>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 md:gap-6 py-4 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="grid grid-cols-3 gap-2 md:flex md:overflow-x-auto md:snap-x md:snap-mandatory md:gap-6 py-4 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {loadingProducts
               ? Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="flex flex-col gap-4 bg-white dark:bg-slate-800 rounded-3xl p-3 border border-slate-200 dark:border-slate-700 w-[140px] md:w-[280px] shrink-0 snap-center md:snap-align-none">
-                    <Skeleton className="aspect-square w-full rounded-2xl" />
-                    <div className="space-y-2 px-2 pb-2">
-                      <Skeleton className="h-5 w-2/3" />
-                      <Skeleton className="h-4 w-1/3" />
+                  <div key={i} className="flex flex-col gap-2 md:gap-4 bg-white dark:bg-slate-800 rounded-xl md:rounded-3xl p-1.5 md:p-3 border border-slate-200 dark:border-slate-700 w-full md:w-[280px] shrink-0 md:snap-align-none">
+                    <Skeleton className="aspect-square w-full rounded-lg md:rounded-2xl" />
+                    <div className="space-y-1 md:space-y-2 px-1 md:px-2 pb-1 md:pb-2">
+                      <Skeleton className="h-3 md:h-5 w-2/3" />
+                      <Skeleton className="h-3 md:h-4 w-1/3" />
                     </div>
                   </div>
                 ))
-              : featuredProducts.slice(0, 20).map((product) => (
+              : featuredProducts.slice(0, 45).map((product) => (
                   <motion.div 
-                    whileHover={{ y: -8 }}
+                    whileHover={{ y: -4 }}
                     key={product.id} 
-                    className="group flex flex-col w-[140px] md:w-[280px] shrink-0 snap-center md:snap-align-none cursor-pointer bg-white dark:bg-slate-800 rounded-3xl p-2 md:p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
+                    className="group flex flex-col w-full md:w-[280px] shrink-0 md:snap-center cursor-pointer bg-white dark:bg-slate-800 rounded-xl md:rounded-3xl p-1.5 md:p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
                     onClick={() => navigate(`/products/${product.id}`)}
                   >
-                    <div className="relative aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl mb-3 md:mb-4 overflow-hidden">
-                      <div className="absolute top-2 left-2 md:top-3 md:left-3 z-20">
+                    <div className="relative aspect-square bg-slate-50 dark:bg-slate-900 rounded-lg md:rounded-2xl mb-2 md:mb-4 overflow-hidden">
+                      <div className="absolute top-1 left-1 md:top-3 md:left-3 z-20 hidden md:block">
                         <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-[10px] md:text-xs font-bold px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1">
                           <Package className="w-3 h-3 text-emerald-500" /> {product.category}
                         </span>
@@ -365,24 +364,24 @@ export function Home() {
                       />
                       
                       {/* Quick Add Button */}
-                      <div className="absolute bottom-3 right-3 z-20 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <div className="absolute bottom-1 right-1 md:bottom-3 md:right-3 z-20 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                         <Button 
                           size="sm" 
-                          className="h-10 w-10 p-0 rounded-full shadow-lg bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center"
+                          className="h-6 w-6 md:h-10 md:w-10 p-0 rounded-full shadow-lg bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center"
                           onClick={(e) => handleAddToCart(e, product.id)}
                         >
-                          <Plus className="h-5 w-5" />
+                          <Plus className="h-3 w-3 md:h-5 md:w-5" />
                         </Button>
                       </div>
                     </div>
                     
-                    <div className="flex flex-col px-2 pb-1 md:pb-2">
-                      <p className="text-[10px] md:text-xs font-semibold text-orange-500 mb-1">{product.category}</p>
-                      <h3 className="text-sm md:text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 md:mb-2 line-clamp-1">{product.name}</h3>
-                      <p className="text-xs md:text-sm text-slate-500 line-clamp-2 mb-2 md:mb-3">{product.description || 'Premium quality, professionally crafted and verified for superior performance and durability.'}</p>
+                    <div className="flex flex-col px-1 md:px-2 pb-1 md:pb-2">
+                      <p className="text-[8px] md:text-xs font-semibold text-orange-500 mb-0.5 md:mb-1 truncate">{product.category}</p>
+                      <h3 className="text-[10px] md:text-base font-bold text-slate-900 dark:text-white leading-tight mb-0.5 md:mb-2 line-clamp-2">{product.name}</h3>
+                      <p className="hidden md:block text-xs md:text-sm text-slate-500 line-clamp-2 mb-2 md:mb-3">{product.description || 'Premium quality, professionally crafted and verified for superior performance and durability.'}</p>
                       <div className="flex justify-between items-center mt-auto">
-                        <span className="text-base md:text-lg font-black text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
-                        <div className="flex items-center gap-1 text-slate-400 text-[10px] md:text-xs font-medium">
+                        <span className="text-[11px] md:text-lg font-black text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
+                        <div className="hidden md:flex items-center gap-1 text-slate-400 text-[10px] md:text-xs font-medium">
                           <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> 4.9
                         </div>
                       </div>
@@ -473,7 +472,7 @@ export function Home() {
               { text: "We opened our digital storefront on the Pro Plan and saw a 40% increase in revenue within two months. The dashboard insights are incredible.", author: "Sarah J.", role: "Owner, City Hardware Co." },
               { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" }
             ].map((review, i) => (
-              <div key={i} className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 text-left shadow-sm min-w-[280px] md:min-w-0 md:flex-1 shrink-0 snap-center">
+              <div key={i} className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 text-left shadow-sm w-[85vw] max-w-[320px] md:min-w-0 md:w-auto md:flex-1 shrink-0 snap-center">
                 <div className="flex gap-1 mb-4 md:mb-6">
                   {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>

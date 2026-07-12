@@ -86,14 +86,14 @@ export function ProductCatalog() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16">
+      <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8 gap-y-6 md:gap-y-16">
         {loading
-          ? Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="flex flex-col gap-4">
-                <Skeleton className="aspect-square w-full rounded-2xl" />
-                <div className="space-y-2">
-                  <Skeleton className="h-6 w-2/3" />
-                  <Skeleton className="h-5 w-1/3" />
+          ? Array.from({ length: 15 }).map((_, i) => (
+              <div key={i} className="flex flex-col gap-2 md:gap-4">
+                <Skeleton className="aspect-square w-full rounded-lg md:rounded-2xl" />
+                <div className="space-y-1 md:space-y-2">
+                  <Skeleton className="h-4 md:h-6 w-2/3" />
+                  <Skeleton className="h-3 md:h-5 w-1/3" />
                 </div>
               </div>
             ))
@@ -104,9 +104,9 @@ export function ProductCatalog() {
                 className="cursor-pointer"
               >
                 <Card hoverLift className="flex flex-col overflow-hidden group border-none bg-transparent dark:bg-transparent shadow-none dark:shadow-none h-full">
-                  <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-2xl mb-6 overflow-hidden relative">
-                    <div className="absolute top-3 left-3 z-20">
-                      <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-xs font-bold px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1 text-slate-900 dark:text-white">
+                  <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-lg md:rounded-2xl mb-2 md:mb-6 overflow-hidden relative">
+                    <div className="absolute top-1 left-1 md:top-3 md:left-3 z-20 hidden md:block">
+                      <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-[10px] md:text-xs font-bold px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1 text-slate-900 dark:text-white">
                         <Package className="w-3 h-3 text-emerald-500" /> {product.category}
                       </span>
                     </div>
@@ -118,25 +118,23 @@ export function ProductCatalog() {
                     />
                     
                     {/* Quick Add Button */}
-                    <div className="absolute bottom-4 right-4 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="absolute bottom-1 right-1 md:bottom-4 md:right-4 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                       <Button 
                         size="sm" 
-                        className="h-10 w-10 p-0 rounded-full shadow-lg"
+                        className="h-6 w-6 md:h-10 md:w-10 p-0 rounded-full shadow-lg bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center"
                         onClick={(e) => handleAddToCart(e, product.id)}
                         aria-label="Add to cart"
                       >
-                        <Plus className="h-5 w-5" />
+                        <Plus className="h-3 w-3 md:h-5 md:w-5" />
                       </Button>
                     </div>
                   </div>
                   
-                  <div className="flex justify-between items-start px-2 pb-2">
-                    <div className="flex-1 pr-4">
-                      <h3 className="text-lg font-medium text-foreground mb-1 group-hover:text-accent-terracotta transition-colors line-clamp-1">{product.name}</h3>
-                      <p className="text-muted text-xs mb-2">{product.category}</p>
-                      <p className="text-sm text-muted line-clamp-2">{product.description || 'Professional grade equipment for your next project.'}</p>
-                    </div>
-                    <span className="text-lg text-foreground font-medium shrink-0">${product.price.toFixed(2)}</span>
+                  <div className="flex flex-col px-1 md:px-2 pb-1 md:pb-2">
+                    <p className="text-[8px] md:text-xs font-semibold text-orange-500 mb-0.5 md:mb-1 truncate">{product.category}</p>
+                    <h3 className="text-[10px] md:text-lg font-bold text-foreground mb-0.5 md:mb-1 group-hover:text-accent-terracotta transition-colors line-clamp-2 leading-tight">{product.name}</h3>
+                    <p className="hidden md:block text-sm text-muted line-clamp-2 mb-2 md:mb-3">{product.description || 'Professional grade equipment for your next project.'}</p>
+                    <span className="text-[11px] md:text-lg text-foreground font-black shrink-0 mt-auto">${product.price.toFixed(2)}</span>
                   </div>
                 </Card>
               </div>
