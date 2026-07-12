@@ -353,10 +353,10 @@ export function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="flex gap-6 overflow-x-auto pb-8 snap-x scrollbar-hide">
             {loadingProducts
               ? Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="flex flex-col gap-4">
+                  <div key={i} className="flex flex-col gap-4 min-w-[280px] shrink-0">
                     <Skeleton className="aspect-square w-full rounded-3xl" />
                     <div className="space-y-2 px-2">
                       <Skeleton className="h-5 w-2/3" />
@@ -368,7 +368,7 @@ export function Home() {
                   <motion.div 
                     whileHover={{ y: -8 }}
                     key={product.id} 
-                    className="group flex flex-col cursor-pointer bg-white dark:bg-slate-800 rounded-3xl p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
+                    className="group flex flex-col min-w-[280px] w-[280px] shrink-0 snap-center cursor-pointer bg-white dark:bg-slate-800 rounded-3xl p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
                     onClick={() => navigate(`/products/${product.id}`)}
                   >
                     <div className="relative aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl mb-4 overflow-hidden">
@@ -379,7 +379,7 @@ export function Home() {
                       </div>
 
                       <img 
-                        src={product.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://loremflickr.com/800/800/${encodeURIComponent((product.name || '').split(' ')[0] || 'tool')},tool?lock=${product.id ? product.id.charCodeAt(0) : 1}`} 
+                        src={product.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80`} 
                         alt={product.name} 
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" 
                       />
@@ -399,7 +399,7 @@ export function Home() {
                     <div className="flex flex-col px-2 pb-2">
                       <p className="text-xs font-semibold text-orange-500 mb-1">{product.category}</p>
                       <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight mb-2 line-clamp-1">{product.name}</h3>
-                      <p className="text-sm text-slate-500 line-clamp-2 mb-3">{product.description || 'Professional grade equipment for your next project.'}</p>
+                      <p className="text-sm text-slate-500 line-clamp-2 mb-3">{product.description || 'Premium quality, professionally crafted and verified for superior performance and durability.'}</p>
                       <div className="flex justify-between items-center mt-auto">
                         <span className="text-lg font-black text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
                         <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">
@@ -487,13 +487,15 @@ export function Home() {
       <section className="py-24 bg-[#FAFAFA] dark:bg-[#0B0F19]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-16">Trusted by the Industry</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="flex gap-8 overflow-x-auto pb-8 snap-x scrollbar-hide items-center">
             {[
               { text: "This platform transformed how we source materials. Being able to compare prices from multiple local hardware stores in one checkout is a game changer for our construction firm.", author: "Marcus T.", role: "Lead Contractor" },
               { text: "We opened our digital storefront on the Pro Plan and saw a 40% increase in revenue within two months. The dashboard insights are incredible.", author: "Sarah J.", role: "Owner, City Hardware Co." },
-              { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" }
+              { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" },
+              { text: "The verified vendor program gives us peace of mind when ordering bulk supplies for our development projects. Highly recommended.", author: "David W.", role: "Project Manager" },
+              { text: "I found exactly the specialized tools I needed from a store just 5 miles away. The convenience and local support are unmatched.", author: "Michael C.", role: "Independent Builder" }
             ].map((review, i) => (
-              <div key={i} className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 text-left shadow-sm">
+              <div key={i} className="min-w-[320px] md:min-w-[400px] shrink-0 snap-center bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 text-left shadow-sm transform hover:scale-105 transition-all duration-300 opacity-90 hover:opacity-100">
                 <div className="flex gap-1 mb-6">
                   {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
@@ -513,33 +515,25 @@ export function Home() {
         </div>
       </section>
 
-      {/* 11. Newsletter Capture */}
-      <section className="max-w-4xl mx-auto px-6 py-24 w-full text-center">
-        <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-8 transform rotate-12">
-          <Building2 className="w-8 h-8" />
+      {/* 11. FAQs Section */}
+      <section className="max-w-4xl mx-auto px-6 py-24 w-full">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+          <p className="text-slate-500 text-lg">Everything you need to know about shopping with us.</p>
         </div>
-        <h2 className="text-4xl md:text-5xl font-bold mb-6">Build Better. Shop Smarter.</h2>
-        <p className="text-lg text-slate-500 mb-10 max-w-2xl mx-auto">
-          Subscribe to receive updates about new hardware stores, seasonal promotions, and industry insights directly to your inbox.
-        </p>
-        <form 
-          className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto"
-          onSubmit={(e) => { e.preventDefault(); alert("Thanks for subscribing!"); setEmail(''); }}
-        >
-          <div className="flex-1">
-            <Input 
-              type="email" 
-              placeholder="Enter your email address" 
-              required 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full h-14 rounded-2xl px-6 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
-            />
-          </div>
-          <Button type="submit" className="h-14 rounded-2xl px-8 font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90 whitespace-nowrap">
-            Subscribe
-          </Button>
-        </form>
+        <div className="space-y-6">
+          {[
+            { q: "How do I find local stores?", a: "You can use our 'Find a Store' feature which utilizes your location to show the nearest verified hardware vendors, complete with their distance and reviews." },
+            { q: "Is payment secure?", a: "Yes, all payments are processed securely through Pesapal, ensuring your funds are protected with enterprise-grade encryption until your delivery is confirmed." },
+            { q: "Can I become a vendor?", a: "Absolutely! Click 'Start Selling Today' to set up your digital storefront and get access to our vendor dashboard and analytics." },
+            { q: "How are products delivered?", a: "Our partner stores handle logistics. Delivery options and times are clearly shown during checkout based on your location." }
+          ].map((faq, i) => (
+            <div key={i} className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm text-left">
+              <h3 className="font-bold text-xl mb-3 text-slate-900 dark:text-white">{faq.q}</h3>
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{faq.a}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
     </div>

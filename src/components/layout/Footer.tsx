@@ -3,7 +3,7 @@ import { Button } from '../ui/Button';
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-border-light dark:border-border-dark bg-background mt-32">
+    <footer className="w-full border-t border-border-light dark:border-border-dark bg-[#FAFAFA] dark:bg-[#0B0F19] mt-0">
       <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-4">
           
@@ -53,9 +53,9 @@ export function Footer() {
         <div className="mt-24 border-t border-border-light dark:border-border-dark pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted">
           <p>&copy; {new Date().getFullYear()} Medion Hardware. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground transition-colors">Twitter</a>
-            <a href="#" className="hover:text-foreground transition-colors">Instagram</a>
-            <a href="#" className="hover:text-foreground transition-colors">GitHub</a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors cursor-pointer">Twitter</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors cursor-pointer">Instagram</a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors cursor-pointer">GitHub</a>
           </div>
         </div>
       </div>
