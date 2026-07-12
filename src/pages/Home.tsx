@@ -60,71 +60,20 @@ export function Home() {
       try {
         const data = await categoriesApi.getFeaturedCategories();
         
-        const fallbackImageMap: Record<string, string> = {
-          'furniture': 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&q=80',
-          'electronic': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&q=80',
-          'computer': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80',
-          'phone': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&q=80',
-          'kitchen': 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=80',
-          'cloth': 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&q=80',
-          'shoe': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80',
-          'tool': 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80',
-          'building': 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80',
-          'service': 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80',
-          'default': 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&q=80'
-        };
-
-        const getImageUrl = (name: string, currentUrl?: string) => {
-          if (currentUrl && currentUrl.startsWith('http') && !currentUrl.includes('example.com') && currentUrl.trim() !== '') return currentUrl;
-          const n = name.toLowerCase();
-          for (const [key, url] of Object.entries(fallbackImageMap)) {
-            if (n.includes(key)) return url;
-          }
-          return fallbackImageMap.default;
-        };
-
-        // Standardize backend data with images
-        let processed = data.map(c => ({
-          ...c,
-          imageUrl: getImageUrl(c.name, c.imageUrl)
-        }));
-
-        // Requested hardcoded categories if not enough from backend
-        const essentialCategories: Category[] = [
-          { id: 'cat-furniture', name: 'Furniture', description: 'Premium furniture for home and office.', imageUrl: fallbackImageMap.furniture, icon: '🛋️', itemCount: 150, featured: true, type: 'PRODUCT' },
-          { id: 'cat-electronics', name: 'Electronics', description: 'Latest gadgets and appliances.', imageUrl: fallbackImageMap.electronic, icon: '🔌', itemCount: 320, featured: true, type: 'PRODUCT' },
-          { id: 'cat-computers', name: 'Computers & Phones', description: 'Laptops, smartphones, and accessories.', imageUrl: fallbackImageMap.computer, icon: '💻', itemCount: 410, featured: true, type: 'PRODUCT' },
-          { id: 'cat-kitchenware', name: 'Kitchenware', description: 'Culinary tools and dining essentials.', imageUrl: fallbackImageMap.kitchen, icon: '🍳', itemCount: 180, featured: true, type: 'PRODUCT' },
-          { id: 'cat-clothes', name: 'Clothes & Shoes', description: 'Fashion, apparel, and footwear.', imageUrl: fallbackImageMap.cloth, icon: '👕', itemCount: 600, featured: true, type: 'PRODUCT' },
-          { id: 'cat-tools', name: 'Tools & Building Materials', description: 'Professional grade hardware.', imageUrl: fallbackImageMap.tool, icon: '🔨', itemCount: 250, featured: true, type: 'PRODUCT' }
-        ];
-
-        // Merge missing essential categories
-        essentialCategories.forEach(ec => {
-          if (!processed.some(p => p.name.toLowerCase().includes(ec.name.toLowerCase().split(' ')[0]))) {
-            processed.push(ec);
-          }
-        });
-
-        // Ensure Services card is present and FIRST
-        const servicesStatic: Category = {
-          id: 'services-static',
-          name: 'Local Services',
-          description: 'Explore and book professional contractors, mechanics, and local experts near you.',
-          imageUrl: fallbackImageMap.service,
-          icon: '🛠️',
-          itemCount: 45,
-          featured: true,
-          type: 'SERVICE'
-        };
-
-        const backendServices = processed.filter(c => c.type === 'SERVICE');
-        const products = processed.filter(c => c.type !== 'SERVICE');
-
-        // Services always go first
-        const finalCategories = [
-          ...(backendServices.length > 0 ? backendServices : [servicesStatic]),
-          ...products
+        // Ensure Services card is present
+        const hasServices = data.some(c => c.type === 'SERVICE');
+        const finalCategories = hasServices ? data : [
+          {
+            id: 'services-static',
+            name: 'Local Services',
+            description: 'Book professional contractors, mechanics, and local experts.',
+            imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80',
+            icon: '🛠️',
+            itemCount: 24,
+            featured: true,
+            type: 'SERVICE'
+          } as Category,
+          ...data
         ];
         
         setCategories(finalCategories);
