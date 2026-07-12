@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, Shield, Plus, 
   Star, Truck, CreditCard,
-  Building2,
   Store, CheckCircle2, Package,
   ChevronLeft, ChevronRight, Search
 } from 'lucide-react';
@@ -11,7 +10,6 @@ import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
-import { Input } from '../components/ui/Input';
 import { productsApi } from '../api/products';
 import type { Product } from '../api/products';
 import { categoriesApi } from '../api/categories';
@@ -38,7 +36,6 @@ export function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
-  const [email, setEmail] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const scrollContainerRef = useRef<HTMLDivElement>(null);
