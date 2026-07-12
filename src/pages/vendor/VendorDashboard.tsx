@@ -187,8 +187,12 @@ export function VendorDashboard() {
         
         setStore(storeData);
         
-        const productsData = await vendorApi.getStoreProducts(storeId || undefined);
-        setProducts(productsData);
+        if (storeData) {
+          const productsData = await vendorApi.getStoreProducts(storeData.id);
+          setProducts(productsData);
+        } else {
+          setProducts([]);
+        }
         
         if (storeData) {
           try {

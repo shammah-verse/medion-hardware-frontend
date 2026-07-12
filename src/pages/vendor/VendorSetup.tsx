@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Store, MapPin, Loader2 } from 'lucide-react';
+import { Store, MapPin, Loader2, Phone } from 'lucide-react';
 import { vendorApi } from '../../api/vendor';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 
@@ -16,12 +17,43 @@ export function VendorSetup() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  const [paymentPending, setPaymentPending] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [pendingStoreId, setPendingStoreId] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Note: We now allow multiple stores, so we don't automatically redirect
-    // if they already have one.
-  }, []);
+    let interval: ReturnType<typeof setInterval>;
+    
+    if (paymentPending && pendingStoreId) {
+      interval = setInterval(async () => {
+        try {
+          const statusStr = await vendorApi.getStoreSubscriptionStatus(pendingStoreId);
+          // Assuming backend might return a string or an object like { status: 'SUCCESS' }
+          // Based on the prompt we expect "SUCCESS"
+          const status = typeof statusStr === 'string' ? statusStr : (statusStr as any).status;
+          
+          if (status === 'SUCCESS') {
+            clearInterval(interval);
+            setPaymentPending(false);
+            setPaymentSuccess(true);
+            setTimeout(() => {
+               navigate('/vendor/dashboard');
+            }, 3000);
+          } else if (status === 'FAILED') {
+            clearInterval(interval);
+            setPaymentPending(false);
+            setError('Payment failed or was cancelled. Please try again.');
+          }
+        } catch (err) {
+          console.error("Failed to poll payment status", err);
+        }
+      }, 3000);
+    }
+    
+    return () => clearInterval(interval);
+  }, [paymentPending, pendingStoreId, navigate]);
 
   const handleGetLocation = () => {
     setLoadingLocation(true);
@@ -62,7 +94,10 @@ export function VendorSetup() {
         subscriptionType
       });
       
-      if (result.paymentUrl) {
+      if (result.mpesaStatus === 'STK_PUSH_SENT') {
+        setPendingStoreId(result.store.id);
+        setPaymentPending(true);
+      } else if (result.paymentUrl) {
         window.location.href = result.paymentUrl;
       } else {
         navigate('/vendor/dashboard');
@@ -189,12 +224,57 @@ export function VendorSetup() {
           )}
 
           <div className="pt-6">
-            <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-              {submitting ? 'Creating Store...' : 'Launch Store'}
+            <Button type="submit" size="lg" className="w-full" disabled={submitting || paymentPending}>
+              {submitting ? 'Creating Store...' : paymentPending ? 'Waiting for Payment...' : 'Launch Store'}
             </Button>
           </div>
         </form>
       </div>
+
+      {/* M-Pesa STK Push Polling Modal */}
+      {paymentPending && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="w-full max-w-md bg-background border border-border-light dark:border-border-dark rounded-[32px] p-8 shadow-2xl flex flex-col items-center text-center">
+            <div className="w-20 h-20 bg-accent-sage/10 text-accent-sage rounded-full flex items-center justify-center mb-6 animate-pulse">
+              <Phone className="w-10 h-10" />
+            </div>
+            <h2 className="text-2xl font-serif text-foreground mb-4">Complete Payment</h2>
+            <p className="text-muted mb-8">
+              Check your phone! We've sent an M-Pesa prompt to your device. Enter your PIN to complete the store subscription.
+            </p>
+            <div className="flex items-center gap-3 text-accent-sage font-medium">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Waiting for payment confirmation...
+            </div>
+            <Button 
+              variant="ghost" 
+              className="mt-8"
+              onClick={() => {
+                setPaymentPending(false);
+                setError('Payment cancelled.');
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Success Lottie Animation Modal */}
+      {paymentSuccess && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="w-96 h-96">
+            <DotLottieReact
+              src="https://lottie.host/0e9aec33-5140-4f79-af99-34c4ac8f2a3d/PExVMY2Lkz.lottie"
+              loop={false}
+              autoplay
+            />
+          </div>
+          <div className="absolute mt-64 text-2xl font-serif text-foreground">
+            Payment Successful! Redirecting...
+          </div>
+        </div>
+      )}
     </div>
   );
 }

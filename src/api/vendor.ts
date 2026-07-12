@@ -42,18 +42,18 @@ export const vendorApi = {
     }
   },
 
-  createStore: async (data: CreateStorePayload): Promise<{ store: Store; paymentUrl?: string }> => {
-    const response = await apiClient.post<{ store: Store; paymentUrl?: string }>('/stores', data);
+  createStore: async (data: CreateStorePayload): Promise<{ store: Store; paymentUrl?: string; mpesaStatus?: string }> => {
+    const response = await apiClient.post<{ store: Store; paymentUrl?: string; mpesaStatus?: string }>('/stores', data);
     return response.data;
   },
 
-  getStoreProducts: async (storeId?: string): Promise<Product[]> => {
-    // If storeId is provided, fetch for that store, otherwise fetch all active (legacy behavior)
-    if (storeId) {
-      const response = await apiClient.get<Product[]>(`/stores/${storeId}/products`);
-      return response.data;
-    }
-    const response = await apiClient.get<Product[]>('/products/active'); 
+  getStoreSubscriptionStatus: async (storeId: string): Promise<string> => {
+    const response = await apiClient.get<string>(`/payments/store-subscription/${storeId}/status`);
+    return response.data;
+  },
+
+  getStoreProducts: async (storeId: string): Promise<Product[]> => {
+    const response = await apiClient.get<Product[]>(`/stores/${storeId}/products`);
     return response.data;
   },
 

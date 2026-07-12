@@ -25,7 +25,7 @@ export interface WithdrawalRequest {
 
 export const walletApi = {
   getBalance: async (): Promise<WalletBalance> => {
-    const response = await apiClient.get<WalletBalance>('/vendor/wallet/balance');
+    const response = await apiClient.get<WalletBalance>('/wallets/my-wallet');
     return response.data;
   },
 
