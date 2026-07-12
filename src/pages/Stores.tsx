@@ -10,7 +10,56 @@ export function Stores() {
   const [stores, setStores] = useState<(Store & { rating: number, reviews: number })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+    const R = 6371; // Radius of the earth in km
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1); 
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2); 
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    const d = R * c; 
+    return d;
+  }
+
+  function deg2rad(deg: number) {
+    return deg * (Math.PI/180);
+  }
+
+  const handleFindNearMe = () => {
+    setIsLocating(true);
+    setLocationError(null);
+
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser.");
+      setIsLocating(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const storesWithDistance = stores.map(store => {
+          // If a store doesn't have valid lat/lon, put it at the end
+          if (!store.latitude || !store.longitude) return { ...store, distance: 99999 };
+          const dist = calculateDistance(latitude, longitude, store.latitude, store.longitude);
+          return { ...store, distance: Number(dist.toFixed(1)) };
+        }).sort((a, b) => a.distance - b.distance);
+        
+        setStores(storesWithDistance);
+        setIsLocating(false);
+      },
+      () => {
+        setLocationError("Unable to retrieve your location. Please check your browser permissions.");
+        setIsLocating(false);
+      }
+    );
+  };
 
   useEffect(() => {
     fetchStores();
@@ -78,9 +127,20 @@ export function Stores() {
         <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-6">
           Featured Hardware Partners
         </h1>
-        <p className="text-lg text-muted">
+        <p className="text-lg text-muted mb-8">
           Discover top-rated, authorized Medion vendors across the country. Our partners are thoroughly vetted to ensure you receive genuine products and exceptional service.
         </p>
+        <Button 
+          onClick={handleFindNearMe} 
+          disabled={isLocating}
+          className="gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200 rounded-2xl px-8 py-6 text-base font-bold shadow-xl shadow-slate-900/10 dark:shadow-white/10 transition-all hover:-translate-y-0.5"
+        >
+          <MapPin className="w-5 h-5" />
+          {isLocating ? 'Locating...' : 'Find Stores Near Me'}
+        </Button>
+        {locationError && (
+          <p className="text-red-500 mt-4 text-sm font-medium">{locationError}</p>
+        )}
       </div>
 
       {stores.length === 0 ? (
@@ -123,7 +183,12 @@ export function Stores() {
                 <div className="space-y-3 mb-8">
                   <div className="flex items-start gap-3 text-muted">
                     <MapPin className="w-5 h-5 shrink-0 text-foreground" />
-                    <span className="text-sm">{store.address}</span>
+                    <div className="flex flex-col">
+                      <span className="text-sm">{store.address}</span>
+                      {store.distance !== undefined && store.distance < 99999 && (
+                        <span className="text-xs font-bold text-accent-terracotta mt-1">{store.distance} km away</span>
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center gap-3 text-muted">
                     <Clock className="w-5 h-5 shrink-0 text-foreground" />
