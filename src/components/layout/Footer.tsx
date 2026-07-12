@@ -11,8 +11,7 @@ export function Footer() {
           <div className="lg:col-span-2 space-y-8">
             <h2 className="text-3xl font-serif tracking-tight text-foreground">Medion.</h2>
             <p className="text-muted max-w-md text-sm leading-relaxed">
-              Uncompromising hardware designed with an obsessive attention to detail. 
-              Subscribe to our newsletter for early access to new releases.
+              Shop easily for premium products, find top-rated services near you, or launch your own multi-vendor storefront in minutes. Join our thriving community today!
             </p>
             <form className="flex max-w-md gap-3" onSubmit={(e) => e.preventDefault()}>
               <input 
@@ -31,9 +30,8 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Shop</h3>
             <ul className="space-y-4 text-sm text-muted">
               <li><Link to="/products" className="hover:text-foreground transition-colors focus-ring rounded-sm">All Products</Link></li>
-              <li><Link to="/products?category=Input" className="hover:text-foreground transition-colors focus-ring rounded-sm">Input Devices</Link></li>
-              <li><Link to="/products?category=Workspace" className="hover:text-foreground transition-colors focus-ring rounded-sm">Workspace</Link></li>
-              <li><Link to="/products?category=Environment" className="hover:text-foreground transition-colors focus-ring rounded-sm">Environment</Link></li>
+              <li><Link to="/vendor" className="hover:text-foreground transition-colors focus-ring rounded-sm">Start a Store</Link></li>
+              <li><Link to="/stores" className="hover:text-foreground transition-colors focus-ring rounded-sm">View Stores</Link></li>
             </ul>
           </div>
 

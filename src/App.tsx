@@ -24,6 +24,10 @@ import { Wallet as VendorWallet } from './pages/vendor/Wallet';
 import { Verification as VendorVerification } from './pages/vendor/Verification';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { useAuthStore } from './store/useAuthStore';
+import { About } from './pages/About';
+import { Journal } from './pages/Journal';
+import { Support } from './pages/Support';
+import { Terms } from './pages/Terms';
 
 export function App() {
   const initialize = useAuthStore(state => state.initialize);
@@ -47,6 +51,10 @@ export function App() {
           <Route path="services/:id" element={<ServiceDetails />} />
           <Route path="stores" element={<Stores />} />
           <Route path="stores/:id" element={<StoreProfile />} />
+          <Route path="about" element={<About />} />
+          <Route path="journal" element={<Journal />} />
+          <Route path="support" element={<Support />} />
+          <Route path="terms" element={<Terms />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           

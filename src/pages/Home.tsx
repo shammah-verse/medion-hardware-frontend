@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  ArrowRight, Shield, Plus, 
+  ArrowRight, Shield, Plus, Minus,
   Star, Truck, CreditCard,
   Store, CheckCircle2, Package,
   ChevronLeft, ChevronRight, Search
@@ -37,6 +37,7 @@ export function Home() {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   
@@ -141,12 +142,12 @@ export function Home() {
             className="flex-1 text-left pt-12 lg:pt-0"
           >
             <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-6">
-              Everything Your Next <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">Construction Project</span> Needs.
+              Discover Products & <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">Services Near You.</span>
             </motion.h1>
             
             <motion.p variants={fadeUp} className="text-xl text-slate-300 font-light leading-relaxed mb-10 max-w-2xl">
-              Discover premium building materials and professional tools from verified local suppliers. Shop seamlessly across multiple vendors, or grow your own hardware business online.
+              Easily find top-rated local products and services, or start your own store to market your business on our platform.
             </motion.p>
             
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -164,7 +165,7 @@ export function Home() {
             
             <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-sm font-medium text-white backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Trusted by 500+ Local Hardware Stores
+              Trusted by 500+ Local Stores
             </motion.div>
           </motion.div>
 
@@ -214,7 +215,7 @@ export function Home() {
       <section className="py-24 bg-[#FAFAFA] dark:bg-[#0B0F19]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">The Smarter Way to Source Hardware</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">The Smarter Way to Shop</h2>
             <p className="text-slate-500 max-w-2xl mx-auto text-lg">Compare prices, discover local suppliers, and order professional-grade materials from one unified platform.</p>
           </div>
           
@@ -224,7 +225,7 @@ export function Home() {
                 <Store className="w-7 h-7" />
               </div>
               <h3 className="text-xl font-bold mb-3">Multiple Vendors, One Cart</h3>
-              <p className="text-slate-500 leading-relaxed">Source materials from various hardware stores and checkout instantly. We handle the logistics and routing.</p>
+              <p className="text-slate-500 leading-relaxed">Source products from various stores and checkout instantly. We handle the logistics and routing.</p>
             </div>
             <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
               <div className="w-14 h-14 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center mb-6">
@@ -350,10 +351,10 @@ export function Home() {
             </div>
           </div>
 
-          <div className="flex gap-6 overflow-x-auto pb-8 snap-x scrollbar-hide">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-h-[800px] overflow-y-auto pr-4 snap-y scrollbar-hide py-4">
             {loadingProducts
               ? Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="flex flex-col gap-4 min-w-[280px] shrink-0">
+                  <div key={i} className="flex flex-col gap-4 shrink-0">
                     <Skeleton className="aspect-square w-full rounded-3xl" />
                     <div className="space-y-2 px-2">
                       <Skeleton className="h-5 w-2/3" />
@@ -361,11 +362,11 @@ export function Home() {
                     </div>
                   </div>
                 ))
-              : featuredProducts.slice(0, 8).map((product) => (
+              : featuredProducts.map((product) => (
                   <motion.div 
                     whileHover={{ y: -8 }}
                     key={product.id} 
-                    className="group flex flex-col min-w-[280px] w-[280px] shrink-0 snap-center cursor-pointer bg-white dark:bg-slate-800 rounded-3xl p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
+                    className="group flex flex-col snap-center cursor-pointer bg-white dark:bg-slate-800 rounded-3xl p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
                     onClick={() => navigate(`/products/${product.id}`)}
                   >
                     <div className="relative aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl mb-4 overflow-hidden">
@@ -417,8 +418,8 @@ export function Home() {
         
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-16">
           <div className="flex-1">
-            <span className="text-orange-500 font-bold tracking-wider uppercase text-sm mb-4 block">For Hardware Businesses</span>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Grow Your Hardware Business Online.</h2>
+            <span className="text-orange-500 font-bold tracking-wider uppercase text-sm mb-4 block">For Store Owners</span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Grow Your Store Online.</h2>
             <p className="text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
               Create your digital storefront in minutes. Manage inventory, process orders, and reach customers nationwide using our premium vendor tools.
             </p>
@@ -464,7 +465,7 @@ export function Home() {
                 Most Popular
               </div>
               <h3 className="text-xl font-bold mb-2">Pro Vendor Plan</h3>
-              <p className="text-slate-400 text-sm mb-6">For serious hardware stores</p>
+              <p className="text-slate-400 text-sm mb-6">For serious stores</p>
               <div className="mb-8">
                 <span className="text-4xl font-black">$20</span>
                 <span className="text-slate-400 font-medium"> / month</span>
@@ -518,16 +519,31 @@ export function Home() {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
           <p className="text-slate-500 text-lg">Everything you need to know about shopping with us.</p>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-4">
           {[
-            { q: "How do I find local stores?", a: "You can use our 'Find a Store' feature which utilizes your location to show the nearest verified hardware vendors, complete with their distance and reviews." },
+            { q: "How do I find local stores?", a: "You can use our 'Find a Store' feature which utilizes your location to show the nearest verified vendors, complete with their distance and reviews." },
             { q: "Is payment secure?", a: "Yes, all payments are processed securely through Pesapal, ensuring your funds are protected with enterprise-grade encryption until your delivery is confirmed." },
             { q: "Can I become a vendor?", a: "Absolutely! Click 'Start Selling Today' to set up your digital storefront and get access to our vendor dashboard and analytics." },
             { q: "How are products delivered?", a: "Our partner stores handle logistics. Delivery options and times are clearly shown during checkout based on your location." }
           ].map((faq, i) => (
-            <div key={i} className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm text-left">
-              <h3 className="font-bold text-xl mb-3 text-slate-900 dark:text-white">{faq.q}</h3>
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{faq.a}</p>
+            <div 
+              key={i} 
+              className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden transition-all duration-300"
+            >
+              <button 
+                className="w-full px-8 py-6 text-left flex items-center justify-between focus:outline-none"
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+              >
+                <h3 className="font-bold text-lg text-slate-900 dark:text-white">{faq.q}</h3>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${openFaq === i ? 'bg-orange-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300'}`}>
+                  {openFaq === i ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                </div>
+              </button>
+              <div 
+                className={`px-8 overflow-hidden transition-all duration-500 ease-in-out ${openFaq === i ? 'max-h-48 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{faq.a}</p>
+              </div>
             </div>
           ))}
         </div>
