@@ -485,15 +485,13 @@ export function Home() {
       <section className="py-24 bg-[#FAFAFA] dark:bg-[#0B0F19]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-16">Trusted by the Industry</h2>
-          <div className="flex gap-8 overflow-x-auto pb-8 snap-x scrollbar-hide items-center">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               { text: "This platform transformed how we source materials. Being able to compare prices from multiple local hardware stores in one checkout is a game changer for our construction firm.", author: "Marcus T.", role: "Lead Contractor" },
               { text: "We opened our digital storefront on the Pro Plan and saw a 40% increase in revenue within two months. The dashboard insights are incredible.", author: "Sarah J.", role: "Owner, City Hardware Co." },
-              { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" },
-              { text: "The verified vendor program gives us peace of mind when ordering bulk supplies for our development projects. Highly recommended.", author: "David W.", role: "Project Manager" },
-              { text: "I found exactly the specialized tools I needed from a store just 5 miles away. The convenience and local support are unmatched.", author: "Michael C.", role: "Independent Builder" }
+              { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" }
             ].map((review, i) => (
-              <div key={i} className="min-w-[320px] md:min-w-[400px] shrink-0 snap-center bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 text-left shadow-sm transform hover:scale-105 transition-all duration-300 opacity-90 hover:opacity-100">
+              <div key={i} className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 text-left shadow-sm">
                 <div className="flex gap-1 mb-6">
                   {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
                 </div>
@@ -514,38 +512,54 @@ export function Home() {
       </section>
 
       {/* 11. FAQs Section */}
-      <section className="max-w-4xl mx-auto px-6 py-24 w-full">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-          <p className="text-slate-500 text-lg">Everything you need to know about shopping with us.</p>
+      <section className="max-w-7xl mx-auto px-6 py-24 w-full">
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-4 block">Frequently Ask Question</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white">
+            You ask? We <span className="font-serif italic font-normal">answer</span>
+          </h2>
         </div>
-        <div className="space-y-4">
-          {[
-            { q: "How do I find local stores?", a: "You can use our 'Find a Store' feature which utilizes your location to show the nearest verified vendors, complete with their distance and reviews." },
-            { q: "Is payment secure?", a: "Yes, all payments are processed securely through Pesapal, ensuring your funds are protected with enterprise-grade encryption until your delivery is confirmed." },
-            { q: "Can I become a vendor?", a: "Absolutely! Click 'Start Selling Today' to set up your digital storefront and get access to our vendor dashboard and analytics." },
-            { q: "How are products delivered?", a: "Our partner stores handle logistics. Delivery options and times are clearly shown during checkout based on your location." }
-          ].map((faq, i) => (
-            <div 
-              key={i} 
-              className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden transition-all duration-300"
-            >
-              <button 
-                className="w-full px-8 py-6 text-left flex items-center justify-between focus:outline-none"
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-              >
-                <h3 className="font-bold text-lg text-slate-900 dark:text-white">{faq.q}</h3>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${openFaq === i ? 'bg-orange-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300'}`}>
-                  {openFaq === i ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+        
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+          {/* FAQ List */}
+          <div className="flex-1 w-full bg-white dark:bg-slate-800 rounded-[2rem] p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-slate-700">
+            <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
+              {[
+                { q: "How do I find local stores?", a: "You can use our 'Find a Store' feature which utilizes your location to show the nearest verified vendors, complete with their distance and reviews." },
+                { q: "Is payment secure?", a: "Yes, all payments are processed securely through Pesapal, ensuring your funds are protected with enterprise-grade encryption until your delivery is confirmed." },
+                { q: "Can I become a vendor?", a: "Absolutely! Click 'Start Selling Today' to set up your digital storefront and get access to our vendor dashboard and analytics." },
+                { q: "How are products delivered?", a: "Our partner stores handle logistics. Delivery options and times are clearly shown during checkout based on your location." },
+                { q: "Do you have any terms & conditions?", a: "Yes, we have comprehensive terms ensuring a fair and safe ecosystem. You can find them linked at the bottom of the page." }
+              ].map((faq, i) => (
+                <div key={i} className="py-2">
+                  <button 
+                    className="w-full py-5 text-left flex items-center justify-between focus:outline-none group"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  >
+                    <h3 className="font-bold text-[15px] text-slate-800 dark:text-slate-200 group-hover:text-orange-500 transition-colors">{faq.q}</h3>
+                    <div className="text-slate-400 group-hover:text-orange-500 transition-colors">
+                      {openFaq === i ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                    </div>
+                  </button>
+                  <div 
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${openFaq === i ? 'max-h-48 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
+                  >
+                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed pr-8">{faq.a}</p>
+                  </div>
                 </div>
-              </button>
-              <div 
-                className={`px-8 overflow-hidden transition-all duration-500 ease-in-out ${openFaq === i ? 'max-h-48 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
-              >
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{faq.a}</p>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Lottie Animation */}
+          <div className="flex-1 w-full flex justify-center items-center">
+            <iframe 
+              src="https://lottie.host/embed/793729d1-22f3-442a-b9c5-50e0816b48e1/4xR58D7WJ8.lottie" 
+              className="w-full max-w-md h-[400px]" 
+              frameBorder="0"
+              title="FAQ Animation"
+            ></iframe>
+          </div>
         </div>
       </section>
 
