@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Button } from '../components/ui/Button';
-import { Plus } from 'lucide-react';
+import { Plus, Package } from 'lucide-react';
 import { productsApi } from '../api/products';
 import type { Product } from '../api/products';
 import { useCartStore } from '../store/useCartStore';
@@ -105,6 +105,11 @@ export function ProductCatalog() {
               >
                 <Card hoverLift className="flex flex-col overflow-hidden group border-none bg-transparent dark:bg-transparent shadow-none dark:shadow-none h-full">
                   <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-2xl mb-6 overflow-hidden relative">
+                    <div className="absolute top-3 left-3 z-20">
+                      <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-xs font-bold px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1 text-slate-900 dark:text-white">
+                        <Package className="w-3 h-3 text-emerald-500" /> {product.category}
+                      </span>
+                    </div>
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                     <img 
                       src={product?.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://loremflickr.com/800/800/${encodeURIComponent((product?.name || '').split(' ')[0] || 'tool')},tool?lock=${product?.id ? product.id.charCodeAt(0) : 1}`} 

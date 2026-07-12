@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Navigation, Clock, Star, Store as StoreIcon, ShieldCheck } from 'lucide-react';
+import { MapPin, Navigation, Clock, Star, Store as StoreIcon } from 'lucide-react';
 import { storesApi } from '../api/stores';
 import type { Store } from '../api/stores';
 import { Skeleton } from '../components/ui/Skeleton';
@@ -151,19 +151,13 @@ export function Stores() {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {stores.map((store, index) => (
+          {stores.map((store) => (
             <div 
               key={store.id}
               onClick={() => navigate(`/stores/${store.id}`)}
               className="group relative bg-white dark:bg-[#111111] border border-border-light dark:border-border-dark rounded-[32px] overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer"
             >
-              {/* Top Banner indicating ranking */}
-              {index < 3 && (
-                <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 px-3 py-1.5 bg-accent-sage text-white text-xs font-bold rounded-full shadow-lg">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  Top Ranked
-                </div>
-              )}
+              {/* Top Banner indicating ranking removed as per request */}
               
               {/* Store Abstract Image/Pattern */}
               <div className="h-48 bg-slate-100 dark:bg-[#1A1A1A] relative overflow-hidden flex items-center justify-center">

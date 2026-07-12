@@ -374,7 +374,7 @@ export function Home() {
                     <div className="relative aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl mb-4 overflow-hidden">
                       <div className="absolute top-3 left-3 z-20">
                         <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-xs font-bold px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1">
-                          <Store className="w-3 h-3 text-emerald-500" /> {product.storeName || 'Vendor Pro'}
+                          <Package className="w-3 h-3 text-emerald-500" /> {product.category}
                         </span>
                       </div>
 

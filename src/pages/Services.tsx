@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Flame, Clock, Star, Store } from 'lucide-react';
+import { Search, Flame, Clock, Star } from 'lucide-react';
 import { servicesApi } from '../api/services';
 import type { Service } from '../api/services';
 import { Skeleton } from '../components/ui/Skeleton';
@@ -91,7 +91,7 @@ export function Services() {
                   )}
                   <div className="absolute top-4 left-4">
                     <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-xs font-bold px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1 text-slate-900 dark:text-white">
-                      <Store className="w-3 h-3 text-emerald-500" /> {service.storeName || 'Vendor Pro'}
+                      <Flame className="w-3 h-3 text-emerald-500" /> {service.categoryId || 'Service'}
                     </span>
                   </div>
                 </div>
