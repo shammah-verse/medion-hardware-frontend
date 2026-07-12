@@ -330,7 +330,7 @@ export function AdminDashboard() {
             <div className="animate-in fade-in duration-300">
               {/* Premium KPI Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl p-6 border border-white/40 dark:border-white/10 shadow-lg shadow-black/5 flex flex-col justify-between">
                   <div className="flex justify-between items-start mb-4">
                     <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                       <DollarSign className="w-5 h-5" />
@@ -345,7 +345,7 @@ export function AdminDashboard() {
                   </div>
                 </div>
                 
-                <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl p-6 border border-white/40 dark:border-white/10 shadow-lg shadow-black/5 flex flex-col justify-between">
                   <div className="flex justify-between items-start mb-4">
                     <div className="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 flex items-center justify-center">
                       <StoreIcon className="w-5 h-5" />
@@ -360,7 +360,7 @@ export function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl p-6 border border-white/40 dark:border-white/10 shadow-lg shadow-black/5 flex flex-col justify-between">
                   <div className="flex justify-between items-start mb-4">
                     <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                       <Users className="w-5 h-5" />
@@ -372,7 +372,7 @@ export function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl p-6 border border-white/40 dark:border-white/10 shadow-lg shadow-black/5 flex flex-col justify-between">
                   <div className="flex justify-between items-start mb-4">
                     <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">
                       <ShoppingBag className="w-5 h-5" />
@@ -489,18 +489,18 @@ export function AdminDashboard() {
                   <table className="w-full text-left text-sm">
                     <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-200 dark:border-slate-700">
                       <tr>
-                        <th className="px-6 py-4">Store Details</th>
-                        <th className="px-6 py-4">Location</th>
-                        <th className="px-6 py-4">Status</th>
-                        <th className="px-6 py-4 text-right">Actions</th>
+                        <th className="px-4 md:px-6 py-4">Store Details</th>
+                        <th className="hidden md:table-cell px-6 py-4">Location</th>
+                        <th className="px-4 md:px-6 py-4">Status</th>
+                        <th className="px-4 md:px-6 py-4 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                       {stores.map((store) => (
                         <tr key={store.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-shrink-0 items-center justify-center">
+                          <td className="px-4 md:px-6 py-4">
+                            <div className="flex items-center gap-2 md:gap-3">
+                              <div className="hidden md:flex w-10 h-10 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 flex-shrink-0 items-center justify-center">
                                 <StoreIcon className="w-5 h-5 text-slate-400" />
                               </div>
                               <div>
@@ -514,27 +514,27 @@ export function AdminDashboard() {
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-slate-500 font-medium">{store.address}</td>
-                          <td className="px-6 py-4">
+                          <td className="hidden md:table-cell px-6 py-4 text-slate-500 font-medium">{store.address}</td>
+                          <td className="px-4 md:px-6 py-4">
                             {store.status === 'PENDING' ? (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">
                                 <div className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Pending Review
                               </span>
                             ) : store.status === 'PENDING_PAYMENT' ? (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                                 <div className="w-1.5 h-1.5 rounded-full bg-slate-400" /> Pending Payment
                               </span>
                             ) : store.status === 'REJECTED' ? (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400">
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400">
                                 <div className="w-1.5 h-1.5 rounded-full bg-red-500" /> Rejected
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Verified
                               </span>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-right">
+                          <td className="px-4 md:px-6 py-4 text-right">
                             <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                               {(!store.status || store.status === 'PENDING') && (
                                 <>
@@ -606,33 +606,33 @@ export function AdminDashboard() {
                   <table className="w-full text-left text-sm">
                     <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-200 dark:border-slate-700">
                       <tr>
-                        <th className="px-6 py-4">Product Name</th>
-                        <th className="px-6 py-4">Store</th>
-                        <th className="px-6 py-4">Category</th>
-                        <th className="px-6 py-4">Stock</th>
-                        <th className="px-6 py-4">Price</th>
-                        <th className="px-6 py-4 text-right">Actions</th>
+                        <th className="px-4 md:px-6 py-4">Product Name</th>
+                        <th className="hidden md:table-cell px-6 py-4">Store</th>
+                        <th className="hidden md:table-cell px-6 py-4">Category</th>
+                        <th className="hidden md:table-cell px-6 py-4">Stock</th>
+                        <th className="px-4 md:px-6 py-4">Price</th>
+                        <th className="px-4 md:px-6 py-4 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                       {allProducts.map((product) => (
                         <tr key={product.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 flex-shrink-0">
+                          <td className="px-4 md:px-6 py-4">
+                            <div className="flex items-center gap-2 md:gap-3">
+                              <div className="hidden md:flex w-10 h-10 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 flex-shrink-0">
                                 {product.imageUrls && product.imageUrls.length > 0 ? (
                                   <img src={product.imageUrls[0]} alt={product.name} className="w-full h-full object-cover" />
                                 ) : (
                                   <Package className="w-5 h-5 m-2.5 text-slate-400" />
                                 )}
                               </div>
-                              <span className="font-bold text-slate-900 dark:text-white">{product.name}</span>
+                              <span className="font-bold text-slate-900 dark:text-white line-clamp-1">{product.name}</span>
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-slate-500 text-xs font-bold">{product.storeName || 'N/A'}</td>
-                          <td className="px-6 py-4 text-slate-500 font-medium">{product.category}</td>
-                          <td className="px-6 py-4 font-medium">{product.stockQuantity}</td>
-                          <td className="px-6 py-4 font-bold text-slate-900 dark:text-white">${product.price.toFixed(2)}</td>
+                          <td className="hidden md:table-cell px-6 py-4 text-slate-500 text-xs font-bold">{product.storeName || 'N/A'}</td>
+                          <td className="hidden md:table-cell px-6 py-4 text-slate-500 font-medium">{product.category}</td>
+                          <td className="hidden md:table-cell px-6 py-4 font-medium">{product.stockQuantity}</td>
+                          <td className="px-4 md:px-6 py-4 font-bold text-slate-900 dark:text-white">${product.price.toFixed(2)}</td>
                           <td className="px-6 py-4 text-right">
                             <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                               <button 
@@ -910,6 +910,33 @@ export function AdminDashboard() {
           </div>
         </div>
       )}
+
+      {/* Mobile Bottom Navigation */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-safe">
+        <div className="flex items-center justify-around p-3">
+          <button 
+            onClick={() => setActiveTab('OVERVIEW')}
+            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${activeTab === 'OVERVIEW' ? 'text-emerald-500' : 'text-slate-500'}`}
+          >
+            <LayoutDashboard className="w-5 h-5" />
+            <span className="text-[10px] font-bold">Overview</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('STORES')}
+            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${activeTab === 'STORES' ? 'text-emerald-500' : 'text-slate-500'}`}
+          >
+            <StoreIcon className="w-5 h-5" />
+            <span className="text-[10px] font-bold">Stores</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('PRODUCTS')}
+            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${activeTab === 'PRODUCTS' ? 'text-emerald-500' : 'text-slate-500'}`}
+          >
+            <Package className="w-5 h-5" />
+            <span className="text-[10px] font-bold">Products</span>
+          </button>
+        </div>
+      </div>
 
     </div>
   );

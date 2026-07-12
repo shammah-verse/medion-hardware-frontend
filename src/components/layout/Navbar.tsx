@@ -149,10 +149,10 @@ export function Navbar() {
           <Button 
             variant="ghost" 
             size="sm" 
-            className="md:hidden h-12 w-12 rounded-full p-0 hover:bg-black/5 dark:hover:bg-white/5"
+            className="md:hidden h-10 w-10 md:h-12 md:w-12 rounded-full p-0 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 shadow-sm"
             onClick={() => setShowMobileMenu(true)}
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-5 w-5 text-foreground" />
           </Button>
         </div>
       </div>

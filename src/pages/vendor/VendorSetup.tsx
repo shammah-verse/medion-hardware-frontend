@@ -11,6 +11,7 @@ export function VendorSetup() {
   const [address, setAddress] = useState('');
   const [lat, setLat] = useState('');
   const [lon, setLon] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [subscriptionType, setSubscriptionType] = useState<'COMMISSION' | 'PREMIUM'>('COMMISSION');
   
   const [loadingLocation, setLoadingLocation] = useState(false);
@@ -91,7 +92,8 @@ export function VendorSetup() {
         address,
         latitude: parseFloat(lat) || 0.0,
         longitude: parseFloat(lon) || 0.0,
-        subscriptionType
+        subscriptionType,
+        phoneNumber // Add phoneNumber to payload
       });
       
       if (result.mpesaStatus === 'STK_PUSH_SENT') {
@@ -137,6 +139,13 @@ export function VendorSetup() {
                 value={address}
                 onChange={e => setAddress(e.target.value)}
                 placeholder="123 Silicon Ave, Nairobi"
+                required
+              />
+              <Input 
+                label="M-PESA Phone Number"
+                value={phoneNumber}
+                onChange={e => setPhoneNumber(e.target.value)}
+                placeholder="2547XXXXXXXX"
                 required
               />
             </div>

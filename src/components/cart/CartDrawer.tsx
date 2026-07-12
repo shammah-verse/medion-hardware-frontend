@@ -32,7 +32,7 @@ export function CartDrawer() {
         </div>
 
         {/* Cart Items */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-6 space-y-6">
           {!cart?.items?.length ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
               <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center">

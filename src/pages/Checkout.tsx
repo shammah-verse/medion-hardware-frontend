@@ -13,6 +13,7 @@ export function Checkout() {
 
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -39,7 +40,8 @@ export function Checkout() {
         deliveryLatitude: -1.2921, 
         deliveryLongitude: 36.8219,
         address,
-        city
+        city,
+        phoneNumber
       };
 
       // Depending on actual implementation, backend returns a paymentUrl
@@ -100,6 +102,13 @@ export function Checkout() {
                   required
                 />
               </div>
+              <Input 
+                label="M-PESA Phone Number"
+                value={phoneNumber}
+                onChange={e => setPhoneNumber(e.target.value)}
+                placeholder="2547XXXXXXXX"
+                required
+              />
             </form>
           </section>
 

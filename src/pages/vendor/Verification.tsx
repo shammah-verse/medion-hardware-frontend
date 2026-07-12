@@ -205,13 +205,26 @@ export function Verification() {
                 </div>
 
                 <div className="max-w-md mx-auto">
-                  <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl p-8 text-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                  <label htmlFor="doc-upload" className="block border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl p-8 text-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                    <input 
+                      type="file" 
+                      id="doc-upload" 
+                      className="hidden" 
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          // In a real app we'd upload or store this file in state
+                          // setDocumentFile(file);
+                        }
+                      }}
+                    />
                     <div className="w-16 h-16 bg-orange-50 dark:bg-orange-900/20 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                       <Upload className="w-8 h-8" />
                     </div>
                     <p className="font-medium text-slate-900 dark:text-white mb-1">Click to upload or drag and drop</p>
                     <p className="text-xs text-slate-500">PDF, JPG or PNG (max. 10MB)</p>
-                  </div>
+                  </label>
                 </div>
               </div>
             )}
