@@ -29,8 +29,8 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    // Gracefully handle 401/403 by clearing invalid token and redirecting
-    if (error.response?.status === 401 || error.response?.status === 403) {
+    // Gracefully handle 401 by clearing invalid token and redirecting
+    if (error.response?.status === 401) {
       localStorage.removeItem('jwt_token');
       localStorage.removeItem('user_profile');
       if (window.location.pathname !== '/login') {
