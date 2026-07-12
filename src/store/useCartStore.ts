@@ -30,7 +30,12 @@ export const useCartStore = create<CartState>((set, get) => ({
       const cart = await cartApi.getCart();
       set({ cart, loading: false });
     } catch (err: any) {
-      set({ error: 'Failed to load cart', loading: false });
+      if (err.response?.status === 401) {
+        // Handled by interceptor, but we should not show a generic error
+        set({ error: 'Please log in to view your cart', loading: false });
+      } else {
+        set({ error: 'Failed to load cart', loading: false });
+      }
     }
   },
 
@@ -55,11 +60,11 @@ export const useCartStore = create<CartState>((set, get) => ({
     const optimisticCart = {
       ...previousCart,
       items: previousCart.items.map(item => 
-        item.product.id === productId ? { ...item, quantity } : item
+        item.productId === productId ? { ...item, quantity } : item
       )
     };
     // Recalculate total
-    optimisticCart.totalAmount = optimisticCart.items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    optimisticCart.totalAmount = optimisticCart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     set({ cart: optimisticCart });
 
     try {
@@ -78,9 +83,9 @@ export const useCartStore = create<CartState>((set, get) => ({
     // Optimistic Update
     const optimisticCart = {
       ...previousCart,
-      items: previousCart.items.filter(item => item.product.id !== productId)
+      items: previousCart.items.filter(item => item.productId !== productId)
     };
-    optimisticCart.totalAmount = optimisticCart.items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    optimisticCart.totalAmount = optimisticCart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     set({ cart: optimisticCart });
 
     try {

@@ -145,14 +145,14 @@ export function Checkout() {
                 <div key={item.id} className="flex justify-between items-center">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 rounded-xl bg-background overflow-hidden">
-                       {item.product.imageUrls && item.product.imageUrls.length > 0 && <img src={item.product.imageUrls[0]} alt={item.product.name} className="w-full h-full object-cover" />}
+                       <img src={`https://loremflickr.com/800/800/${encodeURIComponent((item.productName || '').split(' ')[0] || 'tool')},tool?lock=${item.productId ? item.productId.charCodeAt(0) : 1}`} alt={item.productName} className="w-full h-full object-cover" />
                     </div>
                     <div>
-                      <p className="font-medium text-sm text-foreground">{item.product.name}</p>
+                      <p className="font-medium text-sm text-foreground">{item.productName}</p>
                       <p className="text-xs text-muted">Qty: {item.quantity}</p>
                     </div>
                   </div>
-                  <p className="font-medium text-sm text-foreground">${(item.product.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-medium text-sm text-foreground">${(item.price * item.quantity).toFixed(2)}</p>
                 </div>
               ))}
             </div>

@@ -1,10 +1,11 @@
 import { apiClient } from './client';
-import type { Product } from './products';
 
 export interface CartItem {
   id: string;
-  product: Product;
+  productId: string;
+  productName: string;
   quantity: number;
+  price: number;
 }
 
 export interface Cart {

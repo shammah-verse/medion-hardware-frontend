@@ -48,33 +48,33 @@ export function CartDrawer() {
               <div key={item.id} className="flex gap-4">
                 <div className="w-20 h-20 rounded-xl bg-black/5 dark:bg-white/5 overflow-hidden flex-shrink-0">
                   <img 
-                    src={item.product?.imageUrls && item.product.imageUrls.length > 0 && item.product.imageUrls[0].startsWith('http') && !item.product.imageUrls[0].includes('example.com') ? item.product.imageUrls[0] : `https://loremflickr.com/800/800/${encodeURIComponent((item.product?.name || '').split(' ')[0] || 'tool')},tool?lock=${item.product?.id ? item.product.id.charCodeAt(0) : 1}`} 
-                    alt={item.product?.name} 
+                    src={`https://loremflickr.com/800/800/${encodeURIComponent((item.productName || '').split(' ')[0] || 'tool')},tool?lock=${item.productId ? item.productId.charCodeAt(0) : 1}`} 
+                    alt={item.productName} 
                     className="w-full h-full object-cover" 
                   />
                 </div>
                 <div className="flex-1 flex flex-col justify-between">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-medium text-foreground text-sm">{item.product.name}</h3>
-                      <p className="text-xs text-muted">{item.product.category}</p>
+                      <h3 className="font-medium text-foreground text-sm">{item.productName}</h3>
+                      <p className="text-xs text-muted">Hardware</p>
                     </div>
-                    <p className="font-medium text-foreground">${(item.product.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-medium text-foreground">${(item.price * item.quantity).toFixed(2)}</p>
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center gap-2 border border-border-light dark:border-border-dark rounded-xl px-1">
                       <button 
-                        onClick={() => updateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
+                        onClick={() => updateQuantity(item.productId, Math.max(1, item.quantity - 1))}
                         className="text-muted hover:text-foreground w-11 h-11 flex items-center justify-center font-medium"
                       >-</button>
                       <span className="text-sm font-bold w-6 text-center">{item.quantity}</span>
                       <button 
-                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                         className="text-muted hover:text-foreground w-11 h-11 flex items-center justify-center font-medium"
                       >+</button>
                     </div>
                     <button 
-                      onClick={() => removeItem(item.product.id)}
+                      onClick={() => removeItem(item.productId)}
                       className="text-muted hover:text-accent-terracotta transition-colors text-sm flex items-center justify-center h-11 px-2 gap-1"
                     >
                       <Trash2 className="w-4 h-4" /> <span className="hidden sm:inline">Remove</span>
