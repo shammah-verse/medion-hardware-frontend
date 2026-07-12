@@ -125,9 +125,9 @@ export function Navbar() {
             className="relative h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-ring"
           >
             <ShoppingBag className="h-5 w-5" />
-            {cart && cart.items.length > 0 && (
+            {cart && cart?.items?.length > 0 && (
               <span className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent-terracotta text-[10px] font-bold text-white">
-                {cart.items.reduce((acc, item) => acc + item.quantity, 0)}
+                {(cart.items || []).reduce((acc, item) => acc + (item.quantity || 1), 0)}
               </span>
             )}
           </button>
