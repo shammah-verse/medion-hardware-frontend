@@ -223,9 +223,9 @@ export function StoreProfile() {
           {store.adsUrls && store.adsUrls.length > 0 && (
             <div className="mb-12">
               <h2 className="text-2xl font-bold mb-6">Our Work & Portfolio</h2>
-              <div className="flex gap-4 overflow-x-auto pb-6 snap-x scrollbar-hide">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {store.adsUrls.map((url, idx) => (
-                  <div key={idx} className="min-w-[280px] md:min-w-[320px] aspect-[4/3] shrink-0 snap-center rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 relative group">
+                  <div key={idx} className="aspect-[4/3] rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 relative group shadow-sm hover:shadow-xl transition-all">
                     <img src={url} alt={`Portfolio ${idx}`} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
                   </div>
                 ))}
