@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   ArrowRight, Shield, Plus, Minus,
   Star, Truck, CreditCard,
@@ -15,7 +15,7 @@ import { productsApi } from '../api/products';
 import type { Product } from '../api/products';
 import { categoriesApi } from '../api/categories';
 import type { Category } from '../api/categories';
-import { useCartStore } from '../store/useCartStore';
+import { ProductCard } from '../components/ui/ProductCard';
 import { useAuthStore } from '../store/useAuthStore';
 
 // Animation Variants
@@ -42,10 +42,8 @@ export function Home() {
   
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   
-  const addItem = useCartStore((state) => state.addItem);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const navigate = useNavigate();
-
+  const { isAuthenticated } = useAuthStore();
+  
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -105,22 +103,6 @@ export function Home() {
       });
     }
   };
-
-  const handleAddToCart = async (e: React.MouseEvent, productId: string) => {
-    e.stopPropagation();
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
-    }
-    
-    try {
-      await addItem(productId, 1);
-    } catch (err) {
-      console.error('Failed to add to cart', err);
-    }
-  };
-
-
   const heroSlides = [
     { img: "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80", text: "Professional Grade Tools" },
     { img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80", text: "Premium Building Materials" },
@@ -333,61 +315,21 @@ export function Home() {
               <p className="text-slate-500">Hand-picked premium materials from top-rated vendors.</p>
             </div>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 md:gap-6 py-4 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 py-4 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {loadingProducts
               ? Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="flex flex-col gap-4 bg-white dark:bg-slate-800 rounded-3xl p-3 border border-slate-200 dark:border-slate-700 w-[140px] md:w-[280px] shrink-0 snap-center md:snap-align-none">
-                    <Skeleton className="aspect-square w-full rounded-2xl" />
-                    <div className="space-y-2 px-2 pb-2">
+                  <div key={i} className="flex flex-col gap-4 w-[160px] md:w-[240px] shrink-0 snap-center md:snap-align-none">
+                    <Skeleton className="aspect-[4/5] sm:aspect-square w-full rounded-2xl md:rounded-3xl" />
+                    <div className="space-y-2 px-1">
                       <Skeleton className="h-5 w-2/3" />
                       <Skeleton className="h-4 w-1/3" />
                     </div>
                   </div>
                 ))
               : featuredProducts.slice(0, 20).map((product) => (
-                  <motion.div 
-                    whileHover={{ y: -8 }}
-                    key={product.id} 
-                    className="group flex flex-col w-[140px] md:w-[280px] shrink-0 snap-center md:snap-align-none cursor-pointer bg-white dark:bg-slate-800 rounded-3xl p-2 md:p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
-                    onClick={() => navigate(`/products/${product.id}`)}
-                  >
-                    <div className="relative aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl mb-3 md:mb-4 overflow-hidden">
-                      <div className="absolute top-2 left-2 md:top-3 md:left-3 z-20">
-                        <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-[10px] md:text-xs font-bold px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1">
-                          <Package className="w-3 h-3 text-emerald-500" /> {product.category}
-                        </span>
-                      </div>
-
-                      <img 
-                        src={product.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80`} 
-                        alt={product.name} 
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" 
-                      />
-                      
-                      {/* Quick Add Button */}
-                      <div className="absolute bottom-3 right-3 z-20 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <Button 
-                          size="sm" 
-                          className="h-10 w-10 p-0 rounded-full shadow-lg bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center"
-                          onClick={(e) => handleAddToCart(e, product.id)}
-                        >
-                          <Plus className="h-5 w-5" />
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col px-2 pb-1 md:pb-2">
-                      <p className="text-[10px] md:text-xs font-semibold text-orange-500 mb-1">{product.category}</p>
-                      <h3 className="text-sm md:text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 md:mb-2 line-clamp-1">{product.name}</h3>
-                      <p className="text-xs md:text-sm text-slate-500 line-clamp-2 mb-2 md:mb-3">{product.description || 'Premium quality, professionally crafted and verified for superior performance and durability.'}</p>
-                      <div className="flex justify-between items-center mt-auto">
-                        <span className="text-base md:text-lg font-black text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
-                        <div className="flex items-center gap-1 text-slate-400 text-[10px] md:text-xs font-medium">
-                          <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> 4.9
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
+                  <div key={product.id} className="w-[160px] md:w-[240px] shrink-0 snap-center md:snap-align-none">
+                    <ProductCard product={product} />
+                  </div>
                 ))}
           </div>
         </div>

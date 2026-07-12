@@ -912,7 +912,7 @@ export function AdminDashboard() {
       )}
 
       {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-safe">
+      <div className="lg:hidden sticky bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-safe">
         <div className="flex items-center justify-around p-3">
           <button 
             onClick={() => setActiveTab('OVERVIEW')}
