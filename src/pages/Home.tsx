@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { productsApi } from '../api/products';
 import type { Product } from '../api/products';
 import { categoriesApi } from '../api/categories';
@@ -553,12 +554,13 @@ export function Home() {
 
           {/* Lottie Animation */}
           <div className="flex-1 w-full flex justify-center items-center">
-            <iframe 
-              src="https://lottie.host/embed/793729d1-22f3-442a-b9c5-50e0816b48e1/4xR58D7WJ8.lottie" 
-              className="w-full max-w-md h-[400px]" 
-              frameBorder="0"
-              title="FAQ Animation"
-            ></iframe>
+            <div className="w-full max-w-md h-[400px]">
+              <DotLottieReact
+                src="https://lottie.host/793729d1-22f3-442a-b9c5-50e0816b48e1/4xR58D7WJ8.lottie"
+                loop
+                autoplay
+              />
+            </div>
           </div>
         </div>
       </section>
