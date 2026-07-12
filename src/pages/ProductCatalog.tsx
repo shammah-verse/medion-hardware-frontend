@@ -1,16 +1,23 @@
-import { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card } from '../components/ui/Card';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Button } from '../components/ui/Button';
+import { Plus, Package } from 'lucide-react';
 import { productsApi } from '../api/products';
 import type { Product } from '../api/products';
-import { ProductCard } from '../components/ui/ProductCard';
+import { useCartStore } from '../store/useCartStore';
+import { useAuthStore } from '../store/useAuthStore';
 
 export function ProductCatalog() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  
+  const addItem = useCartStore((state) => state.addItem);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,6 +32,21 @@ export function ProductCatalog() {
     };
     fetchProducts();
   }, []);
+
+  const handleAddToCart = async (e: React.MouseEvent, productId: string) => {
+    e.stopPropagation(); // Prevent card click if we wrap the card in a link later
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    
+    try {
+      await addItem(productId, 1);
+      // We could add a toast notification here in a full app
+    } catch (err) {
+      console.error('Failed to add to cart', err);
+    }
+  };
 
   const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
   const filteredProducts = activeCategory === 'All' 
@@ -64,19 +86,60 @@ export function ProductCatalog() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 gap-y-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16">
         {loading
-          ? Array.from({ length: 8 }).map((_, i) => (
+          ? Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex flex-col gap-4">
-                <Skeleton className="aspect-[4/5] sm:aspect-square w-full rounded-2xl md:rounded-3xl" />
-                <div className="space-y-2 px-1">
-                  <Skeleton className="h-5 w-2/3" />
-                  <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="aspect-square w-full rounded-2xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-6 w-2/3" />
+                  <Skeleton className="h-5 w-1/3" />
                 </div>
               </div>
             ))
           : filteredProducts.map((product, index) => (
-              <ProductCard key={product.id || index} product={product} />
+              <div 
+                key={product?.id || index}
+                onClick={() => navigate(`/products/${product.id}`)}
+                className="cursor-pointer"
+              >
+                <Card hoverLift className="flex flex-col overflow-hidden group border-none bg-transparent dark:bg-transparent shadow-none dark:shadow-none h-full">
+                  <div className="aspect-square bg-[#F5F5F5] dark:bg-[#221F1D] rounded-2xl mb-6 overflow-hidden relative">
+                    <div className="absolute top-3 left-3 z-20">
+                      <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-xs font-bold px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1 text-slate-900 dark:text-white">
+                        <Package className="w-3 h-3 text-emerald-500" /> {product.category}
+                      </span>
+                    </div>
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+                    <img 
+                      src={product?.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://loremflickr.com/800/800/${encodeURIComponent((product?.name || '').split(' ')[0] || 'tool')},tool?lock=${product?.id ? product.id.charCodeAt(0) : 1}`} 
+                      alt={product?.name} 
+                      className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform duration-700" 
+                    />
+                    
+                    {/* Quick Add Button */}
+                    <div className="absolute bottom-4 right-4 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <Button 
+                        size="sm" 
+                        className="h-10 w-10 p-0 rounded-full shadow-lg"
+                        onClick={(e) => handleAddToCart(e, product.id)}
+                        aria-label="Add to cart"
+                      >
+                        <Plus className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-start px-2 pb-2">
+                    <div className="flex-1 pr-4">
+                      <h3 className="text-lg font-medium text-foreground mb-1 group-hover:text-accent-terracotta transition-colors line-clamp-1">{product.name}</h3>
+                      <p className="text-muted text-xs mb-2">{product.category}</p>
+                      <p className="text-sm text-muted line-clamp-2">{product.description || 'Professional grade equipment for your next project.'}</p>
+                    </div>
+                    <span className="text-lg text-foreground font-medium shrink-0">${product.price.toFixed(2)}</span>
+                  </div>
+                </Card>
+              </div>
             ))}
       </div>
     </div>

@@ -7,12 +7,14 @@ import type { Product } from '../api/products';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Button } from '../components/ui/Button';
 import { useAuthStore } from '../store/useAuthStore';
-import { ProductCard } from '../components/ui/ProductCard';
+import { useCartStore } from '../store/useCartStore';
+import { motion } from 'framer-motion';
 
 export function StoreProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
+  const addItem = useCartStore(state => state.addItem);
   
   const [store, setStore] = useState<Store | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -73,6 +75,19 @@ export function StoreProfile() {
       setIsFollowing(previousState);
     } finally {
       setFollowLoading(false);
+    }
+  };
+
+  const handleAddToCart = async (e: React.MouseEvent, productId: string) => {
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    try {
+      await addItem(productId, 1);
+    } catch (err) {
+      console.error('Failed to add to cart', err);
     }
   };
 
@@ -237,9 +252,37 @@ export function StoreProfile() {
                 <p className="text-slate-500">This provider hasn't listed any products or services yet.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map(product => (
-                  <ProductCard key={product.id} product={product} />
+                  <motion.div 
+                    whileHover={{ y: -6 }}
+                    key={product.id} 
+                    className="group cursor-pointer bg-white dark:bg-slate-800 rounded-[24px] p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all flex flex-col"
+                    onClick={() => navigate(`/products/${product.id}`)}
+                  >
+                    <div className="relative aspect-square bg-slate-50 dark:bg-slate-900 rounded-2xl mb-4 overflow-hidden">
+                      <img 
+                        src={product.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://loremflickr.com/800/800/${encodeURIComponent((product.name || '').split(' ')[0] || 'tool')},tool?lock=${product.id ? product.id.charCodeAt(0) : 1}`} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" 
+                      />
+                    </div>
+                    <div className="px-2 pb-2 flex flex-col flex-1">
+                      <p className="text-xs font-semibold text-orange-500 mb-1">{product.category}</p>
+                      <h3 className="font-bold text-slate-900 dark:text-white leading-tight mb-2 line-clamp-1">{product.name}</h3>
+                      <p className="text-sm text-slate-500 line-clamp-2 mb-4 flex-1">{product.description || 'Professional grade equipment.'}</p>
+                      <div className="flex justify-between items-center mt-auto">
+                        <span className="text-lg font-black text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
+                        <Button 
+                          size="sm" 
+                          onClick={(e) => handleAddToCart(e, product.id)}
+                          className="h-8 rounded-lg px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-900 dark:text-white border-0 font-semibold"
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             )}
