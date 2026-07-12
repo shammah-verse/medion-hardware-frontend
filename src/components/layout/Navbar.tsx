@@ -8,12 +8,18 @@ import { SearchOverlay } from './SearchOverlay';
 
 export function Navbar() {
   const { isAuthenticated, profile, logout } = useAuthStore();
-  const { openCart, cart } = useCartStore();
+  const { openCart, cart, fetchCart } = useCartStore();
   const navigate = useNavigate();
   
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchCart();
+    }
+  }, [isAuthenticated, fetchCart]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -110,6 +116,7 @@ export function Navbar() {
           <button 
             onClick={() => {
               if (isAuthenticated) {
+                fetchCart();
                 openCart();
               } else {
                 navigate('/login');
