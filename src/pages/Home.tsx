@@ -362,7 +362,7 @@ export function Home() {
                     </div>
                   </div>
                 ))
-              : featuredProducts.map((product) => (
+              : featuredProducts.slice(0, 20).map((product) => (
                   <motion.div 
                     whileHover={{ y: -8 }}
                     key={product.id} 
