@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MapPin, Clock, Star, Store as StoreIcon, ShieldCheck, UserPlus, UserCheck, Package, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import { MapPin, Clock, Star, Store as StoreIcon, ShieldCheck, UserPlus, UserCheck, Package, ArrowLeft, Image as ImageIcon, X } from 'lucide-react';
 import { storesApi } from '../api/stores';
 import type { Store } from '../api/stores';
 import type { Product } from '../api/products';
@@ -23,6 +23,7 @@ export function StoreProfile() {
   
   const [isFollowing, setIsFollowing] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -225,7 +226,11 @@ export function StoreProfile() {
               <h2 className="text-2xl font-bold mb-6">Our Work & Portfolio</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {store.adsUrls.map((url, idx) => (
-                  <div key={idx} className="aspect-[4/3] rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 relative group shadow-sm hover:shadow-xl transition-all">
+                  <div 
+                    key={idx} 
+                    className="aspect-[4/3] rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 relative group shadow-sm hover:shadow-xl transition-all cursor-pointer"
+                    onClick={() => setSelectedMedia(url)}
+                  >
                     <img src={url} alt={`Portfolio ${idx}`} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
                   </div>
                 ))}
@@ -285,6 +290,31 @@ export function StoreProfile() {
 
         </div>
       </div>
+
+      {/* Media Modal */}
+      {selectedMedia && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+          onClick={() => setSelectedMedia(null)}
+        >
+          <button 
+            className="absolute top-6 right-6 text-white hover:text-orange-500 transition-colors"
+            onClick={() => setSelectedMedia(null)}
+          >
+            <X className="w-8 h-8" />
+          </button>
+          <div 
+            className="relative max-w-5xl max-h-[90vh] w-full rounded-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img 
+              src={selectedMedia} 
+              alt="Expanded view" 
+              className="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
