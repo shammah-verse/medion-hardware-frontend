@@ -65,7 +65,7 @@ export function Navbar() {
           )}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           {isAuthenticated ? (
             <div className="relative" ref={dropdownRef}>
               <button 
@@ -123,9 +123,9 @@ export function Navbar() {
 
           <button
             onClick={() => setShowSearch(true)}
-            className="relative h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-ring"
+            className="relative h-8 w-8 md:h-12 md:w-12 rounded-full p-0 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-ring"
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-4 w-4 md:h-5 md:w-5" />
           </button>
 
           <button 
@@ -137,11 +137,11 @@ export function Navbar() {
                 navigate('/login');
               }
             }} 
-            className="relative h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-ring"
+            className="relative h-8 w-8 md:h-12 md:w-12 rounded-full p-0 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-ring"
           >
-            <ShoppingBag className="h-5 w-5" />
+            <ShoppingBag className="h-4 w-4 md:h-5 md:w-5" />
             {cart && cart?.items?.length > 0 && (
-              <span className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent-terracotta text-[10px] font-bold text-white">
+              <span className="absolute top-1 right-1 md:top-2 md:right-2 flex h-3 w-3 md:h-4 md:w-4 items-center justify-center rounded-full bg-accent-terracotta text-[8px] md:text-[10px] font-bold text-white">
                 {(cart.items || []).reduce((acc, item) => acc + (item.quantity || 1), 0)}
               </span>
             )}
@@ -149,10 +149,10 @@ export function Navbar() {
           <Button 
             variant="outline" 
             size="sm" 
-            className="md:hidden h-10 w-10 md:h-12 md:w-12 rounded-full p-0 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-md border border-slate-200 dark:border-slate-700"
+            className="md:hidden h-8 w-8 md:h-12 md:w-12 rounded-full p-0 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-md border border-slate-200 dark:border-slate-700 flex items-center justify-center"
             onClick={() => setShowMobileMenu(true)}
           >
-            <Menu className="h-5 w-5 text-foreground" />
+            <Menu className="h-4 w-4 md:h-5 md:w-5 text-foreground" />
           </Button>
         </div>
       </div>

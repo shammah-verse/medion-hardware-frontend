@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Card } from '../components/ui/Card';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Button } from '../components/ui/Button';
@@ -75,8 +76,15 @@ export function ProductCatalog() {
       </div>
 
       {error && (
-        <div className="p-6 mb-12 bg-accent-terracotta/10 text-accent-terracotta rounded-2xl border border-accent-terracotta/20 text-center">
-          {error}
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="w-64 h-64">
+            <DotLottieReact
+              src="https://lottie.host/fb777683-9f94-474a-bbda-d89d97ea9ee0/XXQAGInsU9.lottie"
+              loop
+              autoplay
+            />
+          </div>
+          <p className="mt-4 text-accent-terracotta">{error}</p>
         </div>
       )}
 
