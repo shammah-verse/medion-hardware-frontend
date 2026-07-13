@@ -62,9 +62,9 @@ export function StoreProfile() {
     
     try {
       if (previousState) {
-        await storesApi.unfollowStore(store.id);
+        if (store) await storesApi.unfollowStore(store.id);
       } else {
-        await storesApi.followStore(store.id);
+        if (store) await storesApi.followStore(store.id);
       }
     } catch (err) {
       console.error("Failed to toggle follow status", err);

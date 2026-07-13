@@ -3,8 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, Shield, Plus, Minus,
   Star, Truck, CreditCard,
-  Store, CheckCircle2, Package,
-  ChevronLeft, ChevronRight
+  Store, CheckCircle2, Package
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
@@ -110,17 +109,7 @@ export function Home() {
     };
   }, []);
 
-  const scrollCategories = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 400; // pixels to scroll
-      const newScrollPosition = scrollContainerRef.current.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
-      
-      scrollContainerRef.current.scrollTo({
-        left: newScrollPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
+
 
   const handleCategoryScroll = () => {
     if (scrollContainerRef.current) {
@@ -524,7 +513,7 @@ export function Home() {
                 dragElastic={0.2}
                 animate={{ x: `calc(-${activeTestimonial * 100}% - ${activeTestimonial * (window.innerWidth < 768 ? 16 : 32)}px)` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                onDragEnd={(e, { offset, velocity }) => {
+                onDragEnd={(_e, { offset, velocity }) => {
                   const swipe = swipePower(offset.x, velocity.x);
                   if (swipe < -swipeConfidenceThreshold) {
                     setActiveTestimonial(prev => Math.min(prev + 1, 2));
