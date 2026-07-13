@@ -162,7 +162,7 @@ export function Home() {
   ];
 
   return (
-    <div className="flex flex-col w-full bg-[#FAFAFA] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 selection:bg-orange-500/30 font-sans">
+    <div className="flex flex-col w-full bg-[#FAFAFA] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 selection:bg-orange-500/30 font-sans overflow-x-hidden">
       
       {/* 1. Premium Hero Section */}
       <section className="relative w-full min-h-[90vh] flex items-center pt-12 md:pt-20 overflow-hidden bg-slate-900 dark:bg-[#080B12]">

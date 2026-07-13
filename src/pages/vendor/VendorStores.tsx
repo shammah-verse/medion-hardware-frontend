@@ -50,7 +50,7 @@ export function VendorStores() {
   }
 
   return (
-    <div className="min-h-[70vh] bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 font-sans p-6 lg:p-10 w-full">
+    <div className="min-h-[70vh] bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 font-sans p-6 lg:p-10 w-full overflow-x-hidden">
       <div className="max-w-[1400px] mx-auto w-full">
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
@@ -85,7 +85,7 @@ export function VendorStores() {
             </Button>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
             {stores.map(store => (
               <div 
                 key={store.id}

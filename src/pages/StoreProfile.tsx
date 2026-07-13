@@ -56,11 +56,8 @@ export function StoreProfile() {
       return;
     }
     
-    if (!store) return;
-    
     setFollowLoading(true);
     const previousState = isFollowing;
-    // Optimistic update
     setIsFollowing(!previousState);
     
     try {
@@ -125,7 +122,7 @@ export function StoreProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 font-sans pb-24">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 font-sans pb-24 w-full overflow-x-hidden">
       {/* Hero Banner */}
       <div className="relative w-full h-64 md:h-80 bg-slate-200 dark:bg-slate-800">
         {store.bannerUrl ? (
@@ -224,11 +221,11 @@ export function StoreProfile() {
           {store.adsUrls && store.adsUrls.length > 0 && (
             <div className="mb-12">
               <h2 className="text-2xl font-bold mb-6">Our Work & Portfolio</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="flex gap-4 overflow-x-auto pb-6 snap-x snap-mandatory hide-scrollbar">
                 {store.adsUrls.map((url, idx) => (
                   <div 
                     key={idx} 
-                    className="aspect-[4/3] rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 relative group shadow-sm hover:shadow-xl transition-all cursor-pointer"
+                    className="aspect-[4/3] w-[80vw] sm:w-[300px] shrink-0 snap-center rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 relative group shadow-sm hover:shadow-xl transition-all cursor-pointer"
                     onClick={() => setSelectedMedia(url)}
                   >
                     <img src={url} alt={`Portfolio ${idx}`} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />

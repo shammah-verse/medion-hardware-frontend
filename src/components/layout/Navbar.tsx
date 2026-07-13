@@ -170,9 +170,9 @@ export function Navbar() {
             <h2 className="text-xl font-serif font-bold text-foreground">Menu</h2>
             <button 
               onClick={() => setShowMobileMenu(false)}
-              className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5"
+              className="p-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-sm transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 text-slate-900 dark:text-white" />
             </button>
           </div>
           

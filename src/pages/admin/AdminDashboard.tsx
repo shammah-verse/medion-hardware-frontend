@@ -264,7 +264,7 @@ export function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 font-sans flex flex-col lg:flex-row">
+    <div className="min-h-[100dvh] bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-50 font-sans flex flex-col lg:flex-row w-full overflow-x-hidden">
       
       {/* Admin Sidebar */}
       <div className="w-64 bg-slate-900 text-white flex-shrink-0 flex flex-col hidden lg:flex">
@@ -912,7 +912,7 @@ export function AdminDashboard() {
       )}
 
       {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden sticky bottom-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-safe">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 w-full z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-around p-3">
           <button 
             onClick={() => setActiveTab('OVERVIEW')}
