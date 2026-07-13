@@ -88,7 +88,7 @@ export function Checkout() {
                 placeholder="123 Main St"
                 required
               />
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input 
                   label="City"
                   value={city}

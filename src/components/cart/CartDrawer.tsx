@@ -53,13 +53,13 @@ export function CartDrawer() {
                     className="w-full h-full object-cover" 
                   />
                 </div>
-                <div className="flex-1 flex flex-col justify-between">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium text-foreground text-sm">{item.productName}</h3>
+                <div className="flex-1 flex flex-col justify-between overflow-hidden">
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="overflow-hidden">
+                      <h3 className="font-medium text-foreground text-sm truncate">{item.productName}</h3>
                       <p className="text-xs text-muted">Hardware</p>
                     </div>
-                    <p className="font-medium text-foreground">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-medium text-foreground shrink-0">${(item.price * item.quantity).toFixed(2)}</p>
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center gap-2 border border-border-light dark:border-border-dark rounded-xl px-1">

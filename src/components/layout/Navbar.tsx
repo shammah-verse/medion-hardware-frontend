@@ -159,11 +159,11 @@ export function Navbar() {
       
       {/* Mobile Menu Drawer */}
       <div 
-        className={`fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm transition-opacity md:hidden ${showMobileMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 z-[100] bg-white dark:bg-slate-900 transition-opacity md:hidden ${showMobileMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={() => setShowMobileMenu(false)}
       >
         <div 
-          className={`absolute right-0 top-0 h-full w-4/5 max-w-sm bg-background border-l border-border-light dark:border-border-dark shadow-2xl p-6 transition-transform duration-300 ${showMobileMenu ? 'translate-x-0' : 'translate-x-full'}`}
+          className={`absolute right-0 top-0 h-full w-4/5 max-w-sm bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl p-6 transition-transform duration-300 ${showMobileMenu ? 'translate-x-0' : 'translate-x-full'}`}
           onClick={e => e.stopPropagation()}
         >
           <div className="flex justify-between items-center mb-8">
@@ -176,38 +176,46 @@ export function Navbar() {
             </button>
           </div>
           
-          <div className="flex flex-col gap-6">
-            <Link to="/products" className="text-lg font-medium hover:text-orange-500 transition-colors" onClick={() => setShowMobileMenu(false)}>Catalog</Link>
-            <Link to="/stores" className="text-lg font-medium hover:text-orange-500 transition-colors" onClick={() => setShowMobileMenu(false)}>Stores</Link>
+          <div className="flex flex-col gap-2">
+            <Link to="/products" className="text-lg font-medium text-slate-900 dark:text-white hover:text-orange-500 active:bg-slate-100 dark:active:bg-slate-800 p-3 rounded-lg transition-colors" onClick={() => setShowMobileMenu(false)}>Catalog</Link>
+            <Link to="/stores" className="text-lg font-medium text-slate-900 dark:text-white hover:text-orange-500 active:bg-slate-100 dark:active:bg-slate-800 p-3 rounded-lg transition-colors" onClick={() => setShowMobileMenu(false)}>Stores</Link>
             
             {isAuthenticated && profile?.role === 'STORE_VENDOR' && (
-              <Link to="/vendor/dashboard" className="text-lg font-medium text-orange-500" onClick={() => setShowMobileMenu(false)}>Vendor Portal</Link>
+              <Link to="/vendor/dashboard" className="text-lg font-medium text-orange-500 active:bg-slate-100 dark:active:bg-slate-800 p-3 rounded-lg transition-colors" onClick={() => setShowMobileMenu(false)}>Vendor Portal</Link>
             )}
             {isAuthenticated && profile?.role === 'ADMIN' && (
-              <Link to="/admin/dashboard" className="text-lg font-medium text-orange-500" onClick={() => setShowMobileMenu(false)}>Admin Panel</Link>
+              <Link to="/admin/dashboard" className="text-lg font-medium text-orange-500 active:bg-slate-100 dark:active:bg-slate-800 p-3 rounded-lg transition-colors" onClick={() => setShowMobileMenu(false)}>Admin Panel</Link>
             )}
 
-            <div className="h-px bg-border-light dark:bg-border-dark my-2"></div>
+            <div className="h-px bg-slate-200 dark:bg-slate-700 my-4"></div>
 
             {isAuthenticated ? (
               <>
-                <Link to="/profile" className="flex items-center gap-3 text-base text-muted hover:text-foreground" onClick={() => setShowMobileMenu(false)}>
+                <Link to="/profile" className="flex items-center gap-3 text-base text-slate-900 dark:text-white active:bg-slate-100 dark:active:bg-slate-800 p-3 rounded-lg hover:text-orange-500 transition-colors" onClick={() => setShowMobileMenu(false)}>
                   <Settings className="w-5 h-5" /> Account Settings
                 </Link>
-                <Link to="/profile/orders" className="flex items-center gap-3 text-base text-muted hover:text-foreground" onClick={() => setShowMobileMenu(false)}>
+                <Link to="/profile/orders" className="flex items-center gap-3 text-base text-slate-900 dark:text-white active:bg-slate-100 dark:active:bg-slate-800 p-3 rounded-lg hover:text-orange-500 transition-colors" onClick={() => setShowMobileMenu(false)}>
                   <Package className="w-5 h-5" /> Orders & Receipts
                 </Link>
                 <button 
-                  onClick={() => { logout(); setShowMobileMenu(false); }}
-                  className="flex items-center gap-3 text-base text-accent-terracotta"
+                  onClick={() => {
+                    logout();
+                    setShowMobileMenu(false);
+                  }}
+                  className="flex items-center gap-3 text-base text-red-500 active:bg-red-50 dark:active:bg-red-950 p-3 rounded-lg w-full text-left transition-colors"
                 >
-                  <LogOut className="w-5 h-5" /> Sign out
+                  <LogOut className="w-5 h-5" /> Sign Out
                 </button>
               </>
             ) : (
-              <Link to="/login" className="flex items-center gap-3 text-base font-medium text-foreground bg-black/5 dark:bg-white/5 p-3 rounded-xl justify-center mt-4" onClick={() => setShowMobileMenu(false)}>
-                Sign in
-              </Link>
+              <div className="flex flex-col gap-3 mt-4">
+                <Button variant="outline" className="w-full h-12" onClick={() => { navigate('/login'); setShowMobileMenu(false); }}>
+                  Log In
+                </Button>
+                <Button variant="primary" className="w-full h-12" onClick={() => { navigate('/login'); setShowMobileMenu(false); }}>
+                  Sign Up
+                </Button>
+              </div>
             )}
           </div>
         </div>

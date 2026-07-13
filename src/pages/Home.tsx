@@ -32,6 +32,11 @@ const staggerContainer = {
   }
 };
 
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
+
 export function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -39,8 +44,11 @@ export function Home() {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [categoryScrollProgress, setCategoryScrollProgress] = useState(0);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
   
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
   
   const addItem = useCartStore((state) => state.addItem);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -91,7 +99,15 @@ export function Home() {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % 3);
     }, 4000);
-    return () => clearInterval(timer);
+    
+    const testimonialTimer = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % 3);
+    }, 5000);
+    
+    return () => {
+      clearInterval(timer);
+      clearInterval(testimonialTimer);
+    };
   }, []);
 
   const scrollCategories = (direction: 'left' | 'right') => {
@@ -105,6 +121,24 @@ export function Home() {
       });
     }
   };
+
+  const handleCategoryScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      const maxScroll = scrollWidth - clientWidth;
+      if (maxScroll > 0) {
+        setCategoryScrollProgress(scrollLeft / maxScroll);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleCategoryScroll);
+      return () => container.removeEventListener('scroll', handleCategoryScroll);
+    }
+  }, [categories]);
 
   const handleAddToCart = async (e: React.MouseEvent, productId: string) => {
     e.stopPropagation();
@@ -220,27 +254,33 @@ export function Home() {
             <p className="text-slate-500 max-w-2xl mx-auto text-lg">Compare prices, discover local suppliers, and order professional-grade materials from one unified platform.</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-6">
-                <Store className="w-7 h-7" />
+          <div className="flex md:grid md:grid-cols-3 overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:gap-8 pb-4 md:pb-0">
+            <div className="bg-white dark:bg-slate-800 p-4 md:p-8 rounded-2xl md:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm md:hover:shadow-md transition-shadow shrink-0 snap-center w-[85vw] max-w-[300px] md:w-auto flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0">
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 md:mb-6">
+                <Store className="w-6 h-6 md:w-7 md:h-7" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Multiple Vendors, One Cart</h3>
-              <p className="text-slate-500 leading-relaxed">Source products from various stores and checkout instantly. We handle the logistics and routing.</p>
+              <div>
+                <h3 className="text-base md:text-xl font-bold mb-1 md:mb-3">Multiple Vendors, One Cart</h3>
+                <p className="text-sm md:text-base text-slate-500 leading-relaxed line-clamp-2 md:line-clamp-none">Source products from various stores and checkout instantly. We handle the logistics and routing.</p>
+              </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center mb-6">
-                <Shield className="w-7 h-7" />
+            <div className="bg-white dark:bg-slate-800 p-4 md:p-8 rounded-2xl md:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm md:hover:shadow-md transition-shadow shrink-0 snap-center w-[85vw] max-w-[300px] md:w-auto flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0">
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 md:mb-6">
+                <Shield className="w-6 h-6 md:w-7 md:h-7" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Verified Suppliers</h3>
-              <p className="text-slate-500 leading-relaxed">Every vendor undergoes a strict vetting process. Buy with confidence knowing you're dealing with professionals.</p>
+              <div>
+                <h3 className="text-base md:text-xl font-bold mb-1 md:mb-3">Verified Suppliers</h3>
+                <p className="text-sm md:text-base text-slate-500 leading-relaxed line-clamp-2 md:line-clamp-none">Every vendor undergoes a strict vetting process. Buy with confidence knowing you're dealing with professionals.</p>
+              </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-2xl flex items-center justify-center mb-6">
-                <CreditCard className="w-7 h-7" />
+            <div className="bg-white dark:bg-slate-800 p-4 md:p-8 rounded-2xl md:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm md:hover:shadow-md transition-shadow shrink-0 snap-center w-[85vw] max-w-[300px] md:w-auto flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0">
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 md:mb-6">
+                <CreditCard className="w-6 h-6 md:w-7 md:h-7" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Secure Pesapal Checkout</h3>
-              <p className="text-slate-500 leading-relaxed">Enterprise-grade payment processing protects your transactions. Your funds are safe until delivery is confirmed.</p>
+              <div>
+                <h3 className="text-base md:text-xl font-bold mb-1 md:mb-3">Secure Pesapal Checkout</h3>
+                <p className="text-sm md:text-base text-slate-500 leading-relaxed line-clamp-2 md:line-clamp-none">Enterprise-grade payment processing protects your transactions. Your funds are safe until delivery is confirmed.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -249,34 +289,14 @@ export function Home() {
       {/* 4. Shop by Category (Premium Slider) */}
       <section className="py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-row justify-between items-end mb-8 md:mb-12">
+          <div className="flex flex-row justify-between items-end mb-6 md:mb-12">
             <div>
-              <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">Explore by Category</h2>
+              <h2 className="text-2xl md:text-4xl font-bold mb-1 md:mb-4">Explore by Category</h2>
               <p className="text-sm md:text-base text-slate-500 max-w-xl hidden md:block">Find exactly what you need from our comprehensive selection of professional products and services.</p>
             </div>
-            <div className="flex items-center gap-4">
-              <Link to="/categories" className="text-orange-500 text-sm md:text-base font-semibold flex items-center gap-1 md:gap-2 hover:gap-3 transition-all">
-                View All <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-              </Link>
-              <div className="hidden md:flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="rounded-full w-12 h-12 p-0 flex items-center justify-center border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                  onClick={() => scrollCategories('left')}
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="rounded-full w-12 h-12 p-0 flex items-center justify-center border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                  onClick={() => scrollCategories('right')}
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </Button>
-              </div>
-            </div>
+            <Link to="/categories" className="text-orange-500 text-sm md:text-base font-semibold flex items-center gap-1 hover:gap-2 transition-all px-3 py-1.5 md:px-4 md:py-2 bg-orange-50 dark:bg-orange-900/20 rounded-full">
+              View All <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
           
           {loadingCategories ? (
@@ -286,38 +306,58 @@ export function Home() {
               ))}
             </div>
           ) : (
-            <div 
-              ref={scrollContainerRef}
-              className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 md:grid md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6"
-            >
-              {categories.map((cat) => (
-                  <Link 
-                    key={cat.id} 
-                    to={cat.type === 'SERVICE' || cat.id === 'services-static' ? '/services' : `/categories/${cat.id}`} 
-                    className="w-[120px] md:w-auto shrink-0 snap-center group relative block aspect-square md:aspect-[4/5] rounded-[20px] md:rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 hover:border-orange-500/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80 z-10" />
-                    <img src={cat.imageUrl} alt={cat.name} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-transform duration-700 ease-out" />
-                    
-                    <div className="absolute top-4 right-4 z-20 hidden md:block">
-                      <div className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold text-white shadow-sm border border-white/20">
-                        {cat.itemCount} Items
-                      </div>
-                    </div>
-                    <div className="absolute inset-0 p-3 md:p-6 flex flex-col justify-end z-20">
-                      <div className="w-8 h-8 md:w-12 md:h-12 bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl flex items-center justify-center mb-2 md:mb-4 transform group-hover:scale-110 transition-transform duration-500">
-                        {cat.icon ? (cat.icon.length < 5 ? cat.icon : <img src={cat.icon} alt="icon" className="w-4 h-4 md:w-6 md:h-6 invert" />) : <Package className="w-4 h-4 md:w-6 md:h-6 text-white" />}
-                      </div>
-                      <div>
-                        <h3 className="text-white font-bold text-sm md:text-2xl leading-tight mb-1 md:mb-2 tracking-tight group-hover:text-orange-400 transition-colors">{cat.name}</h3>
-                        <div className="flex items-center gap-1 md:gap-2">
-                          <span className="text-[10px] md:text-sm font-semibold text-white">{cat.itemCount || 0} items</span>
-                          <ArrowRight className="w-3 h-3 md:w-4 md:h-4 text-white transition-transform group-hover:translate-x-1" />
+            <div className="relative">
+              {/* Edge fade gradients for mobile */}
+              <div className="md:hidden absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-slate-900 to-transparent z-30 pointer-events-none" />
+              <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-slate-900 to-transparent z-30 pointer-events-none" />
+              
+              <div 
+                ref={scrollContainerRef}
+                className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-4 md:grid md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6"
+              >
+                {categories.map((cat) => (
+                    <Link 
+                      key={cat.id} 
+                      to={cat.type === 'SERVICE' || cat.id === 'services-static' ? '/services' : `/categories/${cat.id}`} 
+                      className="w-[110px] min-w-[110px] md:w-auto shrink-0 snap-center snap-always group relative block aspect-square md:aspect-[4/5] rounded-[20px] md:rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 hover:border-orange-500/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80 z-10" />
+                      <img src={cat.imageUrl} alt={cat.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-transform duration-700 ease-out" />
+                      
+                      <div className="absolute top-4 right-4 z-20 hidden md:block">
+                        <div className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold text-white shadow-sm border border-white/20">
+                          {cat.itemCount} Items
                         </div>
                       </div>
-                    </div>
-                  </Link>
+                      <div className="absolute inset-0 p-3 md:p-6 flex flex-col justify-end z-20">
+                        <div className="w-8 h-8 md:w-12 md:h-12 bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl flex items-center justify-center mb-2 md:mb-4 transform group-hover:scale-110 transition-transform duration-500">
+                          {cat.icon ? (cat.icon.length < 5 ? cat.icon : <img src={cat.icon} alt="icon" className="w-4 h-4 md:w-6 md:h-6 invert" />) : <Package className="w-4 h-4 md:w-6 md:h-6 text-white" />}
+                        </div>
+                        <div>
+                          <h3 className="text-white font-bold text-sm md:text-2xl leading-tight mb-1 md:mb-2 tracking-tight group-hover:text-orange-400 transition-colors">{cat.name}</h3>
+                          <div className="flex items-center gap-1 md:gap-2">
+                            <span className="text-[10px] md:text-sm font-semibold text-white">{cat.itemCount || 0} items</span>
+                            <ArrowRight className="w-3 h-3 md:w-4 md:h-4 text-white transition-transform group-hover:translate-x-1" />
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+              </div>
+              
+              {/* Pagination Dots for Mobile */}
+              <div className="md:hidden flex justify-center items-center gap-1.5 mt-2">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div 
+                    key={i} 
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      Math.round(categoryScrollProgress * 4) === i 
+                        ? 'w-4 bg-orange-500' 
+                        : 'w-1.5 bg-slate-200 dark:bg-slate-700'
+                    }`} 
+                  />
                 ))}
+              </div>
             </div>
           )}
         </div>
@@ -332,10 +372,10 @@ export function Home() {
               <p className="text-slate-500">Hand-picked premium materials from top-rated vendors.</p>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-2 md:flex md:overflow-x-auto md:snap-x md:snap-mandatory md:gap-6 py-4 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="grid grid-cols-2 gap-3 md:flex md:overflow-x-auto md:snap-x md:snap-mandatory md:gap-6 py-4 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {loadingProducts
               ? Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="flex flex-col gap-2 md:gap-4 bg-white dark:bg-slate-800 rounded-xl md:rounded-3xl p-1.5 md:p-3 border border-slate-200 dark:border-slate-700 w-full md:w-[280px] shrink-0 md:snap-align-none">
+                  <div key={i} className="flex flex-col gap-2 md:gap-4 bg-white dark:bg-slate-800 rounded-xl md:rounded-3xl p-2 md:p-3 border border-slate-200 dark:border-slate-700 w-full md:w-[280px] shrink-0 md:snap-align-none shadow-sm">
                     <Skeleton className="aspect-square w-full rounded-lg md:rounded-2xl" />
                     <div className="space-y-1 md:space-y-2 px-1 md:px-2 pb-1 md:pb-2">
                       <Skeleton className="h-3 md:h-5 w-2/3" />
@@ -343,15 +383,15 @@ export function Home() {
                     </div>
                   </div>
                 ))
-              : featuredProducts.slice(0, 45).map((product) => (
+              : featuredProducts.slice(0, 12).map((product) => (
                   <motion.div 
                     whileHover={{ y: -4 }}
                     key={product.id} 
-                    className="group flex flex-col w-full md:w-[280px] shrink-0 md:snap-center cursor-pointer bg-white dark:bg-slate-800 rounded-xl md:rounded-3xl p-1.5 md:p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
+                    className="group flex flex-col w-full md:w-[280px] shrink-0 md:snap-center cursor-pointer bg-white dark:bg-slate-800 rounded-xl md:rounded-3xl p-2 md:p-3 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all"
                     onClick={() => navigate(`/products/${product.id}`)}
                   >
                     <div className="relative aspect-square bg-slate-50 dark:bg-slate-900 rounded-lg md:rounded-2xl mb-2 md:mb-4 overflow-hidden">
-                      <div className="absolute top-1 left-1 md:top-3 md:left-3 z-20 hidden md:block">
+                      <div className="absolute top-2 left-2 md:top-3 md:left-3 z-20 hidden md:block">
                         <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-[10px] md:text-xs font-bold px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-1">
                           <Package className="w-3 h-3 text-emerald-500" /> {product.category}
                         </span>
@@ -360,34 +400,42 @@ export function Home() {
                       <img 
                         src={product.imageUrls && product.imageUrls.length > 0 && product.imageUrls[0].startsWith('http') && !product.imageUrls[0].includes('example.com') ? product.imageUrls[0] : `https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80`} 
                         alt={product.name} 
+                        loading="lazy"
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" 
                       />
                       
                       {/* Quick Add Button */}
-                      <div className="absolute bottom-1 right-1 md:bottom-3 md:right-3 z-20 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <div className="absolute bottom-2 right-2 md:bottom-3 md:right-3 z-20 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                         <Button 
                           size="sm" 
-                          className="h-6 w-6 md:h-10 md:w-10 p-0 rounded-full shadow-lg bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center"
+                          className="h-8 w-8 md:h-10 md:w-10 p-0 rounded-full shadow-lg bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center"
                           onClick={(e) => handleAddToCart(e, product.id)}
                         >
-                          <Plus className="h-3 w-3 md:h-5 md:w-5" />
+                          <Plus className="h-4 w-4 md:h-5 md:w-5" />
                         </Button>
                       </div>
                     </div>
                     
-                    <div className="flex flex-col px-1 md:px-2 pb-1 md:pb-2">
-                      <p className="text-[8px] md:text-xs font-semibold text-orange-500 mb-0.5 md:mb-1 truncate">{product.category}</p>
-                      <h3 className="text-[10px] md:text-base font-bold text-slate-900 dark:text-white leading-tight mb-0.5 md:mb-2 line-clamp-2">{product.name}</h3>
+                    <div className="flex flex-col px-1 md:px-2 pb-1 md:pb-2 flex-1">
+                      <p className="text-[10px] md:text-xs font-semibold text-orange-500 mb-0.5 md:mb-1 truncate">{product.category}</p>
+                      <h3 className="text-xs md:text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 md:mb-2 line-clamp-1">{product.name}</h3>
                       <p className="hidden md:block text-xs md:text-sm text-slate-500 line-clamp-2 mb-2 md:mb-3">{product.description || 'Premium quality, professionally crafted and verified for superior performance and durability.'}</p>
                       <div className="flex justify-between items-center mt-auto">
-                        <span className="text-[11px] md:text-lg font-black text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
-                        <div className="hidden md:flex items-center gap-1 text-slate-400 text-[10px] md:text-xs font-medium">
+                        <span className="text-sm md:text-lg font-black text-slate-900 dark:text-white">${product.price.toFixed(2)}</span>
+                        <div className="flex items-center gap-1 text-slate-400 text-[10px] md:text-xs font-medium">
                           <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> 4.9
                         </div>
                       </div>
                     </div>
                   </motion.div>
                 ))}
+            {featuredProducts.length > 12 && (
+              <div className="md:hidden col-span-2 flex justify-center mt-4">
+                <Button variant="outline" className="w-full text-sm" onClick={() => navigate('/products')}>
+                  Load More Products
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -466,28 +514,69 @@ export function Home() {
       <section className="py-24 bg-[#FAFAFA] dark:bg-[#0B0F19]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center overflow-hidden">
           <h2 className="text-3xl font-bold mb-10 md:mb-16">Trusted by the Industry</h2>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 md:gap-8 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            {[
-              { text: "This platform transformed how we source materials. Being able to compare prices from multiple local hardware stores in one checkout is a game changer for our construction firm.", author: "Marcus T.", role: "Lead Contractor" },
-              { text: "We opened our digital storefront on the Pro Plan and saw a 40% increase in revenue within two months. The dashboard insights are incredible.", author: "Sarah J.", role: "Owner, City Hardware Co." },
-              { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" }
-            ].map((review, i) => (
-              <div key={i} className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 text-left shadow-sm w-[85vw] max-w-[320px] md:min-w-0 md:w-auto md:flex-1 shrink-0 snap-center">
-                <div className="flex gap-1 mb-4 md:mb-6">
-                  {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
-                </div>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">"{review.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-slate-500">
-                    {review.author.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-900 dark:text-white">{review.author}</p>
-                    <p className="text-xs text-slate-500">{review.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          
+          <div className="relative max-w-4xl mx-auto" ref={carouselRef}>
+            <div className="overflow-hidden md:overflow-visible">
+              <motion.div 
+                className="flex gap-4 md:gap-8 cursor-grab active:cursor-grabbing"
+                drag="x"
+                dragConstraints={carouselRef}
+                dragElastic={0.2}
+                animate={{ x: `calc(-${activeTestimonial * 100}% - ${activeTestimonial * (window.innerWidth < 768 ? 16 : 32)}px)` }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipe = swipePower(offset.x, velocity.x);
+                  if (swipe < -swipeConfidenceThreshold) {
+                    setActiveTestimonial(prev => Math.min(prev + 1, 2));
+                  } else if (swipe > swipeConfidenceThreshold) {
+                    setActiveTestimonial(prev => Math.max(prev - 1, 0));
+                  }
+                }}
+              >
+                {[
+                  { text: "This platform transformed how we source materials. Being able to compare prices from multiple local hardware stores in one checkout is a game changer for our construction firm.", author: "Marcus T.", role: "Lead Contractor" },
+                  { text: "We opened our digital storefront on the Pro Plan and saw a 40% increase in revenue within two months. The dashboard insights are incredible.", author: "Sarah J.", role: "Owner, City Hardware Co." },
+                  { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" }
+                ].map((review, i) => (
+                  <motion.div 
+                    key={i} 
+                    className="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-[32px] border border-slate-200 dark:border-slate-700 text-left shadow-lg w-full min-w-full md:min-w-0 md:w-1/3 shrink-0 relative"
+                    animate={{ scale: activeTestimonial === i || window.innerWidth >= 768 ? 1 : 0.95, opacity: activeTestimonial === i || window.innerWidth >= 768 ? 1 : 0.5 }}
+                  >
+                    <div className="absolute top-8 right-8 text-6xl text-slate-100 dark:text-slate-700/50 font-serif leading-none opacity-50">"</div>
+                    <div className="flex gap-1 mb-6 relative z-10">
+                      {[...Array(5)].map((_, j) => <Star key={j} className="w-5 h-5 fill-amber-400 text-amber-400" />)}
+                    </div>
+                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-lg md:text-base relative z-10">{review.text}</p>
+                    <div className="flex items-center gap-4 mt-auto relative z-10">
+                      <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center font-bold text-lg border border-orange-200 dark:border-orange-800/50">
+                        {review.author.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-base font-bold text-slate-900 dark:text-white">{review.author}</p>
+                        <p className="text-sm text-slate-500">{review.role}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+            
+            {/* Pagination Dots */}
+            <div className="md:hidden flex justify-center items-center gap-2 mt-8">
+              {[0, 1, 2].map((i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveTestimonial(i)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    activeTestimonial === i 
+                      ? 'w-6 bg-orange-500' 
+                      : 'w-2 bg-slate-300 dark:bg-slate-700'
+                  }`}
+                  aria-label={`Go to testimonial ${i + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -532,13 +621,14 @@ export function Home() {
             </div>
           </div>
 
-          {/* Lottie Animation - Hidden on mobile */}
+          {/* Lottie Animation */}
           <div className="hidden lg:flex flex-1 w-full justify-center items-center">
-            <div className="w-full max-w-md h-[400px]">
+            <div className="hidden md:block w-full max-w-md sticky top-32">
               <DotLottieReact
-                src="https://lottie.host/793729d1-22f3-442a-b9c5-50e0816b48e1/4xR58D7WJ8.lottie"
+                src="https://lottie.host/80998f44-8840-4dc6-ab0e-436f525dc10f/O0P9iS0e04.lottie"
                 loop
                 autoplay
+                className="w-full h-auto drop-shadow-2xl"
               />
             </div>
           </div>

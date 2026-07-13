@@ -103,7 +103,7 @@ export function Register() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input 
               label="First name"
               name="firstName"
@@ -143,7 +143,7 @@ export function Register() {
             onChange={handleChange}
           />
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="relative">
               <Input 
                 label="Password"
@@ -189,7 +189,7 @@ export function Register() {
 
           <div className="flex flex-col gap-3">
             <span className="text-sm font-medium text-foreground">Account Type</span>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label className={`flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-colors group ${formData.role === 'CUSTOMER' ? 'border-accent-terracotta bg-accent-terracotta/5' : 'border-border-light dark:border-border-dark bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10'}`}>
                 <input 
                   type="radio" 
