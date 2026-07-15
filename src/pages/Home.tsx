@@ -31,11 +31,6 @@ const staggerContainer = {
   }
 };
 
-const swipeConfidenceThreshold = 10000;
-const swipePower = (offset: number, velocity: number) => {
-  return Math.abs(offset) * velocity;
-};
-
 export function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -44,10 +39,8 @@ export function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [categoryScrollProgress, setCategoryScrollProgress] = useState(0);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
   
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
   
   const addItem = useCartStore((state) => state.addItem);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -99,13 +92,8 @@ export function Home() {
       setCurrentSlide((prev) => (prev + 1) % 3);
     }, 4000);
     
-    const testimonialTimer = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % 3);
-    }, 5000);
-    
     return () => {
       clearInterval(timer);
-      clearInterval(testimonialTimer);
     };
   }, []);
 
@@ -174,15 +162,15 @@ export function Home() {
               Easily find top-rated local products and services, or start your own store to market your business on our platform.
             </motion.p>
             
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Link to="/products">
-                <Button size="lg" className="w-full sm:w-auto h-14 px-8 text-base font-semibold rounded-xl bg-orange-500 hover:bg-orange-600 text-white border-0 shadow-lg shadow-orange-500/25 transition-all">
+            <motion.div variants={fadeUp} className="mb-8 flex max-w-xl flex-wrap items-stretch gap-3">
+              <Link to="/products" className="flex-1 sm:flex-none">
+                <Button size="lg" className="h-12 w-full min-w-[150px] px-5 text-sm font-semibold rounded-full bg-orange-500 hover:bg-orange-600 text-white border-0 shadow-lg shadow-orange-500/25 transition-all sm:h-14 sm:px-8 sm:text-base sm:w-auto">
                   Browse Products
                 </Button>
               </Link>
-              <Link to={isAuthenticated ? "/vendor" : "/login"}>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 px-8 text-base font-semibold rounded-xl border-slate-700 text-white hover:bg-white/5 backdrop-blur-sm">
-                  Open Your Hardware Store
+              <Link to={isAuthenticated ? "/vendor" : "/login"} className="flex-1 sm:flex-none">
+                <Button size="lg" variant="outline" className="h-12 w-full min-w-[150px] px-5 text-sm font-semibold rounded-full border-slate-700 text-white hover:bg-white/5 backdrop-blur-sm sm:h-14 sm:px-8 sm:text-base sm:w-auto">
+                  Open Store
                 </Button>
               </Link>
             </motion.div>
@@ -243,32 +231,32 @@ export function Home() {
             <p className="text-slate-500 max-w-2xl mx-auto text-lg">Compare prices, discover local suppliers, and order professional-grade materials from one unified platform.</p>
           </div>
           
-          <div className="flex md:grid md:grid-cols-3 overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:gap-8 pb-4 md:pb-0">
-            <div className="bg-white dark:bg-slate-800 p-4 md:p-8 rounded-2xl md:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm md:hover:shadow-md transition-shadow shrink-0 snap-center w-[85vw] max-w-[300px] md:w-auto flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0">
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 md:mb-6">
-                <Store className="w-6 h-6 md:w-7 md:h-7" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+            <div className="flex min-h-[220px] flex-col items-start gap-4 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 md:p-8">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 md:h-14 md:w-14">
+                <Store className="h-6 w-6 md:h-7 md:w-7" />
               </div>
               <div>
-                <h3 className="text-base md:text-xl font-bold mb-1 md:mb-3">Multiple Vendors, One Cart</h3>
-                <p className="text-sm md:text-base text-slate-500 leading-relaxed line-clamp-2 md:line-clamp-none">Source products from various stores and checkout instantly. We handle the logistics and routing.</p>
+                <h3 className="mb-2 text-base font-bold md:text-xl">Multiple Vendors, One Cart</h3>
+                <p className="text-sm leading-relaxed text-slate-500 md:text-base">Source products from various stores and checkout instantly. We handle the logistics and routing.</p>
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-4 md:p-8 rounded-2xl md:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm md:hover:shadow-md transition-shadow shrink-0 snap-center w-[85vw] max-w-[300px] md:w-auto flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0">
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 md:mb-6">
-                <Shield className="w-6 h-6 md:w-7 md:h-7" />
+            <div className="flex min-h-[220px] flex-col items-start gap-4 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 md:p-8">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400 md:h-14 md:w-14">
+                <Shield className="h-6 w-6 md:h-7 md:w-7" />
               </div>
               <div>
-                <h3 className="text-base md:text-xl font-bold mb-1 md:mb-3">Verified Suppliers</h3>
-                <p className="text-sm md:text-base text-slate-500 leading-relaxed line-clamp-2 md:line-clamp-none">Every vendor undergoes a strict vetting process. Buy with confidence knowing you're dealing with professionals.</p>
+                <h3 className="mb-2 text-base font-bold md:text-xl">Verified Suppliers</h3>
+                <p className="text-sm leading-relaxed text-slate-500 md:text-base">Every vendor undergoes a strict vetting process. Buy with confidence knowing you're dealing with professionals.</p>
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-4 md:p-8 rounded-2xl md:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm md:hover:shadow-md transition-shadow shrink-0 snap-center w-[85vw] max-w-[300px] md:w-auto flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0">
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 md:mb-6">
-                <CreditCard className="w-6 h-6 md:w-7 md:h-7" />
+            <div className="flex min-h-[220px] flex-col items-start gap-4 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 md:p-8">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400 md:h-14 md:w-14">
+                <CreditCard className="h-6 w-6 md:h-7 md:w-7" />
               </div>
               <div>
-                <h3 className="text-base md:text-xl font-bold mb-1 md:mb-3">Secure Pesapal Checkout</h3>
-                <p className="text-sm md:text-base text-slate-500 leading-relaxed line-clamp-2 md:line-clamp-none">Enterprise-grade payment processing protects your transactions. Your funds are safe until delivery is confirmed.</p>
+                <h3 className="mb-2 text-base font-bold md:text-xl">Secure Pesapal Checkout</h3>
+                <p className="text-sm leading-relaxed text-slate-500 md:text-base">Enterprise-grade payment processing protects your transactions. Your funds are safe until delivery is confirmed.</p>
               </div>
             </div>
           </div>
@@ -501,69 +489,59 @@ export function Home() {
 
       {/* 9. Trust & Testimonials */}
       <section className="py-24 bg-[#FAFAFA] dark:bg-[#0B0F19]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center overflow-hidden">
-          <h2 className="text-3xl font-bold mb-10 md:mb-16">Trusted by the Industry</h2>
-          
-          <div className="relative max-w-4xl mx-auto" ref={carouselRef}>
-            <div className="overflow-hidden md:overflow-visible">
-              <motion.div 
-                className="flex gap-4 md:gap-8 cursor-grab active:cursor-grabbing"
-                drag="x"
-                dragConstraints={carouselRef}
-                dragElastic={0.2}
-                animate={{ x: `calc(-${activeTestimonial * 100}% - ${activeTestimonial * (window.innerWidth < 768 ? 16 : 32)}px)` }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                onDragEnd={(_e, { offset, velocity }) => {
-                  const swipe = swipePower(offset.x, velocity.x);
-                  if (swipe < -swipeConfidenceThreshold) {
-                    setActiveTestimonial(prev => Math.min(prev + 1, 2));
-                  } else if (swipe > swipeConfidenceThreshold) {
-                    setActiveTestimonial(prev => Math.max(prev - 1, 0));
-                  }
-                }}
-              >
-                {[
-                  { text: "This platform transformed how we source materials. Being able to compare prices from multiple local hardware stores in one checkout is a game changer for our construction firm.", author: "Marcus T.", role: "Lead Contractor" },
-                  { text: "We opened our digital storefront on the Pro Plan and saw a 40% increase in revenue within two months. The dashboard insights are incredible.", author: "Sarah J.", role: "Owner, City Hardware Co." },
-                  { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" }
-                ].map((review, i) => (
-                  <motion.div 
-                    key={i} 
-                    className="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-[32px] border border-slate-200 dark:border-slate-700 text-left shadow-lg w-full min-w-full md:min-w-0 md:w-1/3 shrink-0 relative"
-                    animate={{ scale: activeTestimonial === i || window.innerWidth >= 768 ? 1 : 0.95, opacity: activeTestimonial === i || window.innerWidth >= 768 ? 1 : 0.5 }}
-                  >
-                    <div className="absolute top-8 right-8 text-6xl text-slate-100 dark:text-slate-700/50 font-serif leading-none opacity-50">"</div>
-                    <div className="flex gap-1 mb-6 relative z-10">
-                      {[...Array(5)].map((_, j) => <Star key={j} className="w-5 h-5 fill-amber-400 text-amber-400" />)}
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mb-10 text-center md:mb-16">
+            <h2 className="text-3xl font-bold">Trusted by the Industry</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-500 md:text-base">Real stories from contractors, store owners, and designers who rely on our marketplace every day.</p>
+          </div>
+
+          <div className="hidden gap-4 md:grid md:grid-cols-3">
+            {[
+              { text: "This platform transformed how we source materials. Being able to compare prices from multiple local hardware stores in one checkout is a game changer for our construction firm.", author: "Marcus T.", role: "Lead Contractor" },
+              { text: "We opened our digital storefront on the Pro Plan and saw a 40% increase in revenue within two months. The dashboard insights are incredible.", author: "Sarah J.", role: "Owner, City Hardware Co." },
+              { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" }
+            ].map((review, i) => (
+              <div key={i} className="flex min-h-[280px] flex-col rounded-[28px] border border-slate-200 bg-white p-7 text-left shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-orange-200 bg-orange-100 font-bold text-lg text-orange-600 dark:border-orange-800/50 dark:bg-orange-900/30 dark:text-orange-400">
+                    {review.author.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-base font-bold text-slate-900 dark:text-white">{review.author}</p>
+                    <p className="text-sm text-slate-500">{review.role}</p>
+                  </div>
+                </div>
+                <div className="my-5 flex gap-1">
+                  {[...Array(5)].map((_, j) => <Star key={j} className="h-4 w-4 fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{review.text}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="md:hidden">
+            <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory">
+              {[
+                { text: "This platform transformed how we source materials. Being able to compare prices from multiple local hardware stores in one checkout is a game changer for our construction firm.", author: "Marcus T.", role: "Lead Contractor" },
+                { text: "We opened our digital storefront on the Pro Plan and saw a 40% increase in revenue within two months. The dashboard insights are incredible.", author: "Sarah J.", role: "Owner, City Hardware Co." },
+                { text: "Secure payments and guaranteed delivery dates. As an interior designer, I rely on this marketplace to keep my projects on schedule.", author: "Elena R.", role: "Interior Designer" },
+                { text: "The ordering flow is effortless and the vendor communication feels premium from the first click to final delivery.", author: "Diana K.", role: "Project Manager" }
+              ].map((review, i) => (
+                <div key={i} className="min-w-[82vw] max-w-[82vw] shrink-0 snap-center rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-200 bg-orange-100 font-semibold text-orange-600 dark:border-orange-800/50 dark:bg-orange-900/30 dark:text-orange-400">
+                      {review.author.charAt(0)}
                     </div>
-                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-lg md:text-base relative z-10">{review.text}</p>
-                    <div className="flex items-center gap-4 mt-auto relative z-10">
-                      <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center font-bold text-lg border border-orange-200 dark:border-orange-800/50">
-                        {review.author.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-base font-bold text-slate-900 dark:text-white">{review.author}</p>
-                        <p className="text-sm text-slate-500">{review.role}</p>
-                      </div>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white">{review.author}</p>
+                      <p className="text-xs text-slate-500">{review.role}</p>
                     </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-            
-            {/* Pagination Dots */}
-            <div className="md:hidden flex justify-center items-center gap-2 mt-8">
-              {[0, 1, 2].map((i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveTestimonial(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    activeTestimonial === i 
-                      ? 'w-6 bg-orange-500' 
-                      : 'w-2 bg-slate-300 dark:bg-slate-700'
-                  }`}
-                  aria-label={`Go to testimonial ${i + 1}`}
-                />
+                  </div>
+                  <div className="my-3 flex gap-1">
+                    {[...Array(5)].map((_, j) => <Star key={j} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />)}
+                  </div>
+                  <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{review.text}</p>
+                </div>
               ))}
             </div>
           </div>
@@ -612,7 +590,7 @@ export function Home() {
 
           {/* Lottie Animation */}
           <div className="hidden lg:flex flex-1 w-full justify-center items-center">
-            <div className="hidden md:block w-full max-w-md sticky top-32">
+            <div className="hidden lg:block w-full max-w-md sticky top-32">
               <DotLottieReact
                 src="https://lottie.host/80998f44-8840-4dc6-ab0e-436f525dc10f/O0P9iS0e04.lottie"
                 loop
